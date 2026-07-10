@@ -1,0 +1,10 @@
+node_modules
+.next
+.data
+.asset-store
+.env
+*.log
+
+# Product images are mounted into the V2 container from the parent project.
+# Keeping them out of the Docker context avoids ~1GB rebuild uploads.
+public/images/products

@@ -1,0 +1,41 @@
+{
+  "id": "zota-zuma",
+  "slug": "zota-zuma",
+  "categorySlug": "boilers",
+  "brand": "zota",
+  "brandName": "ZOTA",
+  "name": "Газовый настенный котел ZOTA «Zuma»",
+  "sku": "ZOTA-ZUMA",
+  "shortDescription": "Настенный газовый котел ZOTA для отопления дома с расчетом мощности под объект.",
+  "description": "Настенный котел ZOTA «Zuma» предназначен для организации отопления в доме или на объекте с соблюдением требований к газовому оборудованию. Для корректного подбора нужно учесть площадь, теплопотери, условия дымоудаления, состав обвязки, группу безопасности и доступность сервисного обслуживания.",
+  "purpose": "Для отопления дома с акцентом на безопасность, сервис и инженерный расчет мощности.",
+  "image": "/images/generated-v2/boilers-zota-zuma-photo.webp",
+  "logo": "/brand-logos/zota.svg",
+  "highlights": ["Настенный газовый котел", "Сценарии: дом, дача, объект", "Нужен расчет мощности", "Консультация инженера перед заказом"],
+  "sellingPoints": ["консультация инженера перед покупкой", "подбор обвязки и группы безопасности", "проверка мощности под объект"],
+  "specs": {
+    "Тип": "газовый настенный котел",
+    "Серия": "Zuma",
+    "Цена": "по запросу"
+  },
+  "crossSell": ["Насосы", "Группы безопасности", "Запорная арматура"],
+  "availability": "on_request",
+  "sourceRefs": [
+    {
+      "type": "supplier",
+      "label": "ZOTA catalog",
+      "url": "https://zota.ru/catalog/gazovye_nastennye_kotly/Zuma/"
+    }
+  ],
+  "dataQuality": {
+    "score": 84,
+    "hasRealImage": true,
+    "hasVerifiedSpecs": true,
+    "hasSourceRefs": true,
+    "hasPrice": false,
+    "hasAvailability": false,
+    "publishInSitemap": true,
+    "notes": ["Для газового оборудования требуется ручная проверка технического описания и условий монтажа."]
+  },
+  "updatedAt": "2026-06-28"
+}

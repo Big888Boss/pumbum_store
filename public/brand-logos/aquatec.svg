@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 96" role="img" aria-label="АКВАТЕК">
+  <rect width="320" height="96" rx="20" fill="#ffffff"/>
+  <path d="M50 18c19 20 30 35 30 49 0 17-13 28-30 28S20 84 20 67c0-14 11-29 30-49Z" fill="#dff3ff"/>
+  <path d="M50 29c13 15 20 27 20 37 0 11-8 19-20 19s-20-8-20-19c0-10 7-22 20-37Z" fill="#1583c7"/>
+  <text x="96" y="54" fill="#0f172a" font-family="Arial, sans-serif" font-size="32" font-weight="800" letter-spacing="1">АКВАТЕК</text>
+  <text x="98" y="77" fill="#64748b" font-family="Arial, sans-serif" font-size="16" font-weight="700">все для воды</text>
+</svg>

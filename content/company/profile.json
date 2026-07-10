@@ -1,0 +1,18 @@
+{
+  "name": "Сантехникъ",
+  "url": "https://477477.ru",
+  "logoUrl": "https://477477.ru/brand-logos/santekhnik-logo.jpg",
+  "phone": "+7 (8452) 47-74-77",
+  "email": "Virado@bk.ru",
+  "address": {
+    "streetAddress": "ул. Большая Горная, д. 290",
+    "addressLocality": "Саратов",
+    "addressRegion": "Саратовская область",
+    "postalCode": "410005",
+    "addressCountry": "RU"
+  },
+  "openingHours": ["Mo-Su 08:00-19:00"],
+  "sameAs": [],
+  "deliveryArea": ["Саратов", "Саратовская область"],
+  "updatedAt": "2026-06-28"
+}

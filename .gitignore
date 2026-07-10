@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Next.js build/runtime output
+.next/
+out/
+
+# Local environment files (do not commit secrets)
+.env
+.env.*
+!.env.example
+
+# Local Playwright/browser dependency bundles and reports
+.playwright-os-libs/
+playwright-report/
+test-results/
+reports/
+
+# Local runtime storage for lead submissions
+.data/
+
+# Local/server-side image archives and generated operational reports
+.asset-store/
+
+# Generated validation/runtime evidence artifacts
+# Keep curated docs/evidence files only when intentionally added by a task handoff.
+docs/evidence/*.log
+docs/evidence/*.png
+docs/evidence/task-130-browser-smoke*.json
+docs/evidence/task-130-ocr-images*.json
+
+# Package/cache noise
+.npm/
+.cache/
+.DS_Store
+
+# Live nginx conf contains a private VPN location path — keep out of the public repo
+deploy/nginx/477477-v2.conf

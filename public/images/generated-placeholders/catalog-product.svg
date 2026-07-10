@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="720" viewBox="0 0 960 720" role="img" aria-labelledby="title desc">
+  <title id="title">Каталожный товар</title>
+  <desc id="desc">Нейтральная карточка для импортированных товаров без проверенного изображения.</desc>
+  <rect width="960" height="720" fill="#f8fafc"/>
+  <rect x="96" y="92" width="768" height="536" rx="42" fill="#ffffff" stroke="#dbe4ef" stroke-width="6"/>
+  <path d="M226 448h508" stroke="#0f6fd8" stroke-width="24" stroke-linecap="round"/>
+  <path d="M278 360h404" stroke="#94a3b8" stroke-width="18" stroke-linecap="round"/>
+  <path d="M344 276h272" stroke="#f59e0b" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="278" cy="448" r="44" fill="#e0f2fe" stroke="#0f6fd8" stroke-width="14"/>
+  <circle cx="682" cy="448" r="44" fill="#e0f2fe" stroke="#0f6fd8" stroke-width="14"/>
+  <text x="480" y="560" text-anchor="middle" fill="#0f172a" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700">товар каталога</text>
+</svg>
