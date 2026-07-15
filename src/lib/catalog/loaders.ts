@@ -65,6 +65,7 @@ const supplierSourceGroups = [
   { slug: 'aquatec', name: 'АКВАТЕК', sources: ['aquatec/catalog.json'] },
   { slug: 'zota', name: 'ZOTA', sources: ['zota/catalog.json'] },
   { slug: 'tim', name: 'TIM', sources: ['tim/catalog.json'] },
+  { slug: 'espa', name: 'ESPA', sources: ['espa/catalog.json'] },
 ] as const;
 
 type SupplierSlug = (typeof supplierSourceGroups)[number]['slug'];
@@ -77,7 +78,8 @@ const supplierLogoFallbacks: Record<SupplierSlug, string> = {
   aquatec: '/brand-logos/aquatec.svg',
   vivaldo: '/brand-logos/vivaldo.png',
   zota: '/brand-logos/zota.svg',
-  tim: '',
+  tim: '/brand-logos/tim.jpg',
+  espa: '/brand-logos/espa.png',
 };
 
 function sourceLabels(product: Product): string {
@@ -113,6 +115,7 @@ function inferSupplierSlug(product: Product): SupplierSlug | undefined {
   if (sourceText.includes('aq-plastic') || sourceText.includes('aquatec') || sourceText.includes('акватек')) return 'aquatec';
   if (sourceText.includes('zota')) return 'zota';
   if (/\btim\b/.test(sourceText) || sourceText.includes('тим')) return 'tim';
+  if (/\bespa\b/.test(sourceText)) return 'espa';
   if (
     sourceText.includes('sinikon')
     || sourceText.includes('синикон')
@@ -133,6 +136,7 @@ function supplierDisplayName(supplier: SupplierSlug): string {
   if (supplier === 'vivaldo') return 'VIVALDO';
   if (supplier === 'zota') return 'ZOTA';
   if (supplier === 'tim') return 'TIM';
+  if (supplier === 'espa') return 'ESPA';
   return supplier;
 }
 
@@ -182,7 +186,9 @@ function applySupplierPresentationFixes(product: Product): Product {
   const supplier = inferSupplierSlug(product);
   if (!supplier) return product;
 
-  const logo = product.logo || supplierLogoFallbacks[supplier] || undefined;
+  const logo = supplier === 'tim'
+    ? supplierLogoFallbacks.tim
+    : product.logo || supplierLogoFallbacks[supplier] || undefined;
   const shouldReplaceBrandName = (
     !product.logo
     || product.hideBrandLogo
@@ -229,16 +235,26 @@ function getSupplierSection(product: Product): string | undefined {
   return section;
 }
 
+const sortedCategories = [...allCategories].sort((a, b) => b.priority - a.priority);
+const categoryBySlug = new Map(allCategories.map((category) => [category.slug, category]));
+const productsByCategory = new Map<string, Product[]>();
+
+for (const product of allProducts) {
+  const categoryProducts = productsByCategory.get(product.categorySlug);
+  if (categoryProducts) categoryProducts.push(product);
+  else productsByCategory.set(product.categorySlug, [product]);
+}
+
 export function getCompanyProfile(): CompanyProfile {
   return companyProfile as CompanyProfile;
 }
 
 export function getAllCategories(): Category[] {
-  return [...allCategories].sort((a, b) => b.priority - a.priority);
+  return sortedCategories;
 }
 
 export function getCategoryBySlug(slug: string): Category | undefined {
-  return allCategories.find((category) => category.slug === slug);
+  return categoryBySlug.get(slug);
 }
 
 export function getAllProducts(): Product[] {
@@ -264,7 +280,7 @@ export function getManufacturerGroups(): ManufacturerGroup[] {
 }
 
 export function getProductsByCategory(categorySlug: string): Product[] {
-  return allProducts.filter((product) => product.categorySlug === categorySlug);
+  return productsByCategory.get(categorySlug) ?? [];
 }
 
 export function getFeaturedProductByCategory(categorySlug: string): Product | undefined {
@@ -292,11 +308,36 @@ export function getCategoryShowcaseBySlug(categorySlug: string): CategoryShowcas
 }
 
 export function getProductBySlug(categorySlug: string, productSlug: string): Product | undefined {
-  return allProducts.find((product) => product.categorySlug === categorySlug && product.slug === productSlug);
+  return getProductsByCategory(categorySlug).find((product) => product.slug === productSlug);
 }
 
 export function getRelatedProducts(categorySlug: string, limit = 3): Product[] {
-  return allProducts.filter((product) => product.categorySlug !== categorySlug).slice(0, limit);
+  const related: Product[] = [];
+  const seenCategories = new Set<string>();
+  for (const product of allProducts) {
+    if (product.categorySlug === categorySlug || seenCategories.has(product.categorySlug)) continue;
+    seenCategories.add(product.categorySlug);
+    related.push(product);
+    if (related.length >= limit) break;
+  }
+  return related;
+}
+
+export function getRelatedProductsForProduct(product: Product, limit = 3): Product[] {
+  const series = product.specs['Подраздел'] || product.specs['Группа'];
+  return getProductsByCategory(product.categorySlug)
+    .filter((candidate) => (
+      candidate.categorySlug === product.categorySlug
+      && candidate.slug !== product.slug
+    ))
+    .sort((a, b) => {
+      const aScore = Number(a.supplier === product.supplier) * 2
+        + Number(Boolean(series) && (a.specs['Подраздел'] === series || a.specs['Группа'] === series));
+      const bScore = Number(b.supplier === product.supplier) * 2
+        + Number(Boolean(series) && (b.specs['Подраздел'] === series || b.specs['Группа'] === series));
+      return bScore - aScore;
+    })
+    .slice(0, limit);
 }
 
 export function getPublishedCategories(): Category[] {

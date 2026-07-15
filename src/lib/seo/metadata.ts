@@ -8,9 +8,10 @@ type SeoMetadataInput = {
   path: string;
   images?: string[];
   noindex?: boolean;
+  followWhenNoindex?: boolean;
 };
 
-export function buildMetadata({ title, description, path, images = [], noindex = false }: SeoMetadataInput): Metadata {
+export function buildMetadata({ title, description, path, images = [], noindex = false, followWhenNoindex = false }: SeoMetadataInput): Metadata {
   const url = canonical(path);
   return {
     metadataBase: new URL(siteConfig.siteUrl),
@@ -38,6 +39,6 @@ export function buildMetadata({ title, description, path, images = [], noindex =
       'geo.position': '51.54513;46.020494',
       ICBM: '51.54513, 46.020494',
     },
-    robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
+    robots: noindex ? { index: false, follow: followWhenNoindex } : { index: true, follow: true },
   };
 }

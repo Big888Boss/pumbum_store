@@ -9,6 +9,8 @@
 - `src/lib/seo/*`
 - `src/app/robots.ts`
 - `src/app/sitemap.ts`
+- `content/generated/legacy-route-redirects.json`
+- `docs/SEO_MOBILE_RELEASE_2026-07-15.md`
 - `src/app/layout.tsx`
 - `content/company/profile.json`
 
@@ -64,18 +66,26 @@
 
 Текущий generated import:
 
-- source files: 11;
-- raw generated legacy categories: 11;
-- raw generated legacy products: 5700;
+- base legacy source files: 11;
+- raw base legacy categories: 11;
+- base legacy products: 5700;
 - runtime buyer categories: 6 purpose categories using legacy `/catalog` bucket assignment;
-- runtime products: 5700 generated legacy rows; manual pilot cards are not appended to production runtime;
-- sitemap-publishable runtime products: 5700;
+- runtime products: 9276 generated rows: 5700 base legacy, 3508 TIM and 68 ESPA;
+- sitemap-publishable runtime products: 9276;
 - manufacturer index route: `/catalog/proizvoditeli`;
 - cart route: `/cart` redirects to `/contacts`; `/api/cart` and `/api/leads` return `410` until order intake is explicitly approved;
-- image references: 5700/5700 runtime products have real image references after import; legacy-local `/images/products/**` must be available as runtime static assets on server;
+- image references: all 9276 runtime products have real image references; legacy-local `/images/products/**` must be available as runtime static assets on server;
 - generated output: `content/generated/legacy-catalog.json`;
 - skipped as non-catalog/runtime/doc/demo: `products.json`, `valtec/catalog_desc.json`, `valtec/catalog_image_overrides.json`, `valtec/documents.json`.
 - VALTEC import follows the live legacy mapper three-level section/group/model traversal and legacy unique article fallback; current VALTEC rows: 4410.
+
+Текущий production runtime:
+
+- image: `plumbing_store_v2-v2:seo-mobile-20260715-v6`;
+- active localhost port: `3015`;
+- live rollback port: `3014`;
+- build only on `administrator@100.95.56.90`; never build on the small production host;
+- release and rollback evidence: `docs/SEO_MOBILE_RELEASE_2026-07-15.md`.
 
 Нельзя:
 

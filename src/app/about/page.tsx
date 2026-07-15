@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import { StaticImage } from '@/components/media/StaticImage';
 import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { getManufacturerGroups } from '@/lib/catalog/loaders';
@@ -81,7 +81,7 @@ export default function AboutPage() {
             {manufacturers.map((manufacturer) => (
               <Link className="card brand-card" href={`/search?q=${encodeURIComponent(manufacturer.name)}`} key={manufacturer.name}>
                 {manufacturer.logo ? (
-                  <Image src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={180} height={70} />
+                  <StaticImage src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={180} height={70} />
                 ) : (
                   <div className="manufacturer-logo"><span>{manufacturer.name.slice(0, 2).toUpperCase()}</span></div>
                 )}

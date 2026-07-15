@@ -1,0 +1,21 @@
+[Unit]
+Description=Warm the 477477 storefront catalog working set
+After=network-online.target nginx.service docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=dev477477
+Group=dev477477
+Nice=10
+IOSchedulingClass=idle
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+MemoryMax=32M
+TimeoutStartSec=25
+ExecStart=/usr/bin/curl --fail --silent --show-error --output /dev/null --max-time 20 --resolve 477477.ru:443:127.0.0.1 --header "Accept-Language: ru-RU,ru;q=0.9" --user-agent "Mozilla/5.0 pumbum-warmup/1.0" https://477477.ru/catalog/kanalizaciya-i-vodootvedenie
+
+[Install]
+WantedBy=multi-user.target

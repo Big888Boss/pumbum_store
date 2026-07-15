@@ -1,5 +1,7 @@
 # V2 production cutover runbook
 
+Historical runbook from the initial legacy-to-V2 cutover. It is not valid for the current `9276`-product deployment. Use `AUDIT_2026-07-10.md` and `AUDIT_CSP_2026-07-11.md` for current runtime and rollback paths.
+
 Date prepared: 2026-07-04
 
 Scope: switch public `https://477477.ru` from legacy storefront to V2. Do not run this without explicit approval.

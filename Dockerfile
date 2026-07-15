@@ -27,19 +27,19 @@ ARG NEXT_PUBLIC_SITE_URL=https://477477.ru
 ARG NEXT_PUBLIC_SITE_ENV=staging
 ARG NEXT_PUBLIC_YANDEX_METRIKA_ID=
 ENV NODE_ENV=production
+ENV NODE_OPTIONS=--max-old-space-size=320
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_SITE_ENV=$NEXT_PUBLIC_SITE_ENV
 ENV NEXT_PUBLIC_YANDEX_METRIKA_ID=$NEXT_PUBLIC_YANDEX_METRIKA_ID
+ENV CSP_MODE=enforce
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3010
 
-COPY --chown=node:node --from=builder /app/package.json /app/package-lock.json ./
-COPY --chown=node:node --from=builder /app/next.config.mjs ./
 COPY --chown=node:node --from=builder /app/public ./public
-COPY --chown=node:node --from=builder /app/.next ./.next
-COPY --chown=node:node --from=builder /app/node_modules ./node_modules
+COPY --chown=node:node --from=builder /app/.next/standalone ./
+COPY --chown=node:node --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3010
 USER node
-CMD ["npm", "run", "start"]
+CMD ["node", "server.js"]

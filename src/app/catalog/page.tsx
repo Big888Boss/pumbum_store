@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { MetrikaSearchForm } from '@/components/analytics/MetrikaEvents';
 import { ProductImage } from '@/components/product/ProductImage';
 import { getAllCategories, getCategoryShowcaseBySlug, getProductsByCategory } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -30,10 +31,10 @@ export default function CatalogPage() {
           <div className="actions">
             <Link className="btn btn-secondary" href="/catalog/proizvoditeli">Открыть каталог по производителям</Link>
           </div>
-          <form className="search-panel search-panel-compact" action="/search">
+          <MetrikaSearchForm className="search-panel search-panel-compact" action="/search" location="catalog_page">
             <input name="q" type="search" placeholder="Поиск по артикулу, бренду или параметру" />
             <button className="btn btn-primary" type="submit">Найти</button>
-          </form>
+          </MetrikaSearchForm>
         </div>
       </section>
       <section className="section">

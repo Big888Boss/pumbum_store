@@ -2,18 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  output: 'standalone',
   outputFileTracingRoot: process.cwd(),
   async redirects() {
-    // Legacy (pre-2026-07-05) URL structure: brand-first catalog and
-    // /product/<article> pages are indexed by search engines; map them to
-    // the closest v2 equivalents instead of returning 404.
-    const legacyBrands = ['valtec', 'sinikon', 'aquario', 'gidrokontrakt', 'vivaldo', 'aquatec', 'zota'];
     return [
-      ...legacyBrands.flatMap((brand) => [
-        { source: `/catalog/${brand}`, destination: `/search?q=${brand}`, permanent: true },
-        { source: `/catalog/${brand}/:path*`, destination: `/search?q=${brand}`, permanent: true },
-      ]),
-      { source: '/product/:article', destination: '/search?q=:article', permanent: true },
       { source: '/changelog', destination: '/about', permanent: true },
     ];
   },
@@ -40,12 +32,6 @@ const nextConfig = {
       { protocol: 'https', hostname: 'zota.ru' }
     ]
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  }
 };
 
 export default nextConfig;

@@ -3,6 +3,7 @@ import type { CompanyProfile } from '@/entities/company/model';
 import type { Product } from '@/entities/product/model';
 import { canPublishOfferSchema, getProductSchemaAvailability } from '@/lib/catalog/quality';
 import { absoluteUrl, siteConfig } from '@/lib/seo/config';
+import { getProductDisplayName, getProductSeoDescription } from '@/lib/seo/product';
 import type { BreadcrumbItem } from '@/lib/seo/breadcrumbs';
 
 export function organizationJsonLd(company: CompanyProfile) {
@@ -89,11 +90,11 @@ export function productJsonLd(product: Product) {
     '@context': 'https://schema.org',
     '@type': 'Product',
     '@id': absoluteUrl(`/catalog/${product.categorySlug}/${product.slug}#product`),
-    name: product.name,
+    name: getProductDisplayName(product),
     sku: product.sku,
     brand: { '@type': 'Brand', name: product.brandName },
     category: product.categorySlug,
-    description: product.shortDescription,
+    description: getProductSeoDescription(product),
     image: absoluteUrl(product.image),
     url: absoluteUrl(`/catalog/${product.categorySlug}/${product.slug}`),
   };

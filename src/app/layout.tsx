@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
+import { SiteHeader } from '@/components/layout/SiteHeader';
 import { YandexMetrika } from '@/components/analytics/YandexMetrika';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { getCompanyProfile } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { localBusinessJsonLd, organizationJsonLd, websiteJsonLd } from '@/lib/seo/jsonld';
+import { getCspNonce } from '@/lib/security/nonce';
 import './globals.css';
 
 export const metadata: Metadata = buildMetadata({
@@ -13,36 +15,18 @@ export const metadata: Metadata = buildMetadata({
   path: '/',
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const nonce = await getCspNonce();
   const company = getCompanyProfile();
   const globalJsonLd = [organizationJsonLd(company), localBusinessJsonLd(company), websiteJsonLd()];
-  const phoneHref = `tel:${company.phone.replace(/[^\d+]/g, '')}`;
 
   return (
     <html lang="ru">
       <body>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(globalJsonLd) }} />
-        <YandexMetrika />
+        <JsonLd data={globalJsonLd} nonce={nonce} />
+        <YandexMetrika nonce={nonce} />
         <div className="page-shell">
-          <header className="header">
-            <div className="container header-row">
-              <Link href="/" className="logo" aria-label="На главную Сантехникъ">
-                <Image src="/brand-logos/santekhnik-logo.png" alt="Сантехникъ" width={264} height={52} priority />
-              </Link>
-              <nav className="nav" aria-label="Основная навигация">
-                <Link href="/catalog">Каталог</Link>
-                <Link href="/catalog/proizvoditeli">Производители</Link>
-                <Link href="/search">Поиск</Link>
-                <Link href="/delivery">Доставка</Link>
-                <Link href="/about">О компании</Link>
-                <Link href="/contacts">Контакты</Link>
-              </nav>
-              <a className="phone-link" href={phoneHref}>
-                <span>Телефон магазина</span>
-                <strong>{company.phone}</strong>
-              </a>
-            </div>
-          </header>
+          <SiteHeader phone={company.phone} />
           <main className="main">{children}</main>
           <footer className="footer">
             <div className="container footer-grid">

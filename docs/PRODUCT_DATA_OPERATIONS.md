@@ -55,26 +55,42 @@ image; instead make the SKU differences clear in text and specs.
 
 ## TIM supplier status
 
-TIM support exists in the V2 supplier model, search aliases and manufacturer source
-mapping, but TIM products are not imported yet.
+TIM was imported on 2026-07-08 from the supplier price/catalog processing flow:
 
-Current Telegram sources inspected on 2026-07-07:
+- 3508 runtime products;
+- supplier and brand normalized to `tim`;
+- price and source metadata retained in each product;
+- TIM products are part of the current `9276`-product production baseline.
 
-- Igor Grebenkov sent `ТИМ Июня 2026г..numbers` with prices.
-- The "Сайт Сантехникъ 477477.ru" chat has `каталог 2026 - для клиентов.pdf`.
+Do not rebuild the current site from the old `5700`-product legacy artifact. The
+authoritative rebuild baseline is the `9276`-product generated catalog containing
+the TIM and ESPA imports.
 
-Current blocker:
+## ESPA supplier import
 
-- `.numbers` is not machine-readable in the current local toolchain without a working converter.
-- The TIM PDF is a scanned/image-only 482-page catalog; text extraction returns no table data.
-- Running full OCR locally is intentionally avoided because it is heavy.
+The ESPA import added on 2026-07-10 is replayable:
 
-Safe import path:
+```bash
+npm run catalog:import-espa
+npm run catalog:validate-espa
+```
 
-1. Request XLSX/CSV export of `ТИМ Июня 2026г..numbers` from Igor or the boss.
-2. Request a text/table catalog export for TIM, or approve a server-side OCR batch.
-3. Generate a TIM source JSON with product article, name, group, specs, price and image source.
-4. Import through the normal supplier connector and run `catalog:normalize-suppliers`, lint, build and sitemap checks.
+Normalized source:
+
+- `content/sources/espa/catalog.json`;
+- 32 numeric articles from Telegram document `Наша Гамма Espa` are marked
+  `in_stock`;
+- 36 official export products in DRAIN, DRAINEX, DRAINCOR and VIGILA are marked
+  `preorder`;
+- prices are intentionally absent and the UI displays `Цена по запросу`;
+- the UI displays `В наличии` or `Под заказ` from verified availability data;
+- official images are stored at `public/images/products/espa/<article>.webp`;
+- the generic source row `Насосная станция ESPA` with article `ESPA` is
+  recorded in the source audit but is not imported as a fabricated product.
+
+The import removes prior ESPA rows before appending the current normalized source,
+checks article collisions, updates supplier statistics and normalizes duplicate
+internal product IDs without changing product routes.
 
 ## Do not do this
 

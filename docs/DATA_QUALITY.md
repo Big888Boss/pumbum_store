@@ -38,10 +38,12 @@
 - Runtime V2 читает нормализованный generated artifact: `content/generated/legacy-catalog.json`.
 - Generated artifact пересобирается командой `LEGACY_CATALOG_SOURCE=<path> LEGACY_CATALOG_GENERATED_AT=<iso> npm run catalog:import-legacy`.
 - После импорта запускать `npm run catalog:normalize-suppliers`, чтобы у каждой runtime-позиции были `supplier`, `supplierName` и `specs["Поставщик"]`.
-- Текущий raw import: 11 legacy-разделов и 5700 product rows.
+- Базовый raw import: 11 legacy-разделов и 5700 product rows.
 - Runtime-каталог для покупателя нормализует raw import в 6 разделов по назначению через legacy `/catalog` bucket assignment и отдельный route производителей `/catalog/proizvoditeli`.
-- Текущий runtime: 5700 product routes из generated legacy rows; ручные pilot-карточки не добавляются поверх legacy runtime; 5700 product URLs проходят sitemap gate.
-- Текущий image import: 5700/5700 runtime-позиций имеют real image reference; 5240 legacy-local `/images/products/**`, 460 external supplier URLs, 0 generated placeholder refs in `content/generated/legacy-catalog.json`.
+- Текущий runtime после импорта TIM и ESPA: 9276 product rows и 9276 уникальных product routes; 9276 product URLs проходят sitemap gate.
+- Состав runtime: 5700 базовых legacy-позиций, 3508 TIM и 68 ESPA.
+- ESPA: 32 позиции `in_stock`, 36 позиций `preorder`; у всех 68 позиций цена отсутствует намеренно, а статус поставки подтвержден и видим пользователю.
+- Текущий ESPA image import: 68/68 позиций имеют локальное официальное WebP-изображение; product paths находятся в `/images/products/espa/**`.
 - Legacy-local `/images/products/**` assets are runtime/static assets and must be mounted or synchronized on the server; do not commit the 1.1 GB legacy image directory into git.
 - VALTEC-ветка импортируется по live Legacy mapper: section -> group -> model -> items, с legacy fallback для уникального артикула; текущий VALTEC import: 4410 rows.
 - `server_data/admin/users.json` не читать и не коммитить.
@@ -51,6 +53,7 @@
 - Legacy-цены хранятся в quality notes и переносятся в runtime `price` только по текущей бизнес-задаче на перенос Legacy-наполнения. `Offer` не включать без подтвержденного наличия.
 - Если у товара нет проверенного изображения, использовать честный placeholder `/images/generated-placeholders/catalog-product.svg`; current generated runtime should stay at 0 placeholder refs unless the source data really lacks an image.
 - Если несколько SKU используют одно семейное фото, карточка и список каталога должны показывать отличающие характеристики: артикул, диаметр, угол, резьбу, размер, мощность, объем, материал или другой проверенный source spec. Одинаковое фото допустимо только когда текст ясно объясняет разницу между артикулами.
+- Внутренние `Product.id` должны быть уникальны. ESPA importer нормализует найденные дубликаты старого каталога, не изменяя `categorySlug/slug` и публичные URL.
 
 ## Lead data rules
 

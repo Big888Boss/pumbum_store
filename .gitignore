@@ -34,5 +34,5 @@ docs/evidence/task-130-ocr-images*.json
 .cache/
 .DS_Store
 
-# Live nginx conf contains a private VPN location path — keep out of the public repo
+# Live nginx conf contains a private VPN location path - keep out of the public repo.
 deploy/nginx/477477-v2.conf

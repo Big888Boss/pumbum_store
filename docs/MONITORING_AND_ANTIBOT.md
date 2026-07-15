@@ -10,7 +10,9 @@
 - Repeated limit violations create a short in-memory penalty window and return `429`/`403` with `Retry-After`.
 - `/api/health` is allowed for monitoring with a separate higher limit.
 - Search and filtered catalog pages are marked `noindex`, so accidental parameter pages do not pollute SEO.
-- Yandex Metrika can be enabled with `NEXT_PUBLIC_YANDEX_METRIKA_ID`.
+- Yandex Metrika is enabled with `NEXT_PUBLIC_YANDEX_METRIKA_ID`. The SPA integration initializes with `defer: true` and sends one explicit `hit` for the initial URL and every client-side route change.
+- Active business goals preserve the legacy identifiers: `search_submit`, `click_phone`, `click_email`, `view_product` and `click_order`.
+- Search goal parameters include only the query length, category when selected, and UI location. The raw search text is not sent to Metrika.
 
 Live V2 verification on `100.95.56.90:3020` after the July 4 anti-bot and UI hardening:
 
@@ -27,7 +29,7 @@ Best practical option for Saratov/Engels analysis:
 
 1. Enable Yandex Metrika only on the production domain after the domain switch, or use a separate staging counter before cutover.
 2. Use reports by geography, traffic source, search phrase, device and landing page.
-3. Add goals for phone clicks, email clicks, contacts page views, map/route clicks, search usage and zero-result search.
+3. Keep the existing JavaScript goals for phone clicks, email clicks, product views, order/contact intent and search usage aligned with their identifiers in code.
 4. Keep server logs for technical checks: status code, path, user agent, response time, IP prefix.
 
 Do not request browser geolocation just for analytics. It is noisy for users, reduces trust and is not needed to understand region demand.
@@ -53,6 +55,15 @@ Absolute protection from copying public pages is impossible: a human can always 
 - Search quality: queries with zero results, top queries, typo-like queries.
 - Funnel: phone clicks, email clicks, contacts page views, route clicks and search usage.
 - Bot pressure: 429 count, suspicious user agents, repeated IPs, high sitemap/catalog crawl rate.
+
+## Server capacity guardrails
+
+- Root filesystem: warning at `80%`, critical at `90%`; a deployment must not proceed at or above the warning threshold without first identifying reclaimable inactive data.
+- Docker JSON logs: host fallback rotation at `50M`, three compressed archives, with `copytruncate` so containers are not restarted. Storefront compose files also cap new container logs at `20m` with three files.
+- Never automate deletion of Docker volumes, active images, release backups, or product assets. Cleanup must target identified inactive images/build cache only and preserve a tested rollback.
+- The host node exporter exposes filesystem and memory metrics on the Tailscale address. The central alert rule remains an external monitoring responsibility and must be verified separately.
+- Runtime memory: inspect container usage, OOM state, restart count, host available memory, and swap after every release. Do not keep two Next.js storefront containers resident longer than the blue-green verification window on this host.
+- `pumbum-store-warmup.timer` requests the heaviest category once per minute through the local HTTPS nginx endpoint with low CPU/I/O priority and a `32M` service memory cap. It keeps the catalog working set active without caching or reusing CSP nonces.
 
 ## Deployment checks
 

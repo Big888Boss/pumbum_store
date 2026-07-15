@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createCspContext, type CspContext } from '@/lib/security/csp';
 
 type Bucket = {
   count: number;
@@ -32,6 +33,7 @@ const suspiciousUserAgent = /(python-requests|scrapy|beautifulsoup|wget|curl|go-
 const aggressiveCrawler = /(ahrefsbot|semrushbot|mj12bot|bytespider|petalbot|dataforseobot|dotbot|blexbot|megaindex|serpstatbot|claudebot|gptbot|ccbot|facebookexternalhit)/i;
 const suspiciousPath = /^\/(?:api\/public|api\/catalog|api\/products|content\/generated|_next\/static\/chunks\/.*legacy-catalog)/i;
 const disabledOrderApiPath = /^\/api\/(?:cart|leads)$/i;
+const cspReportPath = '/api/csp-report';
 
 function getClientIp(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
@@ -90,6 +92,7 @@ function getPenaltyKey(clientKey: string, pathClass: string, clientClass: 'scrip
 
 function classifyPath(pathname: string, method: string): string {
   if (pathname === '/api/health') return 'health';
+  if (pathname === cspReportPath) return 'security-report';
   if (pathname === '/cart') return 'cart';
   if (disabledOrderApiPath.test(pathname)) return 'disabled-order-api';
   if (pathname.startsWith('/api/') && method !== 'GET' && method !== 'HEAD') return 'write-api';
@@ -103,6 +106,7 @@ function classifyPath(pathname: string, method: string): string {
 function getLimit(pathname: string, method: string, userAgent: string): number {
   const pathClass = classifyPath(pathname, method);
   if (pathClass === 'health') return healthLimit;
+  if (pathClass === 'security-report') return writeApiLimit;
   if (trustedSearchBot.test(userAgent)) return normalLimit;
   if (aggressiveCrawler.test(userAgent) || suspiciousUserAgent.test(userAgent)) return suspiciousLimit;
   if (pathClass === 'disabled-order-api') return writeApiLimit;
@@ -123,6 +127,35 @@ function shouldInspect(pathname: string): boolean {
     pathname.startsWith('/search') ||
     pathname.startsWith('/api/')
   );
+}
+
+function shouldApplyCsp(pathname: string): boolean {
+  return !(
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/content/generated/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/images/') ||
+    pathname.startsWith('/brand-logos/') ||
+    pathname.startsWith('/documents/')
+  );
+}
+
+function createPassThroughResponse(request: NextRequest, csp: CspContext | undefined): NextResponse {
+  if (!csp) return NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', csp.nonce);
+  // Next.js reads the enforcing request header to attach nonces during rendering.
+  requestHeaders.set('Content-Security-Policy', csp.policy);
+  requestHeaders.delete('Content-Security-Policy-Report-Only');
+  return NextResponse.next({ request: { headers: requestHeaders } });
+}
+
+function attachCsp(response: NextResponse, csp: CspContext | undefined): NextResponse {
+  if (!csp) return response;
+  response.headers.delete('Content-Security-Policy');
+  response.headers.delete('Content-Security-Policy-Report-Only');
+  response.headers.set(csp.headerName, csp.policy);
+  return response;
 }
 
 function cleanupBuckets(now: number): void {
@@ -180,7 +213,8 @@ function attachVisitorCookie(response: NextResponse, visitorId: string | undefin
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  if (!shouldInspect(pathname)) return NextResponse.next();
+  const csp = shouldApplyCsp(pathname) ? createCspContext() : undefined;
+  if (!shouldInspect(pathname)) return attachCsp(createPassThroughResponse(request, csp), csp);
 
   const userAgent = request.headers.get('user-agent') || '';
   const now = Date.now();
@@ -189,22 +223,25 @@ export function middleware(request: NextRequest) {
   const pathClass = classifyPath(pathname, request.method);
   const clientClass = isScriptRequest(request, userAgent) ? 'script' : 'browser';
   const { key: clientKey, newVisitorId } = getClientKey(request, userAgent, clientClass);
-  const allowDocumentedProbe = request.method === 'HEAD' || pathClass === 'disabled-order-api';
+  const allowDocumentedProbe = request.method === 'HEAD' || pathClass === 'disabled-order-api' || pathClass === 'security-report';
 
   if (suspiciousPath.test(pathname)) {
     if (clientClass === 'script') {
       penalties.set(getPenaltyKey(clientKey, 'bulk-catalog-probe', clientClass), { blockedUntil: now + penaltyMs, reason: 'bulk-catalog-probe' });
     }
-    return botResponse(404, 'Not found', Math.ceil(penaltyMs / 1000), 'bulk-catalog-probe');
+    return attachCsp(botResponse(404, 'Not found', Math.ceil(penaltyMs / 1000), 'bulk-catalog-probe'), csp);
   }
 
   const penaltyKey = getPenaltyKey(clientKey, pathClass, clientClass);
   const activePenalty = penalties.get(penaltyKey);
   if (!allowDocumentedProbe && activePenalty && activePenalty.blockedUntil > now) {
-    return attachVisitorCookie(
-      botResponse(429, 'Too many requests', Math.ceil((activePenalty.blockedUntil - now) / 1000), activePenalty.reason),
-      clientClass === 'browser' ? newVisitorId : undefined,
-      request,
+    return attachCsp(
+      attachVisitorCookie(
+        botResponse(429, 'Too many requests', Math.ceil((activePenalty.blockedUntil - now) / 1000), activePenalty.reason),
+        clientClass === 'browser' ? newVisitorId : undefined,
+        request,
+      ),
+      csp,
     );
   }
 
@@ -212,7 +249,7 @@ export function middleware(request: NextRequest) {
   if (scriptRequest && pathname !== '/api/health' && !allowDocumentedProbe) {
     if (pathClass === 'search' || pathClass === 'catalog' || pathClass === 'product' || pathClass === 'api' || pathClass === 'write-api') {
       penalties.set(penaltyKey, { blockedUntil: now + penaltyMs, reason: 'script-client' });
-      return botResponse(403, 'Forbidden', Math.ceil(penaltyMs / 1000), 'script-client');
+      return attachCsp(botResponse(403, 'Forbidden', Math.ceil(penaltyMs / 1000), 'script-client'), csp);
     }
   }
 
@@ -229,21 +266,37 @@ export function middleware(request: NextRequest) {
     if (scriptRequest) {
       penalties.set(penaltyKey, { blockedUntil: now + penaltyMs, reason: `rate-limit:${pathClass}` });
     }
-    return attachVisitorCookie(
-      botResponse(429, 'Too many requests', Math.ceil((nextBucket.resetAt - now) / 1000), `rate-limit:${pathClass}`),
-      clientClass === 'browser' ? newVisitorId : undefined,
-      request,
+    return attachCsp(
+      attachVisitorCookie(
+        botResponse(429, 'Too many requests', Math.ceil((nextBucket.resetAt - now) / 1000), `rate-limit:${pathClass}`),
+        clientClass === 'browser' ? newVisitorId : undefined,
+        request,
+      ),
+      csp,
     );
   }
 
-  const response = NextResponse.next();
+  const response = createPassThroughResponse(request, csp);
   response.headers.set('X-RateLimit-Limit', String(limit));
   response.headers.set('X-RateLimit-Remaining', String(Math.max(0, limit - nextBucket.count)));
   response.headers.set('X-RateLimit-Reset', String(Math.ceil(nextBucket.resetAt / 1000)));
   response.headers.set('X-AntiBot-Policy', pathClass);
-  return attachVisitorCookie(response, clientClass === 'browser' ? newVisitorId : undefined, request);
+  return attachCsp(
+    attachVisitorCookie(response, clientClass === 'browser' ? newVisitorId : undefined, request),
+    csp,
+  );
 }
 
 export const config = {
-  matcher: ['/', '/cart', '/catalog/:path*', '/search', '/api/:path*', '/content/generated/:path*'],
+  matcher: [
+    {
+      source: '/((?!api|_next/static|_next/image|images|brand-logos|documents|favicon.ico|robots.txt|sitemap.xml|llms.txt|ai.txt).*)',
+      missing: [
+        { type: 'header', key: 'next-router-prefetch' },
+        { type: 'header', key: 'purpose', value: 'prefetch' },
+      ],
+    },
+    '/api/:path*',
+    '/content/generated/:path*',
+  ],
 };

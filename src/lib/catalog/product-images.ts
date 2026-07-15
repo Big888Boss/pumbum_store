@@ -57,6 +57,7 @@ function getSupplierSlug(product: ProductForImageKeys): string | undefined {
   if (text.includes('aq-plastic') || text.includes('aquatec') || text.includes('акватек')) return 'aquatec';
   if (text.includes('zota')) return 'zota';
   if (/\btim\b/.test(text) || text.includes('тим')) return 'tim';
+  if (/\bespa\b/.test(text)) return 'espa';
   if (text.includes('sinikon') || text.includes('синикон') || hasSinikonLegacySource) return 'sinikon';
   return 'unknown';
 }

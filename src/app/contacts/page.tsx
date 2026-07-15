@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { MetrikaGoalAnchor } from '@/components/analytics/MetrikaEvents';
 import { getCompanyProfile, getProductBySlug } from '@/lib/catalog/loaders';
+import { METRIKA_GOALS } from '@/lib/analytics/metrika';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 type PageProps = { searchParams: Promise<{ category?: string; sku?: string; message?: string; sent?: string; error?: string }> };
@@ -41,8 +43,8 @@ export default async function ContactsPage({ searchParams }: PageProps) {
               <p>{company.address.addressLocality}, {company.address.streetAddress}. Ежедневно 08:00-19:00.</p>
             )}
             <div className="actions">
-              <a className="btn" href={phoneHref}>Позвонить</a>
-              <a className="btn btn-secondary" href={emailHref}>Написать</a>
+              <MetrikaGoalAnchor className="btn" href={phoneHref} goal={METRIKA_GOALS.phoneClick} goalParams={{ location: 'contacts_hero' }}>Позвонить</MetrikaGoalAnchor>
+              <MetrikaGoalAnchor className="btn btn-secondary" href={emailHref} goal={METRIKA_GOALS.emailClick} goalParams={{ location: 'contacts_hero' }}>Написать</MetrikaGoalAnchor>
             </div>
           </div>
         </div>
@@ -54,11 +56,11 @@ export default async function ContactsPage({ searchParams }: PageProps) {
             <dl className="contact-list">
               <div>
                 <dt>Телефон</dt>
-                <dd><a href={phoneHref}>{company.phone}</a></dd>
+                <dd><MetrikaGoalAnchor href={phoneHref} goal={METRIKA_GOALS.phoneClick} goalParams={{ location: 'contacts_details' }}>{company.phone}</MetrikaGoalAnchor></dd>
               </div>
               <div>
                 <dt>Email</dt>
-                <dd><a href={emailHref}>{email}</a></dd>
+                <dd><MetrikaGoalAnchor href={emailHref} goal={METRIKA_GOALS.emailClick} goalParams={{ location: 'contacts_details' }}>{email}</MetrikaGoalAnchor></dd>
               </div>
               <div>
                 <dt>Адрес</dt>
@@ -70,7 +72,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
               </div>
             </dl>
             <div className="actions">
-              <a className="btn btn-primary" href={phoneHref}>Позвонить</a>
+              <MetrikaGoalAnchor className="btn btn-primary" href={phoneHref} goal={METRIKA_GOALS.phoneClick} goalParams={{ location: 'contacts_card' }}>Позвонить</MetrikaGoalAnchor>
               <a className="btn btn-secondary" href={routeHref} target="_blank" rel="noreferrer">Построить маршрут</a>
             </div>
           </div>

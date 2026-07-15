@@ -137,6 +137,17 @@ const valtecTopSectionMap: Record<string, string> = {
 };
 
 const zotaHeatingSections = new Set(['Газовые настенные котлы', 'Твердотопливные котлы']);
+const purposeCategorySlugs = new Set(purposeCategories.map((category) => category.slug));
+
+function isTimProduct(product: Product): boolean {
+  return product.supplier === 'tim' || product.brand === 'tim' || product.brandName.toLowerCase() === 'tim';
+}
+
+function isEspaProduct(product: Product): boolean {
+  return product.supplier === 'espa' || product.brand === 'espa' || product.brandName.toLowerCase() === 'espa';
+}
+
+const espaDrainageSeries = new Set(['DRAIN', 'DRAINEX', 'DRAINCOR', 'VIGILA']);
 
 function getTopSection(product: Product): string {
   return (product.specs['Подраздел'] ?? '').split('/')[0]?.trim() ?? '';
@@ -144,6 +155,12 @@ function getTopSection(product: Product): string {
 
 export function getPurposeCategorySlug(product: Product): string {
   const topSection = getTopSection(product);
+  if (isTimProduct(product) && purposeCategorySlugs.has(product.categorySlug)) return product.categorySlug;
+  if (isEspaProduct(product)) {
+    return espaDrainageSeries.has(topSection)
+      ? 'kanalizaciya-i-vodootvedenie'
+      : 'nasosy-i-vodosnabzhenie';
+  }
   if (product.categorySlug === 'naruzhnaya-kanalizaciya') {
     return topSection === 'Инструмент и крепеж' ? 'truby-i-fitingi' : 'kanalizaciya-i-vodootvedenie';
   }

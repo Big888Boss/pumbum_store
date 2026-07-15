@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import { StaticImage } from '@/components/media/StaticImage';
 import Link from 'next/link';
 import { getManufacturerGroups } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Производители — каталог инженерной сантехники',
-  description: 'Каталог по производителям и разделам поставщиков: SINIKON, VALTEC, Гидроконтракт, AQUARIO, VIVALDO, АКВАТЕК, ZOTA.',
+  description: 'Каталог по производителям и разделам поставщиков: SINIKON, VALTEC, Гидроконтракт, AQUARIO, VIVALDO, АКВАТЕК, ZOTA, TIM и ESPA.',
   path: '/catalog/proizvoditeli',
 });
 
@@ -45,10 +45,10 @@ export default function ManufacturersPage() {
       <section className="section">
         <div className="container manufacturer-grid">
           {manufacturers.map((manufacturer) => (
-            <article key={manufacturer.name} className="manufacturer-card">
-              <div className={manufacturer.logo ? 'manufacturer-logo' : 'manufacturer-logo manufacturer-logo-fallback'}>
+            <article key={manufacturer.name} id={manufacturer.slug} className="manufacturer-card">
+              <div className={manufacturer.logo ? `manufacturer-logo manufacturer-logo-${manufacturer.slug}` : 'manufacturer-logo manufacturer-logo-fallback'}>
                 {manufacturer.logo ? (
-                  <Image src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={170} height={70} />
+                  <StaticImage src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={170} height={70} />
                 ) : (
                   <span>{manufacturer.name.slice(0, 2).toUpperCase()}</span>
                 )}

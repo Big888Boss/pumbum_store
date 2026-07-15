@@ -1,22 +1,19 @@
 import { NextResponse } from 'next/server';
-import { getAllCategories, getAllProducts, getPublishedProducts } from '@/lib/catalog/loaders';
+import catalogHealth from '../../../../content/generated/catalog-health.json';
+import { purposeCategories } from '@/lib/catalog/purpose';
 
 export const dynamic = 'force-dynamic';
 
 export function GET() {
-  const products = getAllProducts();
-  const publishedProducts = getPublishedProducts();
-  const categories = getAllCategories();
-
   return NextResponse.json({
     status: 'ok',
     service: 'pumbum-store-v2',
     timestamp: new Date().toISOString(),
     uptimeSeconds: Math.round(process.uptime()),
     catalog: {
-      products: products.length,
-      publishedProducts: publishedProducts.length,
-      categories: categories.length,
+      products: catalogHealth.products,
+      publishedProducts: catalogHealth.publishedProducts,
+      categories: purposeCategories.length,
     },
     runtime: {
       node: process.version,

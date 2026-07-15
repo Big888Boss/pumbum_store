@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" role="img" aria-label="TIM product placeholder">
+  <rect width="960" height="720" fill="#f8fafc"/>
+  <rect x="310" y="285" width="340" height="150" rx="22" fill="#ffffff" stroke="#d8e1ea" stroke-width="3"/>
+  <text x="480" y="378" text-anchor="middle" font-family="Arial, sans-serif" font-size="74" font-weight="700" fill="#1f5b9d">TIM</text>
+</svg>

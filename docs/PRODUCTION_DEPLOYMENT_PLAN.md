@@ -1,5 +1,7 @@
 # Production deployment plan
 
+Historical plan from the initial V2 cutover. For the current `9276`-product production state, use `AUDIT_2026-07-10.md` and `AUDIT_CSP_2026-07-11.md`; do not execute the old `5700`-product steps below.
+
 Date: 2026-07-04
 
 Scope: V2 storefront for `477477.ru`. The legacy production server was inspected read-only. Do not treat this document as permission to change production.

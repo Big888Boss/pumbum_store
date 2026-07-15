@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { MetrikaSearchForm } from '@/components/analytics/MetrikaEvents';
+import { ProductAvailabilityBadge } from '@/components/product/ProductAvailability';
 import { ProductImage } from '@/components/product/ProductImage';
 import { getAllCategories, getAllProducts, getCategoryBySlug } from '@/lib/catalog/loaders';
 import { formatProductPrice } from '@/lib/catalog/pricing';
@@ -7,6 +9,7 @@ import { getProductImage } from '@/lib/catalog/product-images';
 import { searchProductsWithTotal } from '@/lib/catalog/search';
 import { getProductKeyFacts } from '@/lib/catalog/specs';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { getProductCardDescription } from '@/lib/seo/product';
 
 type PageProps = { searchParams: Promise<{ q?: string; category?: string }> };
 
@@ -57,15 +60,15 @@ export default async function SearchPage({ searchParams }: PageProps) {
         <div className="container">
           <div className="eyebrow">Поиск</div>
           <h1>Поиск по {totalProducts.toLocaleString('ru-RU')} позициям</h1>
-          <p className="lead">Ищите по артикулу, бренду, названию, диаметру, серии или характеристике. Цены и наличие уточняются в магазине.</p>
-          <form className="search-panel" action="/search">
+          <p className="lead">Ищите по артикулу, бренду, названию, диаметру, серии или характеристике. Актуальную цену и возможность отгрузки подтвердит менеджер.</p>
+          <MetrikaSearchForm className="search-panel" action="/search" location="search_page">
             <input name="q" type="search" placeholder="Например: V1620.040, AQUARIO, 32 мм" defaultValue={query} />
             <select name="category" defaultValue={categorySlug}>
               <option value="">Все разделы</option>
               {categories.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
             </select>
             <button className="btn btn-primary" type="submit">Найти</button>
-          </form>
+          </MetrikaSearchForm>
         </div>
       </section>
 
@@ -89,17 +92,17 @@ export default async function SearchPage({ searchParams }: PageProps) {
 
           {results.length > 0 ? (
             <div className="product-list-grid">
-              {results.map(({ product, matchedBy }) => (
+              {results.map(({ product }) => (
                 <Link key={`${product.categorySlug}/${product.slug}`} className="product-list-card product-list-card-with-image" href={`/catalog/${product.categorySlug}/${product.slug}`}>
                   <ProductImage src={getProductImage(product, 'card')} alt={product.name} logoSrc={product.logo} brand={product.brandName} hideBrandLogo={product.hideBrandLogo} compact />
                   <span className="brand-line">{product.brandName}</span>
                   <h3>{product.name}</h3>
-                  <p>{cleanPreviewText(product.shortDescription)}</p>
+                  <p>{cleanPreviewText(getProductCardDescription(product))}</p>
                   <ul className="badges">
                     {product.sku ? <li className="badge">{product.sku}</li> : null}
                     <li className="badge price-badge">{formatProductPrice(product)}</li>
+                    <ProductAvailabilityBadge product={product} />
                     {getProductKeyFacts(product, 3).slice(1).map((fact) => <li className="badge" key={fact}>{fact}</li>)}
-                    {matchedBy.slice(0, 2).map((match) => <li className="badge" key={match}>{match}</li>)}
                   </ul>
                 </Link>
               ))}

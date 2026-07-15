@@ -1,6 +1,6 @@
 import type { SourceRef } from '@/entities/shared/source';
 
-export type SupplierId = 'valtec' | 'aquario' | 'zota' | 'vivaldo' | 'sinikon' | 'aquatec' | 'gidrokontrakt' | 'tim' | 'generic';
+export type SupplierId = 'valtec' | 'aquario' | 'zota' | 'vivaldo' | 'sinikon' | 'aquatec' | 'gidrokontrakt' | 'tim' | 'espa' | 'generic';
 export type BrandId = SupplierId;
 
 export type ProductAvailability = 'in_stock' | 'out_of_stock' | 'preorder' | 'unknown' | 'on_request';

@@ -36,6 +36,13 @@
 - In Yandex Webmaster after cutover: verify region as Saratov/Saratov oblast, submit `https://477477.ru/sitemap.xml`, inspect a few important product URLs.
 - Do not index search/filter URLs; use sitemap/category/product pages for discoverability.
 
+## Product GEO and legacy URL rules
+
+- Product metadata and visible lead text may include the natural Saratov purchase intent, but must not repeat city keywords or invent local stock.
+- Ordinary products use a neutral price/shipping confirmation note. Only products with explicit `preorder` data show `Под заказ`.
+- Legacy brand, subcategory, group and article URLs must resolve through `content/generated/legacy-route-redirects.json`; do not replace exact matches with a generic search redirect.
+- Validate the redirect artifact with `npm run seo:check-legacy-redirects` before deployment.
+
 ## Text quality
 
 - Тексты должны проходить fact-check по sourceRefs.

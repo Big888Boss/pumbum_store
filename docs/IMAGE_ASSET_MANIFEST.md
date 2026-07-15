@@ -132,3 +132,20 @@ channel preservation. Do not run this conversion without explicit approval.
 
 This is intentionally conservative: it avoids visible quality loss and does not
 force lossy WebP for JPEGs that do not shrink in lossless mode.
+
+
+## 2026-07-08 TIM PDF image merge
+
+- Source: `content/generated/tim-catalog-source.json` and PDF-derived WebP files under `/images/products/tim/`.
+- Scope: 3508 TIM products merged into current production V2 source.
+- Product images: 2381 products kept existing OCR/group manifest images; 1127 products received family-image fallback from the nearest TIM catalog group/section/category.
+
+## Manufacturer logo corrections 2026-07-15
+
+- TIM manufacturer and product overlays use `public/brand-logos/tim.jpg` (SHA-256 `71a3847a81e807657d39da6847a343c3ab04b60311a17f059d609666516cb175`).
+- The previous handcrafted `tim.svg` was removed because it did not represent the published TIM mark clearly.
+- Local SVG logo background rectangles were removed where they created visible white boxes.
+- VIVALDO receives a black CSS treatment in all current logo placements.
+- Remaining TIM image gaps: 0.
+- Remaining TIM price gaps: 10.
+- All TIM image entries are marked as `family-image`; supplier PDF photos may represent product families, not unique SKU pack variants.

@@ -17,6 +17,8 @@
 | `/privacy` | Политика обработки данных | production only |
 | `/robots.txt` | Robots policy by environment | always |
 | `/sitemap.xml` | Sitemap from route map | production URLs only |
+| `/product/:article` | Permanent redirect from the old article URL to the current product or closest current category | redirect only |
+| `/catalog/:brand/:subcategory/:group` | Permanent redirect from the old brand-first catalog URL | redirect only |
 
 ## Canonical domain
 
@@ -28,10 +30,9 @@ Staging must not be indexed unless explicitly approved. Use `NEXT_PUBLIC_SITE_EN
 
 - Buyer-facing categories: 6 purpose categories, using the legacy `/catalog` bucket assignment (`Отопление и котельная`, `Насосы и водоснабжение`, `Канализация и водоотведение`, `Трубы и фитинги`, `Арматура и комплектующие`, `Прочее оборудование`).
 - Raw generated legacy source categories: 11.
-- Raw generated legacy products: 5700.
-- Runtime product routes: 5700 generated legacy rows; manual pilot cards are not appended to production runtime.
-- Runtime `/catalog` category counts match live Legacy purpose navigation: 3132 / 479 / 311 / 1082 / 509 / 187.
-- Sitemap loc count after purpose categories, manufacturer index and product routes: 5714. Cart route is intentionally not included in sitemap.
-- Build output after cart API/page and legacy image path import: 5722 generated/static/dynamic routes.
-- Heavy categories render only the first 240 visible SKU cards on category page; all publishable products remain available through product URLs and sitemap.
-- Search is server-rendered and reads the full normalized catalog without shipping the 22 MB generated catalog to the browser as a client bundle.
+- Base legacy products: `5700`.
+- Runtime product routes: `9276` generated rows: `5700` base legacy, `3508` TIM and `68` ESPA.
+- Sitemap loc count: `9289`; cart and search routes are intentionally excluded.
+- Current nonce-CSP build renders HTML routes dynamically while keeping robots and sitemap static.
+- Category pages render `60` products at a time with server-side pagination. Every matching product is reachable through the page controls; page 2 and later are `noindex,follow` to avoid duplicate category indexing while preserving product discovery.
+- Search is server-rendered and reads the full normalized catalog without shipping the generated catalog to the browser as a client bundle.

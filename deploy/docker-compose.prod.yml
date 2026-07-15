@@ -11,12 +11,14 @@ services:
         NEXT_PUBLIC_YANDEX_METRIKA_ID: ${NEXT_PUBLIC_YANDEX_METRIKA_ID:-}
     environment:
       NODE_ENV: production
+      NODE_OPTIONS: ${NODE_OPTIONS:---max-old-space-size=320}
       PORT: 3010
       HOSTNAME: 0.0.0.0
       NEXT_TELEMETRY_DISABLED: 1
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://477477.ru}
       NEXT_PUBLIC_SITE_ENV: ${NEXT_PUBLIC_SITE_ENV:-production}
       NEXT_PUBLIC_YANDEX_METRIKA_ID: ${NEXT_PUBLIC_YANDEX_METRIKA_ID:-}
+      CSP_MODE: ${CSP_MODE:-enforce}
     volumes:
       - ./public/images/products:/app/public/images/products:ro
     ports:
@@ -24,6 +26,16 @@ services:
     cpus: ${V2_CPUS:-0.75}
     mem_limit: ${V2_MEMORY_LIMIT:-512m}
     pids_limit: 256
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
     security_opt:
       - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
     restart: unless-stopped

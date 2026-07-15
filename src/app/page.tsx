@@ -1,7 +1,9 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import { MetrikaGoalAnchor } from '@/components/analytics/MetrikaEvents';
+import { StaticImage } from '@/components/media/StaticImage';
 import { ProductImage } from '@/components/product/ProductImage';
 import { getAllCategories, getAllProducts, getCategoryShowcaseBySlug } from '@/lib/catalog/loaders';
+import { METRIKA_GOALS } from '@/lib/analytics/metrika';
 
 export default function HomePage() {
   const categories = getAllCategories();
@@ -26,8 +28,14 @@ export default function HomePage() {
             </div>
           </div>
           <aside className="home-contact-panel" aria-label="Контакты магазина">
-            <Image className="home-contact-logo" src="/brand-logos/santekhnik-logo.png" alt="Сантехникъ" width={360} height={70} priority />
-            <a href="tel:+78452477477">8 (8452) 47-74-77</a>
+            <StaticImage className="home-contact-logo" src="/brand-logos/santekhnik-logo.png" alt="Сантехникъ" width={360} height={70} priority />
+            <MetrikaGoalAnchor
+              href="tel:+78452477477"
+              goal={METRIKA_GOALS.phoneClick}
+              goalParams={{ location: 'home_contact_panel' }}
+            >
+              8 (8452) 47-74-77
+            </MetrikaGoalAnchor>
             <p>г. Саратов, ул. Большая Горная, 290</p>
             <p>Ежедневно 08:00-19:00</p>
           </aside>
