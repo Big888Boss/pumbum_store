@@ -48,6 +48,7 @@ Scope: finish the code-controlled parts of iterations 1-6 without regenerating o
 - Nginx upstream plumbing_store_v2_app: primary 3017, backup 3016 (previous brand-seo release).
 - Pre-cutover nginx backup: /etc/nginx/backups/plumbing_store.conf.backup-20260717-sameas.
 - The obsolete 3014 Metrika container was removed after its 46-hour rollback window; its image and compose file were retained.
+- The older 3015 seo-mobile container was stopped after 3016 became the verified nginx backup; its image and compose file remain available without consuming production RAM.
 
 ## Rollback
 
