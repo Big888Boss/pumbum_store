@@ -87,6 +87,21 @@ function ViewSwitcher({ categorySlug, selected, viewMode, page }: { categorySlug
   );
 }
 
+function CategoryExpertText({ category }: { category: Category }) {
+  return (
+    <section className="section section-tight" aria-labelledby="category-selection-guide">
+      <div className="container">
+        <article className="card info-card">
+          <h2 id="category-selection-guide">Как выбрать оборудование для своей задачи</h2>
+          <p>{category.seoText}</p>
+          <p>{category.buyingGuide}</p>
+          <p className="meta">Товар можно забрать в магазине на Большой Горной, 290 в Саратове. Цену, срок поставки и совместимость комплекта подтвердит менеджер.</p>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 function FilterPanel({ categorySlug, products, selected, viewMode }: { categorySlug: string; products: Product[]; selected: CatalogFilterSelection; viewMode: CatalogViewMode }) {
   const filters = buildCatalogFilters(products, selected);
   const activeCount = activeCatalogFilterCount(selected);
@@ -363,6 +378,7 @@ function RadiatorsCategoryView({ category, product, products, related, viewMode,
         </div>
       </section>
       <ProductGrid categorySlug={category.slug} products={products} baseProducts={products} selected={{}} viewMode={viewMode} requestedPage={page} />
+      <CategoryExpertText category={category} />
     </>
   );
 }
@@ -434,6 +450,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
         </div>
       </section>
       <ProductGrid categorySlug={categoryData.slug} products={filteredProducts} baseProducts={categoryProducts} selected={selectedFilters} viewMode={viewMode} requestedPage={page} />
+      <CategoryExpertText category={categoryData} />
 
       <section className="section">
         <div className="container">

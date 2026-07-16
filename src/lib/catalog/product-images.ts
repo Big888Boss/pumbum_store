@@ -89,12 +89,18 @@ export function getProductImageManifestKey(product: Pick<Product, 'categorySlug'
   return `${product.categorySlug}/${product.slug}`;
 }
 
+// Некоторые нормализованные файлы названы кириллицей (артикулы вида «тп10025323»);
+// без percent-кодирования такой путь ломает HTTP-заголовок Link (preload) — ByteString TypeError.
+function toAsciiSafeImagePath(path: string): string {
+  return /[^ -~]/.test(path) ? encodeURI(path) : path;
+}
+
 export function getProductImage(product: Product, variant: 'card' | 'detail' = 'detail'): string {
   const entry = getProductImageManifestKeys(product)
     .map((key) => manifest.products?.[key])
     .find((candidate) => candidate?.status && usableStatuses.has(candidate.status));
-  if (!entry?.status || !usableStatuses.has(entry.status)) return product.image;
-  return entry.image?.[variant] || entry.image?.detail || entry.image?.card || product.image;
+  if (!entry?.status || !usableStatuses.has(entry.status)) return toAsciiSafeImagePath(product.image);
+  return toAsciiSafeImagePath(entry.image?.[variant] || entry.image?.detail || entry.image?.card || product.image);
 }
 
 export function applyProductImageManifest(product: Product): Product {

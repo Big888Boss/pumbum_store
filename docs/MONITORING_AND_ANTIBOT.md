@@ -10,7 +10,7 @@
 - Repeated limit violations create a short in-memory penalty window and return `429`/`403` with `Retry-After`.
 - `/api/health` is allowed for monitoring with a separate higher limit.
 - Search and filtered catalog pages are marked `noindex`, so accidental parameter pages do not pollute SEO.
-- Yandex Metrika is enabled with `NEXT_PUBLIC_YANDEX_METRIKA_ID`. The SPA integration initializes with `defer: true` and sends one explicit `hit` for the initial URL and every client-side route change.
+- Yandex Metrika is enabled with `NEXT_PUBLIC_YANDEX_METRIKA_ID`. The external tag starts four seconds after `window.load`; pageviews and goals queue until initialization. The SPA integration sends one explicit `hit` for the initial URL and every client-side route change.
 - Active business goals preserve the legacy identifiers: `search_submit`, `click_phone`, `click_email`, `view_product` and `click_order`.
 - Search goal parameters include only the query length, category when selected, and UI location. The raw search text is not sent to Metrika.
 
@@ -62,6 +62,7 @@ Absolute protection from copying public pages is impossible: a human can always 
 - Docker JSON logs: host fallback rotation at `50M`, three compressed archives, with `copytruncate` so containers are not restarted. Storefront compose files also cap new container logs at `20m` with three files.
 - Never automate deletion of Docker volumes, active images, release backups, or product assets. Cleanup must target identified inactive images/build cache only and preserve a tested rollback.
 - The host node exporter exposes filesystem and memory metrics on the Tailscale address. The central alert rule remains an external monitoring responsibility and must be verified separately.
+- The dedicated pumbum Prometheus on the USA build host already runs Blackbox checks for `/`, `/api/health`, `/catalog` and `/sitemap.xml`. As of 2026-07-16 its Grafana has no alert rules and no approved Telegram receiver, so notification delivery is not considered verified.
 - Runtime memory: inspect container usage, OOM state, restart count, host available memory, and swap after every release. Do not keep two Next.js storefront containers resident longer than the blue-green verification window on this host.
 - `pumbum-store-warmup.timer` requests the heaviest category once per minute through the local HTTPS nginx endpoint with low CPU/I/O priority and a `32M` service memory cap. It keeps the catalog working set active without caching or reusing CSP nonces.
 

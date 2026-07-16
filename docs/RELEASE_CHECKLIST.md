@@ -59,3 +59,9 @@
 - Check Yandex Metrika geography and goal events
 - Verify one real production pageview and each applicable goal in Metrika diagnostics without creating duplicate hits.
 - Start weekly SEO crew review
+
+## Commit and push gate
+
+- Commit and push only after the active public release passes the complete after-switch checklist.
+- Before pushing, confirm `/api/health`, catalog totals, sitemap totals, representative product images, nginx syntax, container health, restart/OOM state and recent `5xx` logs.
+- If a production check is red, keep the release unpushed or roll back; do not publish a commit that is described as deployed and accepted.

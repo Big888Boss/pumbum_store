@@ -13,6 +13,7 @@ type SeoMetadataInput = {
 
 export function buildMetadata({ title, description, path, images = [], noindex = false, followWhenNoindex = false }: SeoMetadataInput): Metadata {
   const url = canonical(path);
+  const ogImages = images.length > 0 ? images : [siteConfig.defaultOgImage];
   return {
     metadataBase: new URL(siteConfig.siteUrl),
     title,
@@ -25,13 +26,13 @@ export function buildMetadata({ title, description, path, images = [], noindex =
       siteName: siteConfig.name,
       locale: siteConfig.locale,
       type: 'website',
-      images,
+      images: ogImages,
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images,
+      images: ogImages,
     },
     other: {
       'geo.region': 'RU-SAR',

@@ -39,6 +39,8 @@ export function localBusinessJsonLd(company: CompanyProfile) {
       latitude: 51.54513,
       longitude: 46.020494,
     },
+    hasMap: 'https://yandex.ru/maps/?ll=46.020494%2C51.545130&z=16&pt=46.020494%2C51.545130%2Cpm2rdm',
+    priceRange: '₽₽',
     areaServed: company.deliveryArea,
     openingHours: company.openingHours,
   };

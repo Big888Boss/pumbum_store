@@ -3,6 +3,9 @@ node_modules
 .data
 .asset-store
 .env
+artifacts
+__pycache__
+*.pyc
 *.log
 
 # Product images are mounted into the V2 container from the parent project.

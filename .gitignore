@@ -15,6 +15,7 @@ out/
 playwright-report/
 test-results/
 reports/
+artifacts/
 
 # Local runtime storage for lead submissions
 .data/
@@ -32,6 +33,8 @@ docs/evidence/task-130-ocr-images*.json
 # Package/cache noise
 .npm/
 .cache/
+__pycache__/
+*.pyc
 .DS_Store
 
 # Live nginx conf contains a private VPN location path - keep out of the public repo.

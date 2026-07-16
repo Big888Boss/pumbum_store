@@ -4,6 +4,7 @@ export const siteConfig = {
   defaultTitle: 'Сантехникъ — инженерная сантехника и отопление',
   defaultDescription: 'Магазин сантехники и инженерных комплектующих в Саратове: каталог товаров, телефон, адрес и контакты.',
   locale: 'ru_RU',
+  defaultOgImage: '/og/default-og.jpg',
 };
 
 export function absoluteUrl(path: string): string {
