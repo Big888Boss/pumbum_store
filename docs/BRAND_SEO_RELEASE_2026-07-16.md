@@ -26,7 +26,7 @@ Scope: finish the code-controlled parts of iterations 1-6 without regenerating o
 
 - Yandex Business, Google Business, Webmaster and Search Console require owner account access and cannot be confirmed from code.
 - PSI scheduling needs a Google API key; CrUX needs about 28 days of real traffic.
-- Prometheus Blackbox probes `/`, `/api/health`, `/catalog` and `/sitemap.xml`. Grafana now evaluates endpoint-down, slow-endpoint and TLS-expiry rules on the USA monitoring host. Telegram delivery still requires a rotated bot token and a chat that has started the bot; secrets must not be committed or pasted into chat.
+- Prometheus Blackbox probes `/`, `/api/health`, `/catalog` and `/sitemap.xml`. Grafana evaluates endpoint-down, slow-endpoint and TLS-expiry rules on the USA monitoring host and routes them to the `Pumbum Telegram` contact point. The Grafana test notification returned `ok` on 2026-07-17. Bot credentials remain in server-side mode-0600 secret files; the owner explicitly retained the chat-exposed token, so rotation remains recommended.
 - Moving the storefront to a separate 2 vCPU / 2 GiB VPS is a budget decision. Until then, production builds remain forbidden and the 384 MiB/0.75 CPU limits plus warmup timer stay in force.
 - TIM manifest status is unchanged: 3,508 products, 2,381 direct/existing mappings, 278 subsection fallbacks and 849 section fallbacks. Reducing `fallbackBySection` below 400 requires new supplier images; generated substitutes are not treated as unique product photos.
 - Product Offers remain conservative: unknown stock is omitted and no price/availability is invented. ESPA preorder semantics are only emitted when the source data contains the required truthful offer fields.

@@ -19,3 +19,8 @@ Yandex Maps organization page `1056584886` and the 2GIS company page
 named organizations in Engels.
 
 Release commits are pushed only after the public blue-green checklist is green. A prepared source tree or a healthy candidate port is not sufficient: verify the public route, catalog and sitemap totals, representative product images, logs, container health and rollback first.
+
+Production alert delivery is active through the `Pumbum Telegram` Grafana
+contact point. The three public endpoint/TLS rules were `inactive/ok` and a
+Grafana test notification returned `ok` on 2026-07-17. Telegram credentials
+live only in mode-0600 files on the monitoring host, never in this repository.
