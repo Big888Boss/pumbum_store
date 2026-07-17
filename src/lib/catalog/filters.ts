@@ -14,7 +14,8 @@ export type CatalogFilterKey =
   | 'power'
   | 'head'
   | 'flow'
-  | 'volume';
+  | 'volume'
+  | 'price';
 
 export type CatalogFilterSelection = Partial<Record<CatalogFilterKey, string>>;
 
@@ -101,12 +102,59 @@ function buildOptions(products: Product[], definition: FilterDefinition, selecte
   return options;
 }
 
+// Цена — диапазонный фасет: значение кодируется как «min-max» («30000-» = без верхней границы).
+const priceBuckets: Array<[number, number | undefined, string]> = [
+  [0, 1000, 'до 1 000 ₽'],
+  [1000, 3000, '1 000–3 000 ₽'],
+  [3000, 10000, '3 000–10 000 ₽'],
+  [10000, 30000, '10 000–30 000 ₽'],
+  [30000, undefined, 'от 30 000 ₽'],
+];
+
+const priceRangePattern = /^\d+-\d*$/;
+
+function getProductPriceAmount(product: Product): number | undefined {
+  const amount = product.price?.amount;
+  return typeof amount === 'number' && Number.isFinite(amount) && amount > 0 ? amount : undefined;
+}
+
+export function matchesPriceRange(product: Product, range: string): boolean {
+  const amount = getProductPriceAmount(product);
+  if (amount === undefined) return false;
+  const [minRaw, maxRaw] = range.split('-');
+  const min = Number(minRaw);
+  if (!Number.isFinite(min)) return false;
+  const max = maxRaw ? Number(maxRaw) : undefined;
+  return amount >= min && (max === undefined || amount < max);
+}
+
+export function priceRangeLabel(range: string): string {
+  const bucket = priceBuckets.find(([min, max]) => (max === undefined ? `${min}-` : `${min}-${max}`) === range);
+  return bucket ? bucket[2] : range.replace('-', '–') + ' ₽';
+}
+
+function buildPriceFilter(products: Product[], selectedValue?: string): CatalogFilter | null {
+  const options: CatalogFilterOption[] = [];
+  for (const [min, max, label] of priceBuckets) {
+    const value = max === undefined ? `${min}-` : `${min}-${max}`;
+    const count = products.reduce((sum, product) => sum + (matchesPriceRange(product, value) ? 1 : 0), 0);
+    if (count > 0) options.push({ label, value, count });
+  }
+  if (options.length < 2) return null;
+  if (selectedValue && priceRangePattern.test(selectedValue) && !options.some((option) => option.value === selectedValue)) {
+    const count = products.reduce((sum, product) => sum + (matchesPriceRange(product, selectedValue) ? 1 : 0), 0);
+    options.push({ label: priceRangeLabel(selectedValue), value: selectedValue, count });
+  }
+  return { key: 'price', label: 'Цена', options };
+}
+
 export function getCatalogFilterValue(product: Product, key: CatalogFilterKey): string | undefined {
   const definition = filterDefinitions.find((item) => item.key === key);
   return definition ? getFilterValue(product, definition) : undefined;
 }
 
 export function buildCatalogFilters(products: Product[], selected: CatalogFilterSelection): CatalogFilter[] {
+  const priceFilter = buildPriceFilter(products, selected.price);
   const filters = filterDefinitions
     .map((definition) => {
       const options = buildOptions(products, definition, selected[definition.key]);
@@ -117,13 +165,18 @@ export function buildCatalogFilters(products: Product[], selected: CatalogFilter
       if (a.definition.alwaysShow !== b.definition.alwaysShow) return a.definition.alwaysShow ? -1 : 1;
       return b.options.reduce((sum, option) => sum + option.count, 0) - a.options.reduce((sum, option) => sum + option.count, 0);
     })
-    .slice(0, maxFilters);
+    .slice(0, priceFilter ? maxFilters - 1 : maxFilters)
+    .map(({ definition, options }) => ({
+      key: definition.key,
+      label: definition.label,
+      options,
+    }));
 
-  return filters.map(({ definition, options }) => ({
-    key: definition.key,
-    label: definition.label,
-    options,
-  }));
+  if (priceFilter) {
+    const alwaysShowCount = filters.filter((filter) => filterDefinitions.find((d) => d.key === filter.key)?.alwaysShow).length;
+    filters.splice(alwaysShowCount, 0, priceFilter);
+  }
+  return filters;
 }
 
 export function applyCatalogFilters(products: Product[], selected: CatalogFilterSelection): Product[] {
@@ -131,7 +184,9 @@ export function applyCatalogFilters(products: Product[], selected: CatalogFilter
   if (activeFilters.length === 0) return products;
 
   return products.filter((product) =>
-    activeFilters.every(([key, expected]) => getCatalogFilterValue(product, key) === expected)
+    activeFilters.every(([key, expected]) =>
+      key === 'price' ? matchesPriceRange(product, expected) : getCatalogFilterValue(product, key) === expected,
+    )
   );
 }
 
@@ -143,6 +198,9 @@ export function parseCatalogFilterSelection(params: Record<string, string | stri
     const clean = cleanValue(value);
     if (clean) selected[definition.key] = clean;
   }
+  const rawPrice = params.price;
+  const priceValue = cleanValue(Array.isArray(rawPrice) ? rawPrice[0] : rawPrice);
+  if (priceValue && priceRangePattern.test(priceValue)) selected.price = priceValue;
   return selected;
 }
 

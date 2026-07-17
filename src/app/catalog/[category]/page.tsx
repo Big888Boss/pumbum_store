@@ -7,7 +7,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import type { Category } from '@/entities/category/model';
 import type { Product } from '@/entities/product/model';
 import type { CatalogFilterKey, CatalogFilterSelection } from '@/lib/catalog/filters';
-import { activeCatalogFilterCount, applyCatalogFilters, buildCatalogFilters, getProductGroupLabel, parseCatalogFilterSelection } from '@/lib/catalog/filters';
+import { activeCatalogFilterCount, applyCatalogFilters, buildCatalogFilters, getProductGroupLabel, parseCatalogFilterSelection, priceRangeLabel } from '@/lib/catalog/filters';
 import { getCategoryBySlug, getFeaturedProductByCategory, getProductsByCategory, getRelatedProducts } from '@/lib/catalog/loaders';
 import { formatProductPrice } from '@/lib/catalog/pricing';
 import { getProductImage } from '@/lib/catalog/product-images';
@@ -55,11 +55,38 @@ function parseCatalogPage(query: Record<string, string | string[] | undefined>):
   return Number.isSafeInteger(page) && page > 0 ? page : 1;
 }
 
+type CatalogSortMode = 'default' | 'price_asc' | 'price_desc';
+
+function parseCatalogSort(query: Record<string, string | string[] | undefined>): CatalogSortMode {
+  const raw = query.sort;
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  return value === 'price_asc' || value === 'price_desc' ? value : 'default';
+}
+
+// Товары без цены при любой сортировке уходят в конец списка.
+function sortCatalogProducts(products: Product[], sort: CatalogSortMode): Product[] {
+  if (sort === 'default') return products;
+  const direction = sort === 'price_asc' ? 1 : -1;
+  const amount = (product: Product): number | undefined => {
+    const value = product.price?.amount;
+    return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : undefined;
+  };
+  return [...products].sort((a, b) => {
+    const priceA = amount(a);
+    const priceB = amount(b);
+    if (priceA === undefined && priceB === undefined) return 0;
+    if (priceA === undefined) return 1;
+    if (priceB === undefined) return -1;
+    return (priceA - priceB) * direction;
+  });
+}
+
 function buildCategoryHref(
   categorySlug: string,
   selected: CatalogFilterSelection,
   viewMode: CatalogViewMode,
-  options: { key?: CatalogFilterKey; value?: string; page?: number } = {},
+  sort: CatalogSortMode,
+  options: { key?: CatalogFilterKey; value?: string; page?: number; sort?: CatalogSortMode } = {},
 ): string {
   const params = new URLSearchParams();
   const nextSelected = { ...selected };
@@ -72,17 +99,36 @@ function buildCategoryHref(
     if (entryValue) params.set(entryKey, entryValue);
   }
   if (viewMode === 'list') params.set('view', 'list');
+  const nextSort = options.sort ?? sort;
+  if (nextSort !== 'default') params.set('sort', nextSort);
   if ((options.page ?? 1) > 1) params.set('page', String(options.page));
 
   const query = params.toString();
   return query ? `/catalog/${categorySlug}?${query}` : `/catalog/${categorySlug}`;
 }
 
-function ViewSwitcher({ categorySlug, selected, viewMode, page }: { categorySlug: string; selected: CatalogFilterSelection; viewMode: CatalogViewMode; page: number }) {
+function ViewSwitcher({ categorySlug, selected, viewMode, sort, page }: { categorySlug: string; selected: CatalogFilterSelection; viewMode: CatalogViewMode; sort: CatalogSortMode; page: number }) {
   return (
     <div className="catalog-view-switcher" aria-label="Вид каталога">
-      <Link className={viewMode === 'grid' ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, 'grid', { page })}>Карточки с фото</Link>
-      <Link className={viewMode === 'list' ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, 'list', { page })}>Список без фото</Link>
+      <Link className={viewMode === 'grid' ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, 'grid', sort, { page })}>Карточки с фото</Link>
+      <Link className={viewMode === 'list' ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, 'list', sort, { page })}>Список без фото</Link>
+    </div>
+  );
+}
+
+function SortSwitcher({ categorySlug, selected, viewMode, sort }: { categorySlug: string; selected: CatalogFilterSelection; viewMode: CatalogViewMode; sort: CatalogSortMode }) {
+  const modes: Array<[CatalogSortMode, string]> = [
+    ['default', 'По порядку'],
+    ['price_asc', 'Сначала дешевле'],
+    ['price_desc', 'Сначала дороже'],
+  ];
+  return (
+    <div className="catalog-view-switcher" aria-label="Сортировка товаров">
+      {modes.map(([mode, label]) => (
+        <Link key={mode} className={sort === mode ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, viewMode, sort, { sort: mode })}>
+          {label}
+        </Link>
+      ))}
     </div>
   );
 }
@@ -102,7 +148,7 @@ function CategoryExpertText({ category }: { category: Category }) {
   );
 }
 
-function FilterPanel({ categorySlug, products, selected, viewMode }: { categorySlug: string; products: Product[]; selected: CatalogFilterSelection; viewMode: CatalogViewMode }) {
+function FilterPanel({ categorySlug, products, selected, viewMode, sort }: { categorySlug: string; products: Product[]; selected: CatalogFilterSelection; viewMode: CatalogViewMode; sort: CatalogSortMode }) {
   const filters = buildCatalogFilters(products, selected);
   const activeCount = activeCatalogFilterCount(selected);
 
@@ -115,6 +161,7 @@ function FilterPanel({ categorySlug, products, selected, viewMode }: { categoryS
       </summary>
       <form className="filter-panel" action={`/catalog/${categorySlug}`}>
         {viewMode === 'list' ? <input type="hidden" name="view" value="list" /> : null}
+        {sort !== 'default' ? <input type="hidden" name="sort" value={sort} /> : null}
         <div className="filter-grid">
           {filters.map((filter) => (
             <label key={filter.key} className="filter-field">
@@ -132,7 +179,7 @@ function FilterPanel({ categorySlug, products, selected, viewMode }: { categoryS
         </div>
         <div className="filter-actions">
           <button className="btn btn-primary" type="submit">Показать</button>
-          <Link className="btn btn-secondary" href={buildCategoryHref(categorySlug, {}, viewMode)}>Сбросить</Link>
+          <Link className="btn btn-secondary" href={buildCategoryHref(categorySlug, {}, viewMode, sort)}>Сбросить</Link>
         </div>
       </form>
     </details>
@@ -144,18 +191,19 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const query = searchParams ? await searchParams : {};
   const hasFilters = activeCatalogFilterCount(parseCatalogFilterSelection(query)) > 0;
   const hasPagination = parseCatalogPage(query) > 1;
+  const hasSort = parseCatalogSort(query) !== 'default';
   const categoryData = getCategoryBySlug(category);
   if (!categoryData) return {};
   return buildMetadata({
     title: categoryData.title,
     description: categoryData.description,
     path: `/catalog/${categoryData.slug}`,
-    noindex: hasFilters || hasPagination,
-    followWhenNoindex: hasPagination && !hasFilters,
+    noindex: hasFilters || hasPagination || hasSort,
+    followWhenNoindex: hasPagination && !hasFilters && !hasSort,
   });
 }
 
-function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode, requestedPage }: { categorySlug: string; products: Product[]; baseProducts: Product[]; selected: CatalogFilterSelection; viewMode: CatalogViewMode; requestedPage: number }) {
+function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode, sort, requestedPage }: { categorySlug: string; products: Product[]; baseProducts: Product[]; selected: CatalogFilterSelection; viewMode: CatalogViewMode; sort: CatalogSortMode; requestedPage: number }) {
   const pageCount = Math.max(1, Math.ceil(products.length / productsPerPage));
   const currentPage = Math.min(Math.max(requestedPage, 1), pageCount);
   const startIndex = (currentPage - 1) * productsPerPage;
@@ -188,7 +236,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
               <Link
                 key={name}
                 className={selected.group === name ? 'is-active' : ''}
-                href={buildCategoryHref(categorySlug, selected, viewMode, { key: 'group', value: name })}
+                href={buildCategoryHref(categorySlug, selected, viewMode, sort, { key: 'group', value: name })}
               >
                 {name} <strong>{count.toLocaleString('ru-RU')}</strong>
               </Link>
@@ -196,14 +244,15 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
           </div>
         ) : null}
         <div className="catalog-toolbar">
-          <FilterPanel categorySlug={categorySlug} products={baseProducts} selected={selected} viewMode={viewMode} />
-          <ViewSwitcher categorySlug={categorySlug} selected={selected} viewMode={viewMode} page={currentPage} />
+          <FilterPanel categorySlug={categorySlug} products={baseProducts} selected={selected} viewMode={viewMode} sort={sort} />
+          <SortSwitcher categorySlug={categorySlug} selected={selected} viewMode={viewMode} sort={sort} />
+          <ViewSwitcher categorySlug={categorySlug} selected={selected} viewMode={viewMode} sort={sort} page={currentPage} />
         </div>
         {activeCount > 0 ? (
           <div className="active-filters" aria-label="Выбранные фильтры">
             {Object.entries(selected).map(([key, value]) => value ? (
-              <Link key={key} href={buildCategoryHref(categorySlug, selected, viewMode, { key: key as CatalogFilterKey, value })}>
-                {value} ×
+              <Link key={key} href={buildCategoryHref(categorySlug, selected, viewMode, sort, { key: key as CatalogFilterKey, value })}>
+                {key === 'price' ? priceRangeLabel(value) : value} ×
               </Link>
             ) : null)}
           </div>
@@ -257,14 +306,14 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
         {pageCount > 1 ? (
           <nav className="catalog-pagination" aria-label="Страницы каталога">
             {currentPage > 1 ? (
-              <Link rel="prev" href={buildCategoryHref(categorySlug, selected, viewMode, { page: currentPage - 1 })}>Назад</Link>
+              <Link rel="prev" href={buildCategoryHref(categorySlug, selected, viewMode, sort, { page: currentPage - 1 })}>Назад</Link>
             ) : null}
             {paginationPages.map((page, index) => (
               <span className="catalog-pagination-item" key={page}>
                 {index > 0 && page - paginationPages[index - 1] > 1 ? <span className="catalog-pagination-gap" aria-hidden="true">…</span> : null}
                 <Link
                   className={page === currentPage ? 'is-active' : ''}
-                  href={buildCategoryHref(categorySlug, selected, viewMode, { page })}
+                  href={buildCategoryHref(categorySlug, selected, viewMode, sort, { page })}
                   aria-current={page === currentPage ? 'page' : undefined}
                 >
                   {page}
@@ -272,7 +321,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
               </span>
             ))}
             {currentPage < pageCount ? (
-              <Link rel="next" href={buildCategoryHref(categorySlug, selected, viewMode, { page: currentPage + 1 })}>Вперёд</Link>
+              <Link rel="next" href={buildCategoryHref(categorySlug, selected, viewMode, sort, { page: currentPage + 1 })}>Вперёд</Link>
             ) : null}
           </nav>
         ) : null}
@@ -281,7 +330,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
   );
 }
 
-function RadiatorsCategoryView({ category, product, products, related, viewMode, page, nonce }: { category: Category; product: Product; products: Product[]; related: Product[]; viewMode: CatalogViewMode; page: number; nonce?: string }) {
+function RadiatorsCategoryView({ category, product, products, related, viewMode, sort, page, nonce }: { category: Category; product: Product; products: Product[]; related: Product[]; viewMode: CatalogViewMode; sort: CatalogSortMode; page: number; nonce?: string }) {
   const breadcrumbs = [
     { name: 'Главная', path: '/' },
     { name: 'Каталог', path: '/catalog' },
@@ -377,7 +426,7 @@ function RadiatorsCategoryView({ category, product, products, related, viewMode,
           </div>
         </div>
       </section>
-      <ProductGrid categorySlug={category.slug} products={products} baseProducts={products} selected={{}} viewMode={viewMode} requestedPage={page} />
+      <ProductGrid categorySlug={category.slug} products={sortCatalogProducts(products, sort)} baseProducts={products} selected={{}} viewMode={viewMode} sort={sort} requestedPage={page} />
       <CategoryExpertText category={category} />
     </>
   );
@@ -389,10 +438,11 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const query = searchParams ? await searchParams : {};
   const selectedFilters = parseCatalogFilterSelection(query);
   const viewMode = parseCatalogViewMode(query);
+  const sort = parseCatalogSort(query);
   const page = parseCatalogPage(query);
   const categoryData = getCategoryBySlug(category);
   const categoryProducts = getProductsByCategory(category);
-  const filteredProducts = applyCatalogFilters(categoryProducts, selectedFilters);
+  const filteredProducts = sortCatalogProducts(applyCatalogFilters(categoryProducts, selectedFilters), sort);
   const product = getFeaturedProductByCategory(category);
   if (!categoryData || !product) {
     const legacyDestination = getLegacyCatalogRedirect([category]);
@@ -402,7 +452,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const related = getRelatedProducts(product.categorySlug);
 
   if (product.categorySlug === 'radiators') {
-    return <RadiatorsCategoryView category={categoryData} product={product} products={categoryProducts} related={related} viewMode={viewMode} page={page} nonce={nonce} />;
+    return <RadiatorsCategoryView category={categoryData} product={product} products={categoryProducts} related={related} viewMode={viewMode} sort={sort} page={page} nonce={nonce} />;
   }
 
   const breadcrumbs = [
@@ -449,7 +499,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
           </aside>
         </div>
       </section>
-      <ProductGrid categorySlug={categoryData.slug} products={filteredProducts} baseProducts={categoryProducts} selected={selectedFilters} viewMode={viewMode} requestedPage={page} />
+      <ProductGrid categorySlug={categoryData.slug} products={filteredProducts} baseProducts={categoryProducts} selected={selectedFilters} viewMode={viewMode} sort={sort} requestedPage={page} />
       <CategoryExpertText category={categoryData} />
 
       <section className="section">
