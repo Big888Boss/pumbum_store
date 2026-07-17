@@ -12,7 +12,7 @@ import { formatSpecLabel, getProductDistinctionFacts, getProductKeyFacts } from 
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { getLegacyCatalogRedirect } from '@/lib/seo/legacy-redirects';
-import { getProductCardDescription, getProductDisplayName, getProductLocalSummary, getProductSeoDescription, getProductSeoTitle, getProductVisibleDescription, getProductVisibleText } from '@/lib/seo/product';
+import { getProductCardDescription, getProductDisplayTitle, getProductLocalSummary, getProductSeoDescription, getProductSeoTitle, getProductVisibleDescription, getProductVisibleText } from '@/lib/seo/product';
 import { getCspNonce } from '@/lib/security/nonce';
 import { METRIKA_GOALS } from '@/lib/analytics/metrika';
 
@@ -53,7 +53,7 @@ export default async function ProductPage({ params }: PageProps) {
     price_status: product.price ? 'known' : 'request',
   };
   const distinctionFacts = getProductDistinctionFacts(product, 5);
-  const displayName = getProductDisplayName(product);
+  const displayTitle = getProductDisplayTitle(product);
   const localSummary = getProductLocalSummary(product);
   const breadcrumbs = [
     { name: 'Главная', path: '/' },
@@ -73,7 +73,7 @@ export default async function ProductPage({ params }: PageProps) {
           <ProductImage src={product.image} alt={product.name} logoSrc={product.logo} brand={product.brandName} hideBrandLogo={product.hideBrandLogo} priority />
           <div>
             <div className="eyebrow">{product.brandName} · инженерная комплектация</div>
-            <h1>{displayName}</h1>
+            <h1>{displayTitle}</h1>
             <p className="lead">{localSummary}</p>
             {distinctionFacts.length > 0 ? (
               <p className="product-difference-line">Отличия позиции: {distinctionFacts.join(' · ')}.</p>

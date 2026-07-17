@@ -120,6 +120,40 @@ export function getProductKeyFacts(product: Product, limit = 4): string[] {
   return facts.slice(0, limit);
 }
 
+// [specKey, подпись, единица для «голых» числовых значений]
+const titleParameterSpecs: Array<[string, string, string]> = [
+  ['head_m', 'напор', 'м'],
+  ['filter_napor', 'напор', 'м'],
+  ['power_w', 'мощность', 'Вт'],
+  ['power_kw', 'мощность', 'кВт'],
+  ['flow_rate_l_min', 'производительность', 'л/мин'],
+  ['filter_proizvoditelnost', 'производительность', ''],
+  ['volume_l', 'объём', 'л'],
+  ['volume_single_m3', 'объём', 'м³'],
+  ['accumulator_volume', 'объём', ''],
+  ['diameter_mm', 'диаметр', 'мм'],
+  ['size', 'размер', ''],
+  ['tube_size_mm', 'размер', 'мм'],
+];
+
+function normalizeForComparison(value: string): string {
+  return value.toLocaleLowerCase('ru-RU').replace(/\s+/g, '');
+}
+
+export function getProductTitleParameter(product: Product): string | undefined {
+  const nameNormalized = normalizeForComparison(product.name);
+  for (const [key, label, unit] of titleParameterSpecs) {
+    const raw = clean(product.specs[key]);
+    if (!raw || raw.length > 24) continue;
+    if (nameNormalized.includes(normalizeForComparison(raw))) continue;
+    // Микрообъёмы вида «0.00035 м³» у мелкой фурнитуры — шум, не ключевой параметр.
+    if (key === 'volume_single_m3' && parseFloat(raw.replace(',', '.')) < 0.5) continue;
+    const value = unit && /^\d+([.,]\d+)?$/.test(raw) ? `${raw} ${unit}` : raw;
+    return `${label} ${value}`;
+  }
+  return undefined;
+}
+
 export function getProductDistinctionFacts(product: Product, limit = 4): string[] {
   const facts: string[] = [];
   const seenValues = new Set<string>();

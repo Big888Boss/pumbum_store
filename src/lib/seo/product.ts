@@ -1,5 +1,6 @@
 import type { Product } from '@/entities/product/model';
 import { getProductGroupLabel } from '@/lib/catalog/filters';
+import { getProductTitleParameter } from '@/lib/catalog/specs';
 
 const categoryLabels: Record<string, string> = {
   'nasosy-i-vodosnabzhenie': 'Оборудование для насосов и водоснабжения',
@@ -54,8 +55,15 @@ export function getProductCardDescription(product: Product): string {
   return description || getProductLocalSummary(product);
 }
 
+// Название с ключевым параметром: «AQUARIO ADB-35, напор 35 м» — для H1 и title.
+export function getProductDisplayTitle(product: Product): string {
+  const name = getProductDisplayName(product);
+  const parameter = getProductTitleParameter(product);
+  return parameter ? `${name}, ${parameter}` : name;
+}
+
 export function getProductSeoTitle(product: Product): string {
-  return trimAtWord(`${getProductDisplayName(product)} — купить в Саратове | Сантехникъ`, 90);
+  return trimAtWord(`${getProductDisplayTitle(product)} — купить в Саратове | Сантехникъ`, 90);
 }
 
 export function getProductSeoDescription(product: Product): string {

@@ -1,8 +1,8 @@
-name: plumbing_store_v2_sameas_20260717
+name: plumbing_store_v2_title_param_20260717
 
 services:
-  v2-sameas:
-    image: plumbing_store_v2-v2:sameas-20260717-v1
+  v2-title-param:
+    image: plumbing_store_v2-v2:title-param-20260717-v1
     environment:
       NODE_ENV: production
       NODE_OPTIONS: --max-old-space-size=320
@@ -16,7 +16,7 @@ services:
     volumes:
       - /opt/plumbing_store_v2/public/images/products:/app/public/images/products:ro
     ports:
-      - "127.0.0.1:3017:3010"
+      - "127.0.0.1:3018:3010"
     cpus: 0.75
     mem_limit: 384m
     pids_limit: 256

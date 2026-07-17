@@ -14,7 +14,7 @@ services:
       NEXT_PUBLIC_YANDEX_METRIKA_ID: "109783471"
       CSP_MODE: enforce
     volumes:
-      - ../public/images/products:/app/public/images/products:ro
+      - /opt/plumbing_store_v2/public/images/products:/app/public/images/products:ro
     ports:
       - "127.0.0.1:3016:3010"
     cpus: 0.75
