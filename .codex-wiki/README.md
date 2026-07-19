@@ -11,7 +11,7 @@ The current production implementation notes are maintained in `docs/`.
 
 Production builds are created on the USA build host. The small production server must never run `next build` or `docker build`.
 
-Current production storefront release: `plumbing_store_v2-v2:sameas-20260717-v1` on localhost port `3017`. Nginx keeps `brand-seo-20260716-v2` on port `3016` as the live rollback backup. The older 3015 container is stopped to conserve production memory; its image and compose file are retained. See `docs/BRAND_SEO_RELEASE_2026-07-16.md` for acceptance evidence, external blockers and rollback.
+Current production storefront release: `plumbing_store_v2-v2:filters-price-20260717-v1` on localhost port `3019`. The verified `brand-seo-20260716-v2` rollback container on port `3016` is stopped to conserve roughly 300 MiB of RAM/swap; its image, stopped container and compose file are retained for one-command rollback. Unused 3017/3018 releases and the old 3015 container were removed from runtime without deleting images or catalog assets. See `docs/RESOURCE_OPTIMIZATION_RELEASE_2026-07-19.md` for current acceptance evidence and rollback.
 
 The verified organization identity links for structured data are the exact
 Yandex Maps organization page `1056584886` and the 2GIS company page
@@ -21,6 +21,7 @@ named organizations in Engels.
 Release commits are pushed only after the public blue-green checklist is green. A prepared source tree or a healthy candidate port is not sufficient: verify the public route, catalog and sitemap totals, representative product images, logs, container health and rollback first.
 
 Production alert delivery is active through the `Pumbum Telegram` Grafana
-contact point. The three public endpoint/TLS rules were `inactive/ok` and a
-Grafana test notification returned `ok` on 2026-07-17. Telegram credentials
-live only in mode-0600 files on the monitoring host, never in this repository.
+contact point. Availability checks `/api/health` every 30 seconds, buyer pages
+every 2 minutes and the 1.8 MiB sitemap every 30 minutes. Alerts wait for a
+sustained failure and use concise Russian messages. Telegram credentials live
+only in mode-0600 files on the monitoring host, never in this repository.

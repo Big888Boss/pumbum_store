@@ -62,9 +62,9 @@ Absolute protection from copying public pages is impossible: a human can always 
 - Docker JSON logs: host fallback rotation at `50M`, three compressed archives, with `copytruncate` so containers are not restarted. Storefront compose files also cap new container logs at `20m` with three files.
 - Never automate deletion of Docker volumes, active images, release backups, or product assets. Cleanup must target identified inactive images/build cache only and preserve a tested rollback.
 - The host node exporter exposes filesystem and memory metrics on the Tailscale address. The central alert rule remains an external monitoring responsibility and must be verified separately.
-- The dedicated pumbum Prometheus on the USA build host already runs Blackbox checks for `/`, `/api/health`, `/catalog` and `/sitemap.xml`. As of 2026-07-16 its Grafana has no alert rules and no approved Telegram receiver, so notification delivery is not considered verified.
+- The dedicated pumbum Prometheus on the USA build host checks `/api/health` every 30 seconds, `/` and `/catalog` every 2 minutes, and `/sitemap.xml` every 30 minutes. Grafana has provisioned Russian availability, latency and TLS rules and an active Telegram contact point. The availability rule uses only `/api/health`, waits for three minutes and no longer interprets one slow buyer page or a monitoring-host DNS timeout as confirmed application downtime.
 - Runtime memory: inspect container usage, OOM state, restart count, host available memory, and swap after every release. Do not keep two Next.js storefront containers resident longer than the blue-green verification window on this host.
-- `pumbum-store-warmup.timer` requests the heaviest category once per minute through the local HTTPS nginx endpoint with low CPU/I/O priority and a `32M` service memory cap. It keeps the catalog working set active without caching or reusing CSP nonces.
+- `pumbum-store-warmup.timer` requests the heaviest category once per five minutes through the local HTTPS nginx endpoint with low CPU/I/O priority and a `32M` service memory cap. It limits background CPU while keeping the main catalog path warm without caching or reusing CSP nonces.
 
 ## Deployment checks
 

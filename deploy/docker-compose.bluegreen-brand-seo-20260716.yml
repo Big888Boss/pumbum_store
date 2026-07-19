@@ -28,13 +28,9 @@ services:
     security_opt:
       - no-new-privileges:true
     healthcheck:
-      test:
-        - CMD-SHELL
-        - >-
-          node -e "fetch('http://127.0.0.1:3010/api/health').then((response) =>
-          process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
-      interval: 30s
-      timeout: 5s
+      test: ["CMD", "wget", "-q", "-T", "5", "-O", "/dev/null", "http://127.0.0.1:3010/api/health"]
+      interval: 120s
+      timeout: 6s
       retries: 3
       # Parsing the 39 MB catalog is intentionally CPU-capped on the small host.
       # Keep the container in "starting" state until the first warmup completes.

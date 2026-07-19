@@ -81,11 +81,11 @@
 
 Текущий production runtime:
 
-- image: `plumbing_store_v2-v2:brand-seo-20260716-v2`;
-- active localhost port: `3016`;
-- live rollback port: `3015`;
+- image: `plumbing_store_v2-v2:filters-price-20260717-v1`;
+- active localhost port: `3019`;
+- verified rollback image/container: `brand-seo-20260716-v2` on `3016`, stopped after the rollback verification window to save roughly 300 MiB of RAM/swap;
 - build only on `administrator@100.95.56.90`; never build on the small production host;
-- release and rollback evidence: `docs/BRAND_SEO_RELEASE_2026-07-16.md`.
+- release and rollback evidence: `docs/RESOURCE_OPTIMIZATION_RELEASE_2026-07-19.md`.
 
 Нельзя:
 
