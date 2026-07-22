@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
+import { CategoryProductCarousel } from '@/components/catalog/CategoryProductCarousel';
 import { ProductAvailabilityBadge, ProductAvailabilityText } from '@/components/product/ProductAvailability';
 import { ProductImage } from '@/components/product/ProductImage';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -8,7 +9,7 @@ import type { Category } from '@/entities/category/model';
 import type { Product } from '@/entities/product/model';
 import type { CatalogFilterKey, CatalogFilterSelection } from '@/lib/catalog/filters';
 import { activeCatalogFilterCount, applyCatalogFilters, buildCatalogFilters, getProductGroupLabel, parseCatalogFilterSelection, priceRangeLabel } from '@/lib/catalog/filters';
-import { getCategoryBySlug, getFeaturedProductByCategory, getProductsByCategory, getRelatedProducts } from '@/lib/catalog/loaders';
+import { getCategoryBySlug, getFeaturedProductsByCategory, getProductsByCategory, getRelatedProducts } from '@/lib/catalog/loaders';
 import { formatProductPrice } from '@/lib/catalog/pricing';
 import { getProductImage } from '@/lib/catalog/product-images';
 import { getProductDistinctionFacts, getProductKeyFacts } from '@/lib/catalog/specs';
@@ -231,7 +232,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
           {products.length > 0 ? <p className="meta">Показаны позиции {visibleStart.toLocaleString('ru-RU')}–{visibleEnd.toLocaleString('ru-RU')} из {products.length.toLocaleString('ru-RU')}.</p> : null}
         </div>
         {productGroups.length > 0 ? (
-          <div className="catalog-groups" aria-label="Популярные группы раздела">
+          <div className="catalog-groups" aria-label="Группы товаров раздела">
             {productGroups.map(([name, count]) => (
               <Link
                 key={name}
@@ -443,7 +444,8 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const categoryData = getCategoryBySlug(category);
   const categoryProducts = getProductsByCategory(category);
   const filteredProducts = sortCatalogProducts(applyCatalogFilters(categoryProducts, selectedFilters), sort);
-  const product = getFeaturedProductByCategory(category);
+  const featuredProducts = getFeaturedProductsByCategory(category, category === 'otoplenie-i-kotelnaya' ? 3 : 1);
+  const product = featuredProducts[0];
   if (!categoryData || !product) {
     const legacyDestination = getLegacyCatalogRedirect([category]);
     if (legacyDestination) permanentRedirect(legacyDestination);
@@ -476,21 +478,36 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
               <Link className="btn btn-secondary" href="/contacts">Связаться с магазином</Link>
             </div>
           </div>
-          <ProductImage src={product.image} alt={product.name} logoSrc={product.logo} brand={product.brandName} hideBrandLogo={product.hideBrandLogo} priority />
+          {featuredProducts.length > 1 ? (
+            <CategoryProductCarousel products={featuredProducts} />
+          ) : (
+            <ProductImage src={product.image} alt={product.name} logoSrc={product.logo} brand={product.brandName} hideBrandLogo={product.hideBrandLogo} priority />
+          )}
         </div>
       </section>
 
       <section className="section">
         <div className="container grid grid-2">
-          <Link className="card popular-product-card" href={`/catalog/${product.categorySlug}/${product.slug}`}>
-            <h2>Популярный товар</h2>
-            <h3>{product.name}</h3>
-            <p>{getProductCardDescription(product)}</p>
-            <ul className="badges">
-              {getProductKeyFacts(product, 4).map((item) => <li className="badge" key={item}>{item}</li>)}
-              <li className="badge price-badge">{formatProductPrice(product)}</li>
-            </ul>
-          </Link>
+          {featuredProducts.length > 1 ? (
+            <article className="card popular-product-card">
+              <h2>Ключевое оборудование раздела</h2>
+              <h3>Котлы для разных типов систем</h3>
+              <p>В карусели показаны газовый, электрический и твердотопливный котлы. Коллекторы, арматура и монтажные комплектующие идут ниже после основного оборудования.</p>
+              <ul className="badges">
+                {featuredProducts.map((item) => <li className="badge" key={item.slug}>{item.name}</li>)}
+              </ul>
+            </article>
+          ) : (
+            <Link className="card popular-product-card" href={`/catalog/${product.categorySlug}/${product.slug}`}>
+              <h2>Основной товар раздела</h2>
+              <h3>{product.name}</h3>
+              <p>{getProductCardDescription(product)}</p>
+              <ul className="badges">
+                {getProductKeyFacts(product, 4).map((item) => <li className="badge" key={item}>{item}</li>)}
+                <li className="badge price-badge">{formatProductPrice(product)}</li>
+              </ul>
+            </Link>
+          )}
           <aside className="card">
             <h2>Что уточнить перед покупкой</h2>
             <ul>

@@ -8,6 +8,10 @@ type LegacyRedirectFile = {
 const redirects = legacyRedirects as LegacyRedirectFile;
 const catalogRoutes = redirects.routes ?? {};
 const articleRoutes = redirects.articles ?? {};
+const purposeCategoryRedirects: Record<string, string> = {
+  '/catalog/nasosy-i-vodosnabzhenie': '/catalog/nasosy',
+  '/catalog/kanalizaciya-i-vodootvedenie': '/catalog/kanalizaciya',
+};
 
 function normalizeSegment(value: string): string {
   return value.trim().toLocaleLowerCase('ru-RU');
@@ -15,7 +19,7 @@ function normalizeSegment(value: string): string {
 
 export function getLegacyCatalogRedirect(segments: string[]): string | undefined {
   const path = `/catalog/${segments.map(normalizeSegment).join('/')}`;
-  return catalogRoutes[path];
+  return purposeCategoryRedirects[path] ?? catalogRoutes[path];
 }
 
 export function getLegacyArticleRedirect(article: string): string | undefined {

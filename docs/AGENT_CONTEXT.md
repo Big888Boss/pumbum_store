@@ -69,7 +69,7 @@
 - base legacy source files: 11;
 - raw base legacy categories: 11;
 - base legacy products: 5700;
-- runtime buyer categories: 6 purpose categories using legacy `/catalog` bucket assignment;
+- runtime buyer categories: 10 purpose categories defined in `src/lib/catalog/purpose.ts`;
 - runtime products: 9276 generated rows: 5700 base legacy, 3508 TIM and 68 ESPA;
 - sitemap-publishable runtime products: 9276;
 - manufacturer index route: `/catalog/proizvoditeli`;
@@ -81,11 +81,11 @@
 
 Текущий production runtime:
 
-- image: `plumbing_store_v2-v2:filters-price-20260717-v1`;
-- active localhost port: `3019`;
-- verified rollback image/container: `brand-seo-20260716-v2` on `3016`, stopped after the rollback verification window to save roughly 300 MiB of RAM/swap;
+- image: `plumbing_store_v2-v2:catalog-taxonomy-20260722-v4`;
+- active localhost port: `3020`;
+- verified rollback image/container: `filters-price-20260717-v1` on `3019`, stopped after the rollback verification window to save RAM/swap;
 - build only on `administrator@100.95.56.90`; never build on the small production host;
-- release and rollback evidence: `docs/RESOURCE_OPTIMIZATION_RELEASE_2026-07-19.md`.
+- release and rollback evidence: `docs/CATALOG_TAXONOMY_RELEASE_2026-07-22.md`.
 
 Нельзя:
 

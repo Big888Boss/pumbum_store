@@ -1,7 +1,7 @@
 import { performance } from 'node:perf_hooks';
 
 const baseUrl = (process.env.CATEGORY_TEST_BASE_URL ?? 'http://127.0.0.1:3010').replace(/\/$/, '');
-const categoryPath = process.env.CATEGORY_TEST_PATH ?? '/catalog/kanalizaciya-i-vodootvedenie';
+const categoryPath = process.env.CATEGORY_TEST_PATH ?? '/catalog/truby-i-fitingi';
 const configuredTotal = process.env.CATEGORY_TEST_TOTAL ? Number(process.env.CATEGORY_TEST_TOTAL) : undefined;
 const pageSize = Number(process.env.CATEGORY_TEST_PAGE_SIZE ?? '60');
 

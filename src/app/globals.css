@@ -121,6 +121,21 @@ p { color: var(--muted); line-height: 1.65; }
 .home-contact-panel p { margin: 0; color: #475569; font-size: 18px; line-height: 1.45; }
 .popular-product-card { transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
 .popular-product-card:hover { border-color: #93c5fd; transform: translateY(-2px); box-shadow: 0 22px 52px rgba(15,111,216,.1); }
+.category-product-carousel { position: relative; display: grid; gap: 14px; min-width: 0; }
+.category-carousel-image { min-width: 0; }
+.category-carousel-copy { display: grid; gap: 7px; min-height: 138px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 22px; background: #fff; box-shadow: 0 16px 40px rgba(15,23,42,.05); }
+.category-carousel-copy h2 { margin: 0; font-size: clamp(22px, 2.5vw, 30px); line-height: 1.08; }
+.category-carousel-copy p { margin: 0; font-size: 14px; line-height: 1.45; }
+.category-carousel-copy a { width: fit-content; color: var(--brand-dark); font-weight: 900; }
+.category-carousel-counter { color: var(--brand-dark); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; }
+.category-carousel-controls { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; }
+.category-carousel-controls > button { min-height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #334155; font: inherit; font-size: 13px; font-weight: 850; cursor: pointer; }
+.category-carousel-controls > button:hover { border-color: #93c5fd; color: var(--brand-dark); }
+.category-carousel-dots { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.category-carousel-dots button { width: 11px; height: 11px; padding: 0; border: 0; border-radius: 999px; background: #cbd5e1; cursor: pointer; }
+.category-carousel-dots button.is-active { width: 28px; background: var(--brand); }
+.category-carousel-controls button:focus-visible,
+.category-carousel-dots button:focus-visible { outline: 3px solid rgba(15,111,216,.35); outline-offset: 2px; }
 .about-layout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(300px, .55fr); gap: 24px; align-items: start; }
 .about-copy { padding: 34px; }
 .about-copy h2 { margin-top: 28px; font-size: clamp(24px, 3vw, 34px); }

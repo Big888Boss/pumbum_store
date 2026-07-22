@@ -10,6 +10,7 @@
 - `npm run check:isolation`
 - `npm audit --audit-level=moderate`
 - `npm run build`
+- Production Docker builds pass `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SITE_ENV=production` and `NEXT_PUBLIC_YANDEX_METRIKA_ID=109783471` as build arguments; runtime environment variables alone are not sufficient for `NEXT_PUBLIC_*` values.
 - `npm run seo:inventory` with legacy source path
 - `SEO_CRAWL_BASE_URL=<local-or-staging-url> npm run seo:crawl`
 - `/robots.txt` returns staging-safe policy
@@ -43,6 +44,8 @@
 - Verify headers: HSTS, CSP plan, nosniff, referrer policy, permissions policy
 - Run `CSP_BASE_URL=https://477477.ru npm run security:check-csp`; require one enforcing CSP header, rotating nonces, no `unsafe-inline`/`unsafe-eval`, and a `204` report endpoint.
 - Run `CATEGORY_TEST_BASE_URL=https://477477.ru npm run catalog:check-pagination`; require every product in the tested heavy category to appear exactly once, `60` rows in list view, and `noindex,follow` on paginated pages.
+- Run `CATEGORY_TAXONOMY_BASE_URL=https://477477.ru npm run catalog:check-taxonomy`; require 9,276 products, 10 categories, 9,293 sitemap URLs, the representative products and permanent legacy redirects.
+- Run `CATEGORY_TAXONOMY_BASE_URL=https://477477.ru npm run catalog:check-legacy-purpose-redirects`; require all 9,276 former product paths to be either unchanged or covered by one unambiguous permanent redirect.
 - For the heaviest category, require a warm public p95 below `2s`, no response above `3s` in the standard sequential check, and no OOM/restart under the staging concurrency check.
 - Confirm the storefront publishes only on `127.0.0.1`, the container has no OOM/restarts, root disk usage is below `80%`, and at least one tested rollback image remains.
 - Confirm `/etc/logrotate.d/docker-containers` is installed and Docker JSON logs are bounded.

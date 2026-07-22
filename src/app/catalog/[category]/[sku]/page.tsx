@@ -5,7 +5,7 @@ import { MetrikaGoalLink, MetrikaProductView } from '@/components/analytics/Metr
 import { ProductAvailabilityBadge } from '@/components/product/ProductAvailability';
 import { ProductImage } from '@/components/product/ProductImage';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { getCategoryBySlug, getProductBySlug, getRelatedProductsForProduct } from '@/lib/catalog/loaders';
+import { getCategoryBySlug, getProductBySlug, getProductByUniqueSlug, getRelatedProductsForProduct } from '@/lib/catalog/loaders';
 import { getProductAvailabilityPresentation } from '@/lib/catalog/availability';
 import { formatProductPrice } from '@/lib/catalog/pricing';
 import { formatSpecLabel, getProductDistinctionFacts, getProductKeyFacts } from '@/lib/catalog/specs';
@@ -35,6 +35,8 @@ export default async function ProductPage({ params }: PageProps) {
   const { category, sku } = await params;
   const product = getProductBySlug(category, sku);
   if (!product) {
+    const movedProduct = getProductByUniqueSlug(sku);
+    if (movedProduct) permanentRedirect(`/catalog/${movedProduct.categorySlug}/${movedProduct.slug}`);
     const legacyDestination = getLegacyCatalogRedirect([category, sku]);
     if (legacyDestination) permanentRedirect(legacyDestination);
     notFound();

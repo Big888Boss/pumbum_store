@@ -34,7 +34,7 @@ export default function HomePage() {
               goal={METRIKA_GOALS.phoneClick}
               goalParams={{ location: 'home_contact_panel' }}
             >
-              8 (8452) 47-74-77
+              +7 (8452) 477-477
             </MetrikaGoalAnchor>
             <p>г. Саратов, ул. Большая Горная, 290</p>
             <p>Ежедневно 08:00-19:00</p>

@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 
 const baseUrl = (process.env.METRIKA_TEST_BASE_URL ?? 'http://127.0.0.1:3010').replace(/\/$/, '');
-const productPath = process.env.METRIKA_TEST_PRODUCT_PATH ?? '/catalog/nasosy-i-vodosnabzhenie/espa-167577';
+const productPath = process.env.METRIKA_TEST_PRODUCT_PATH ?? '/catalog/nasosy/aquario-7435';
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);

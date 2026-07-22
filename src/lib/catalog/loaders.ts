@@ -5,7 +5,7 @@ import type { CompanyProfile } from '@/entities/company/model';
 import type { Product } from '@/entities/product/model';
 import { applyProductPricing } from '@/lib/catalog/pricing';
 import { applyProductImageManifest } from '@/lib/catalog/product-images';
-import { normalizeProductCategory, purposeCategories } from '@/lib/catalog/purpose';
+import { getCategoryProductPriority, normalizeProductCategory, purposeCategories } from '@/lib/catalog/purpose';
 
 export type ManufacturerGroup = {
   slug: string;
@@ -34,16 +34,14 @@ const sinikonLogo = '/images/brands/sinikon.svg';
 const generatedProducts = ((legacyCatalog as { products?: unknown[] }).products ?? []).map(asProduct);
 const allCategories = purposeCategories.map(asCategory);
 
-function dedupeProducts(input: Product[]): Product[] {
+function assertUniqueProducts(input: Product[]): Product[] {
   const seen = new Set<string>();
-  const output: Product[] = [];
   for (const product of input) {
     const key = `${product.categorySlug}/${product.slug}`;
-    if (seen.has(key)) continue;
+    if (seen.has(key)) throw new Error(`Duplicate normalized catalog route: ${key}`);
     seen.add(key);
-    output.push(product);
   }
-  return output;
+  return input;
 }
 
 const supplierSourceGroups = [
@@ -140,19 +138,21 @@ function supplierDisplayName(supplier: SupplierSlug): string {
   return supplier;
 }
 
-const categoryShowcaseOverrides: Record<string, CategoryShowcase> = {
-  'truby-i-fitingi': {
-    image: '/images/products/_normalized-v2/valtec/vti.901.i.001204-6ba94fc10c269e92-detail.webp',
-    alt: 'Соединитель VALTEC из нержавеющей стали',
-  },
-  'kanalizaciya-i-vodootvedenie': {
-    image: '/images/products/_normalized-v2/sinikon/504049.u-85ecae3495e0578c-detail.webp',
-    alt: 'Канализационный отвод SINIKON',
-  },
-};
-
-const categoryFeaturedProductOverrides: Record<string, string> = {
-  'kanalizaciya-i-vodootvedenie': 'sistemy-naruzhnoy-kanalizacii-504049-u',
+const categoryFeaturedProductOverrides: Record<string, string[]> = {
+  vodosnabzhenie: ['akvatek-atv-500'],
+  kanalizaciya: ['sistemy-naruzhnoy-kanalizacii-504049-u'],
+  filtraciya: ['tim-jh-1001'],
+  nasosy: ['aquario-7435'],
+  'smesiteli-i-sifony': ['tim-bas0802s'],
+  'otoplenie-i-kotelnaya': [
+    'zota-zota-zuma',
+    'zota-zota-zota-solid-x',
+    'zota-zota-zota-topol-vk',
+  ],
+  'krepezh-dlya-montazha': ['tim-zsr-2502-302002'],
+  'truby-i-fitingi': ['tim-tpap-1620-100-stabil'],
+  'armatura-i-komplektuyuschie': ['valtec-vt-214-n-04'],
+  'prochee-oborudovanie': ['valtec-vt-1550-ucz-220-2'],
 };
 
 function hasDisplayableProductImage(product: Product): boolean {
@@ -215,7 +215,7 @@ function applySupplierPresentationFixes(product: Product): Product {
   };
 }
 
-const allProducts = dedupeProducts(
+const allProducts = assertUniqueProducts(
   generatedProducts
     .map(applyProductPricing)
     .map(normalizeProductCategory)
@@ -238,11 +238,23 @@ function getSupplierSection(product: Product): string | undefined {
 const sortedCategories = [...allCategories].sort((a, b) => b.priority - a.priority);
 const categoryBySlug = new Map(allCategories.map((category) => [category.slug, category]));
 const productsByCategory = new Map<string, Product[]>();
+const productsByUniqueSlug = new Map<string, Product | null>();
 
 for (const product of allProducts) {
   const categoryProducts = productsByCategory.get(product.categorySlug);
   if (categoryProducts) categoryProducts.push(product);
   else productsByCategory.set(product.categorySlug, [product]);
+
+  if (!productsByUniqueSlug.has(product.slug)) productsByUniqueSlug.set(product.slug, product);
+  else productsByUniqueSlug.set(product.slug, null);
+}
+
+for (const products of productsByCategory.values()) {
+  products.sort((a, b) => (
+    getCategoryProductPriority(b) - getCategoryProductPriority(a)
+    || a.name.localeCompare(b.name, 'ru')
+    || a.slug.localeCompare(b.slug, 'ru')
+  ));
 }
 
 export function getCompanyProfile(): CompanyProfile {
@@ -284,21 +296,26 @@ export function getProductsByCategory(categorySlug: string): Product[] {
 }
 
 export function getFeaturedProductByCategory(categorySlug: string): Product | undefined {
+  return getFeaturedProductsByCategory(categorySlug, 1)[0];
+}
+
+export function getFeaturedProductsByCategory(categorySlug: string, limit = 3): Product[] {
   const products = getProductsByCategory(categorySlug);
-  const preferredSlug = categoryFeaturedProductOverrides[categorySlug];
-  if (preferredSlug) {
-    const preferred = products.find((product) => product.slug === preferredSlug);
-    if (preferred) return preferred;
+  const featured: Product[] = [];
+  for (const preferredSlug of categoryFeaturedProductOverrides[categorySlug] ?? []) {
+    const preferred = products.find((product) => product.slug === preferredSlug && hasDisplayableProductImage(product));
+    if (preferred) featured.push(preferred);
   }
-  return products.find(hasDisplayableProductImage) ?? products[0];
+  for (const product of products) {
+    if (featured.length >= limit) break;
+    if (!featured.includes(product) && hasDisplayableProductImage(product)) featured.push(product);
+  }
+  if (featured.length === 0 && products[0]) featured.push(products[0]);
+  return featured.slice(0, limit);
 }
 
 export function getCategoryShowcaseBySlug(categorySlug: string): CategoryShowcase | undefined {
-  const override = categoryShowcaseOverrides[categorySlug];
-  if (override) return override;
-
-  const products = getProductsByCategory(categorySlug);
-  const showcaseProduct = products.find(hasDisplayableProductImage) ?? products[0];
+  const showcaseProduct = getFeaturedProductByCategory(categorySlug);
   if (!showcaseProduct) return undefined;
 
   return {
@@ -311,16 +328,16 @@ export function getProductBySlug(categorySlug: string, productSlug: string): Pro
   return getProductsByCategory(categorySlug).find((product) => product.slug === productSlug);
 }
 
+export function getProductByUniqueSlug(productSlug: string): Product | undefined {
+  return productsByUniqueSlug.get(productSlug) ?? undefined;
+}
+
 export function getRelatedProducts(categorySlug: string, limit = 3): Product[] {
-  const related: Product[] = [];
-  const seenCategories = new Set<string>();
-  for (const product of allProducts) {
-    if (product.categorySlug === categorySlug || seenCategories.has(product.categorySlug)) continue;
-    seenCategories.add(product.categorySlug);
-    related.push(product);
-    if (related.length >= limit) break;
-  }
-  return related;
+  return sortedCategories
+    .filter((category) => category.slug !== categorySlug)
+    .map((category) => getFeaturedProductByCategory(category.slug))
+    .filter((product): product is Product => Boolean(product))
+    .slice(0, limit);
 }
 
 export function getRelatedProductsForProduct(product: Product, limit = 3): Product[] {

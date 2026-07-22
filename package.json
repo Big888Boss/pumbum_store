@@ -19,6 +19,8 @@
     "analytics:check": "node scripts/check-metrika-contract.mjs",
     "analytics:check-browser": "node scripts/check-metrika-browser.mjs",
     "catalog:check-pagination": "node scripts/check-category-pagination.mjs",
+    "catalog:check-taxonomy": "node scripts/check-category-taxonomy.mjs",
+    "catalog:check-legacy-purpose-redirects": "node scripts/check-legacy-purpose-redirect-coverage.mjs",
     "images:audit": "node scripts/audit-product-images.mjs",
     "images:normalize": "node scripts/normalize-product-images.mjs",
     "images:apply-sinikon-source": "node scripts/apply-sinikon-source-images.mjs",
@@ -33,23 +35,24 @@
     "check:ocr-images": "node scripts/ocr-task130-images.mjs"
   },
   "dependencies": {
-    "@next/env": "^15.0.0",
-    "next": "^15.0.0",
+    "@next/env": "15.5.21",
+    "next": "15.5.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "sharp": "^0.34.5",
+    "sharp": "0.35.3",
     "zod": "^3.23.8"
   },
   "overrides": {
     "js-yaml": "^4.3.0",
-    "postcss": "^8.5.16"
+    "postcss": "^8.5.16",
+    "sharp": "0.35.3"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "^15.0.0",
+    "eslint-config-next": "15.5.21",
     "playwright": "^1.60.0",
     "tesseract.js": "^7.0.0",
     "typescript": "^5.5.0"

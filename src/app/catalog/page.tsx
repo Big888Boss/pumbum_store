@@ -7,7 +7,7 @@ import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Каталог — категории инженерной сантехники',
-  description: 'Каталог инженерной сантехники по назначению: отопление, водоснабжение, канализация, трубы, арматура и комплектующие.',
+  description: 'Каталог инженерной сантехники по назначению: водоснабжение, канализация, фильтрация, насосы, отопление, трубы и арматура.',
   path: '/catalog',
 });
 
@@ -27,7 +27,7 @@ export default function CatalogPage() {
         <div className="container">
           <div className="eyebrow">Каталог</div>
           <h1>Каталог товаров по назначению</h1>
-          <p className="lead">Подберите комплектующие для водоснабжения и отопления: по назначению, совместимости и условиям монтажа.</p>
+          <p className="lead">Выберите нужную инженерную систему, а внутри раздела сначала увидите основное оборудование и только затем комплектующие.</p>
           <div className="actions">
             <Link className="btn btn-secondary" href="/catalog/proizvoditeli">Открыть каталог по производителям</Link>
           </div>

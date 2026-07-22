@@ -6,7 +6,7 @@ const headerName = expectedMode === 'report-only'
 const forbiddenHeaderName = expectedMode === 'report-only'
   ? 'content-security-policy'
   : 'content-security-policy-report-only';
-const testPath = process.env.CSP_TEST_PATH ?? '/catalog/nasosy-i-vodosnabzhenie/espa-167577';
+const testPath = process.env.CSP_TEST_PATH ?? '/catalog/nasosy/aquario-7435';
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
