@@ -490,7 +490,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
         <div className="container grid grid-2">
           {featuredProducts.length > 1 ? (
             <article className="card popular-product-card">
-              <h2>Ключевое оборудование раздела</h2>
+              <h2>Рекомендуемые товары раздела</h2>
               <h3>Котлы для разных типов систем</h3>
               <p>В карусели показаны газовый, электрический и твердотопливный котлы. Коллекторы, арматура и монтажные комплектующие идут ниже после основного оборудования.</p>
               <ul className="badges">
@@ -499,7 +499,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
             </article>
           ) : (
             <Link className="card popular-product-card" href={`/catalog/${product.categorySlug}/${product.slug}`}>
-              <h2>Основной товар раздела</h2>
+              <h2>Рекомендуемый товар раздела</h2>
               <h3>{product.name}</h3>
               <p>{getProductCardDescription(product)}</p>
               <ul className="badges">

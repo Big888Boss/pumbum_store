@@ -129,8 +129,9 @@ p { color: var(--muted); line-height: 1.65; }
 .category-carousel-copy a { width: fit-content; color: var(--brand-dark); font-weight: 900; }
 .category-carousel-counter { color: var(--brand-dark); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; }
 .category-carousel-controls { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; }
-.category-carousel-controls > button { min-height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #334155; font: inherit; font-size: 13px; font-weight: 850; cursor: pointer; }
-.category-carousel-controls > button:hover { border-color: #93c5fd; color: var(--brand-dark); }
+.category-carousel-controls button { min-height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #334155; font: inherit; font-size: 13px; font-weight: 850; cursor: pointer; }
+.category-carousel-controls button:hover { border-color: #93c5fd; color: var(--brand-dark); }
+.category-carousel-actions { display: flex; gap: 8px; align-items: center; }
 .category-carousel-dots { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .category-carousel-dots button { width: 11px; height: 11px; padding: 0; border: 0; border-radius: 999px; background: #cbd5e1; cursor: pointer; }
 .category-carousel-dots button.is-active { width: 28px; background: var(--brand); }
@@ -147,7 +148,7 @@ p { color: var(--muted); line-height: 1.65; }
 .about-fact span { display: block; color: var(--brand); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; }
 .about-fact strong { display: block; margin: 6px 0 8px; color: #0f172a; font-size: 23px; line-height: 1.08; letter-spacing: 0; }
 .about-fact p { margin: 0; color: #64748b; line-height: 1.45; }
-.product-frame { position: relative; overflow: hidden; border-radius: 32px; background: #fff; border: 1px solid var(--line); box-shadow: 0 20px 54px rgba(15,23,42,.08); }
+.product-frame { position: relative; overflow: hidden; border-radius: 32px; background: linear-gradient(145deg, #fff 0%, #eef5fb 100%); border: 1px solid var(--line); box-shadow: 0 20px 54px rgba(15,23,42,.08); }
 .product-frame img.product-photo { aspect-ratio: 4/3; width: 100%; height: auto; object-fit: contain; padding: 28px; display: block; }
 .product-frame-compact { border-radius: 16px; box-shadow: none; background: #f8fafc; }
 .product-frame-compact img.product-photo { padding: 14px; }

@@ -6,13 +6,14 @@ The current production implementation notes are maintained in `docs/`.
 - SEO rules: `docs/SEO_RULES.md`
 - Current SEO/mobile release: `docs/SEO_MOBILE_RELEASE_2026-07-15.md`
 - Current catalog taxonomy release: `docs/CATALOG_TAXONOMY_RELEASE_2026-07-22.md`
+- Current category showcase release: `docs/CATEGORY_SHOWCASE_RELEASE_2026-07-22.md`
 - Performance release: `docs/PERFORMANCE_RELEASE_2026-07-11.md`
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`
 
 Production builds are created on the USA build host. The small production server must never run `next build` or `docker build`.
 
-Current production storefront release: `plumbing_store_v2-v2:catalog-taxonomy-20260722-v4` on localhost port `3020`. The previous `filters-price-20260717-v1` container on port `3019` is stopped to conserve RAM/swap; its image, stopped container and compose file are retained for rollback. No build runs on production. See `docs/CATALOG_TAXONOMY_RELEASE_2026-07-22.md` for acceptance evidence and rollback.
+Current production storefront release: `plumbing_store_v2-v2:category-showcase-20260722-v1` on localhost port `3021`. The previous `catalog-taxonomy-20260722-v4` container on port `3020` is stopped to conserve RAM/swap; its image and stopped container are retained for rollback. No build runs on production. See `docs/CATEGORY_SHOWCASE_RELEASE_2026-07-22.md` for acceptance evidence and rollback.
 
 The verified organization identity links for structured data are the exact
 Yandex Maps organization page `1056584886` and the 2GIS company page

@@ -86,6 +86,19 @@ Operational server rule:
 - `.asset-store/` is non-public and excluded from Docker context/git; it is for rollback and migration only.
 - Do not delete old photos during normalization unless a later explicit cleanup task approves it.
 
+## Category showcase cutouts 2026-07-22
+
+- `/images/category-showcase/valtec-stainless-pipe-{detail,card}.png` — real VALTEC stainless-pipe family used by `valtec-vti-900-304-1208`.
+- `/images/category-showcase/sinikon-clamp-km038-{detail,card}.png` — real SINIKON standard rubber-lined metal clamp.
+- `/images/category-showcase/sinikon-clamp-km100d-{detail,card}.png` — real SINIKON double rubber-lined metal clamp.
+- `/images/category-showcase/sinikon-sewer-pipe-{detail,card}.png` — real SINIKON orange single-socket sewer pipe family used by `20015`.
+
+The detail files are 1100x825; card files are 480x360. All eight files preserve
+an alpha channel. They are presentation-only overrides keyed by the exact
+normalized source path in `src/lib/catalog/product-images.ts`; original runtime
+product files are retained for rollback. The temporary segmentation model and
+Python environment are factory-only and excluded from Docker context.
+
 ## Extension and size audit
 
 2026-07-07 local V2 source audit:

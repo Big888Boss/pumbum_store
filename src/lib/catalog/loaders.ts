@@ -140,7 +140,7 @@ function supplierDisplayName(supplier: SupplierSlug): string {
 
 const categoryFeaturedProductOverrides: Record<string, string[]> = {
   vodosnabzhenie: ['akvatek-atv-500'],
-  kanalizaciya: ['sistemy-naruzhnoy-kanalizacii-504049-u'],
+  kanalizaciya: ['sistemy-naruzhnoy-kanalizacii-20015'],
   filtraciya: ['tim-jh-1001'],
   nasosy: ['aquario-7435'],
   'smesiteli-i-sifony': ['tim-bas0802s'],
@@ -149,8 +149,8 @@ const categoryFeaturedProductOverrides: Record<string, string[]> = {
     'zota-zota-zota-solid-x',
     'zota-zota-zota-topol-vk',
   ],
-  'krepezh-dlya-montazha': ['tim-zsr-2502-302002'],
-  'truby-i-fitingi': ['tim-tpap-1620-100-stabil'],
+  'krepezh-dlya-montazha': ['sistemy-naruzhnoy-kanalizacii-km038-r'],
+  'truby-i-fitingi': ['valtec-vti-900-304-1208'],
   'armatura-i-komplektuyuschie': ['valtec-vt-214-n-04'],
   'prochee-oborudovanie': ['valtec-vt-1550-ucz-220-2'],
 };

@@ -2,13 +2,13 @@ const baseUrl = (process.env.CATEGORY_TAXONOMY_BASE_URL || 'http://127.0.0.1:301
 const expectedPhone = '+7 (8452) 477-477';
 const categories = [
   ['vodosnabzhenie', 'Водоснабжение', 'ATV 500', /atv|емкост|бак|гидроаккумулятор/i],
-  ['kanalizaciya', 'Канализация', '504049.U', /канализац|локальной очистки|душевой лоток|трап/i],
+  ['kanalizaciya', 'Канализация', 'Труба однораструбная L=1000', /канализац|локальной очистки|душевой лоток|трап/i],
   ['filtraciya', 'Фильтрация', 'Фильтр промывной', /фильтр|сепаратор/i],
   ['nasosy', 'Насосы', 'AUTO ADB-35', /насос/i],
   ['smesiteli-i-sifony', 'Смесители и сифоны', 'Сифон металлический', /сифон|обвязка|слив/i],
   ['otoplenie-i-kotelnaya', 'Отопление и котельная', 'ZOTA «Zuma»', /zota|котел/i],
-  ['krepezh-dlya-montazha', 'Крепёж для монтажа', 'Профиль монтажный', /профиль|монтажная шина|хомут|клипса/i],
-  ['truby-i-fitingi', 'Трубы и фитинги', 'Труба PEX-b/AL/PERT', /труба|трубопроводная система/i],
+  ['krepezh-dlya-montazha', 'Крепёж для монтажа', 'Хомуты металлические с резиновой прокладкой', /профиль|монтажная шина|хомут|клипса/i],
+  ['truby-i-fitingi', 'Трубы и фитинги', 'Труба из нержавеющей стали', /труба|трубопроводная система/i],
   ['armatura-i-komplektuyuschie', 'Арматура и комплектующие', 'Кран шаровой VALTEC BASE', /кран|клапан|вентиль|редуктор/i],
   ['prochee-oborudovanie', 'Прочее оборудование', 'Пресс-инструмент электрический', /инструмент|аппарат/i],
 ];
@@ -48,6 +48,7 @@ for (const [slug, name, featuredText, firstProductPattern] of categories) {
   assert(page.body.includes(featuredText), `representative product is missing for ${slug}: ${featuredText}`);
   assert(page.body.includes(expectedPhone), `new phone format is missing from ${slug}`);
   assert(!page.body.includes('Популярный товар'), `unsupported popularity claim remains in ${slug}`);
+  assert(!page.body.includes('Основной товар раздела'), `old featured-product label remains in ${slug}`);
   const gridStart = page.body.indexOf('product-list-grid product-list-grid-with-images');
   const firstGridProduct = page.body.slice(gridStart, gridStart + 25_000).match(/<h3>(.*?)<\/h3>/s)?.[1]?.replace(/<[^>]+>/g, '') ?? '';
   assert(gridStart > 0 && firstProductPattern.test(firstGridProduct), `first product is not core for ${slug}: ${firstGridProduct}`);
@@ -58,7 +59,16 @@ for (const boiler of ['ZOTA «Zuma»', 'ZOTA «Solid-X»', 'ZOTA «Тополь-
   assert(heating.body.includes(boiler), `heating carousel item is missing: ${boiler}`);
 }
 const heatingText = heating.body.replaceAll('<!-- -->', '');
-assert(heatingText.includes('Основное оборудование · 1 из 3'), 'heating carousel counter is missing');
+assert(heatingText.includes('Рекомендуемые товары · 1 из 3'), 'heating carousel counter is missing');
+
+for (const [path, asset] of [
+  ['/catalog/kanalizaciya', '/images/category-showcase/sinikon-sewer-pipe-detail.png'],
+  ['/catalog/krepezh-dlya-montazha', '/images/category-showcase/sinikon-clamp-km038-detail.png'],
+  ['/catalog/truby-i-fitingi', '/images/category-showcase/valtec-stainless-pipe-detail.png'],
+]) {
+  const page = await get(path);
+  assert(page.body.includes(asset), `${path} does not use ${asset}`);
+}
 
 for (const [source, destination] of [
   ['/catalog/nasosy-i-vodosnabzhenie', '/catalog/nasosy'],

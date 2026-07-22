@@ -23,6 +23,7 @@
 - `/api/cart` and `/api/leads` are disabled until order intake is explicitly approved
 - Contact paths are visible and usable: phone, email, address, working hours, map
 - `/images/products/**` legacy runtime assets are mounted/synchronized for V2 and product pages do not render generated placeholder art
+- Category presentation overrides reference only exact normalized source image paths; inspect transparent edges on the real hero background and keep unrelated product images unchanged.
 - `/api/health` returns `200` and current catalog totals
 - `/catalog/<category>` includes rate-limit headers
 - `/search?q=random-gibberish` returns zero results
@@ -33,6 +34,7 @@
 - Confirm `NEXT_PUBLIC_SITE_ENV=production`
 - Confirm `NEXT_PUBLIC_YANDEX_METRIKA_ID` uses the approved production counter
 - Confirm the existing Metrika JavaScript goals `search_submit`, `click_phone`, `click_email`, `view_product` and `click_order` remain configured on counter `109783471`.
+- For an automatic carousel, verify five-second rotation, explicit pause, manual controls, focus/hover pause, hidden-tab pause and `prefers-reduced-motion` handling.
 - Run `METRIKA_TEST_BASE_URL=<staging-url> npm run analytics:check-browser` with Yandex requests intercepted; require one initial `hit`, one `hit` per SPA route change, all five goals, and no raw search query in goal parameters.
 - Confirm order intake is still disabled, or document the approved CRM/webhook owner before enabling it
 - Run PageSpeed/Lighthouse on HTTPS URL
