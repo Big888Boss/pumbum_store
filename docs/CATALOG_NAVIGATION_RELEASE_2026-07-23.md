@@ -51,8 +51,8 @@ p50 was 895 ms, p95 1,692 ms and all 20 responses were `200`.
 The production host did not run `npm install`, `next build` or `docker build`.
 The image was built and tested on `administrator@100.95.56.90`. During
 blue-green verification both versions ran briefly; the previous container was
-stopped after public acceptance, returning available memory to about 300 MiB
-and swap use to about 750 MiB.
+stopped after public acceptance. The warmed single-release runtime left about
+220–300 MiB available and used about 750–790 MiB of swap during final checks.
 
 ## Verification
 
