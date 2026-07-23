@@ -3,6 +3,14 @@ import legacyCatalog from '../../../content/generated/legacy-catalog.json';
 import type { Category } from '@/entities/category/model';
 import type { CompanyProfile } from '@/entities/company/model';
 import type { Product } from '@/entities/product/model';
+import {
+  getBuyerGroupLabel,
+  getBuyerSubcategoriesByCategory,
+  getBuyerSubcategoryBySlug,
+  getBuyerSubcategoryForProduct,
+  getBuyerSubcategoryProducts,
+  type BuyerSubcategory,
+} from '@/lib/catalog/buyer-subcategories';
 import { applyProductPricing } from '@/lib/catalog/pricing';
 import { applyProductImageManifest } from '@/lib/catalog/product-images';
 import { getCategoryProductPriority, normalizeProductCategory, purposeCategories } from '@/lib/catalog/purpose';
@@ -144,15 +152,24 @@ const categoryFeaturedProductOverrides: Record<string, string[]> = {
   filtraciya: ['tim-jh-1001'],
   nasosy: ['aquario-7435'],
   'smesiteli-i-sifony': ['tim-bas0802s'],
-  'otoplenie-i-kotelnaya': [
-    'zota-zota-zuma',
-    'zota-zota-zota-solid-x',
-    'zota-zota-zota-topol-vk',
-  ],
+  'otoplenie-i-kotelnaya': ['zota-zota-zuma'],
   'krepezh-dlya-montazha': ['sistemy-naruzhnoy-kanalizacii-km038-r'],
   'truby-i-fitingi': ['valtec-vti-900-304-1208'],
   'armatura-i-komplektuyuschie': ['valtec-vt-214-n-04'],
   'prochee-oborudovanie': ['valtec-vt-1550-ucz-220-2'],
+};
+
+const categoryFeaturedSubcategoryOrder: Record<string, string[]> = {
+  vodosnabzhenie: ['emkosti-dlya-vody', 'gidroakkumulyatory', 'zashchita-ot-protechek'],
+  kanalizaciya: ['naruzhnaya-kanalizaciya', 'vnutrennyaya-kanalizaciya', 'trapy-i-dushevye-lotki'],
+  filtraciya: ['promyvnye-filtry', 'mehanicheskie-filtry', 'gryazeotdeliteli'],
+  nasosy: ['skvazhinnye-nasosy', 'nasosnye-stancii', 'cirkulyacionnye-nasosy'],
+  'smesiteli-i-sifony': ['sifony', 'slivy-i-obvyazki', 'dushevye-komplektuyushchie'],
+  'otoplenie-i-kotelnaya': ['kotly', 'kollektory', 'radiatornaya-armatura'],
+  'krepezh-dlya-montazha': ['homuty', 'montazhnye-profili', 'klipsy-i-krepleniya'],
+  'truby-i-fitingi': ['nerzhaveyushchaya-stal', 'polipropilen', 'pex-i-metallopolimer'],
+  'armatura-i-komplektuyuschie': ['sharovye-krany', 'reguliruyushchaya-armatura', 'armatura-bezopasnosti'],
+  'prochee-oborudovanie': ['press-instrument', 'rezka-i-podgotovka-trub', 'uplotniteli-i-rashodniki'],
 };
 
 function hasDisplayableProductImage(product: Product): boolean {
@@ -228,13 +245,6 @@ function productHasLegacySource(product: Product, sources: readonly string[]): b
   return product.sourceRefs.some((source) => sources.includes(source.label));
 }
 
-function getSupplierSection(product: Product): string | undefined {
-  const rawSection = product.specs['Подраздел'] || product.specs['Группа'] || product.specs['Исходный раздел'];
-  const section = rawSection?.split('/')[0]?.trim();
-  if (!section || section === product.name) return undefined;
-  return section;
-}
-
 const sortedCategories = [...allCategories].sort((a, b) => b.priority - a.priority);
 const categoryBySlug = new Map(allCategories.map((category) => [category.slug, category]));
 const productsByCategory = new Map<string, Product[]>();
@@ -275,8 +285,11 @@ export function getAllProducts(): Product[] {
 
 export function getManufacturerGroups(): ManufacturerGroup[] {
   return supplierSourceGroups.map((supplier) => {
-    const items = allProducts.filter((product) => productHasLegacySource(product, supplier.sources));
-    const sections = [...new Set(items.map(getSupplierSection).filter(Boolean) as string[])]
+    const items = allProducts.filter((product) => (
+      inferSupplierSlug(product) === supplier.slug
+      || productHasLegacySource(product, supplier.sources)
+    ));
+    const sections = [...new Set(items.map(getBuyerGroupLabel).filter(Boolean) as string[])]
       .sort((a, b) => a.localeCompare(b, 'ru'));
     const logo = items.find((product) => product.logo)?.logo || supplierLogoFallbacks[supplier.slug];
     return {
@@ -291,8 +304,46 @@ export function getManufacturerGroups(): ManufacturerGroup[] {
   }).filter((group) => group.productCount > 0);
 }
 
+export function getManufacturerGroupBySlug(slug: string): ManufacturerGroup | undefined {
+  return getManufacturerGroups().find((manufacturer) => manufacturer.slug === slug);
+}
+
+export function getProductsByManufacturer(slug: string): Product[] {
+  const supplier = supplierSourceGroups.find((item) => item.slug === slug);
+  if (!supplier) return [];
+  return allProducts.filter((product) => (
+    inferSupplierSlug(product) === supplier.slug
+    || productHasLegacySource(product, supplier.sources)
+  ));
+}
+
 export function getProductsByCategory(categorySlug: string): Product[] {
   return productsByCategory.get(categorySlug) ?? [];
+}
+
+export function getCatalogSubcategories(categorySlug: string): Array<BuyerSubcategory & { productCount: number }> {
+  const products = getProductsByCategory(categorySlug);
+  return getBuyerSubcategoriesByCategory(categorySlug)
+    .map((definition) => ({
+      ...definition,
+      productCount: getBuyerSubcategoryProducts(products, definition).length,
+    }))
+    .filter((definition) => definition.productCount > 0);
+}
+
+export function getCatalogSubcategory(categorySlug: string, subcategorySlug: string): BuyerSubcategory | undefined {
+  const definition = getBuyerSubcategoryBySlug(categorySlug, subcategorySlug);
+  if (!definition) return undefined;
+  return getBuyerSubcategoryProducts(getProductsByCategory(categorySlug), definition).length > 0
+    ? definition
+    : undefined;
+}
+
+export function getProductsByCatalogSubcategory(categorySlug: string, subcategorySlug: string): Product[] {
+  const definition = getCatalogSubcategory(categorySlug, subcategorySlug);
+  return definition
+    ? getBuyerSubcategoryProducts(getProductsByCategory(categorySlug), definition)
+    : [];
 }
 
 export function getFeaturedProductByCategory(categorySlug: string): Product | undefined {
@@ -302,13 +353,28 @@ export function getFeaturedProductByCategory(categorySlug: string): Product | un
 export function getFeaturedProductsByCategory(categorySlug: string, limit = 3): Product[] {
   const products = getProductsByCategory(categorySlug);
   const featured: Product[] = [];
+  const selectedGroups = new Set<string>();
+
+  const addProduct = (product: Product | undefined) => {
+    if (!product || featured.includes(product) || !hasDisplayableProductImage(product)) return;
+    const group = getBuyerSubcategoryForProduct(product);
+    if (group && selectedGroups.has(group.slug)) return;
+    featured.push(product);
+    if (group) selectedGroups.add(group.slug);
+  };
+
   for (const preferredSlug of categoryFeaturedProductOverrides[categorySlug] ?? []) {
-    const preferred = products.find((product) => product.slug === preferredSlug && hasDisplayableProductImage(product));
-    if (preferred) featured.push(preferred);
+    addProduct(products.find((product) => product.slug === preferredSlug));
+  }
+  for (const subcategorySlug of categoryFeaturedSubcategoryOrder[categorySlug] ?? []) {
+    if (featured.length >= limit) break;
+    const definition = getBuyerSubcategoryBySlug(categorySlug, subcategorySlug);
+    if (!definition || selectedGroups.has(definition.slug)) continue;
+    addProduct(getBuyerSubcategoryProducts(products, definition).find(hasDisplayableProductImage));
   }
   for (const product of products) {
     if (featured.length >= limit) break;
-    if (!featured.includes(product) && hasDisplayableProductImage(product)) featured.push(product);
+    addProduct(product);
   }
   if (featured.length === 0 && products[0]) featured.push(products[0]);
   return featured.slice(0, limit);
@@ -341,19 +407,33 @@ export function getRelatedProducts(categorySlug: string, limit = 3): Product[] {
 }
 
 export function getRelatedProductsForProduct(product: Product, limit = 3): Product[] {
-  const series = product.specs['Подраздел'] || product.specs['Группа'];
-  return getProductsByCategory(product.categorySlug)
+  const relatedCategoryOrder: Record<string, string[]> = {
+    vodosnabzhenie: ['nasosy', 'filtraciya', 'armatura-i-komplektuyuschie'],
+    kanalizaciya: ['truby-i-fitingi', 'krepezh-dlya-montazha', 'nasosy'],
+    filtraciya: ['armatura-i-komplektuyuschie', 'vodosnabzhenie', 'truby-i-fitingi'],
+    nasosy: ['vodosnabzhenie', 'armatura-i-komplektuyuschie', 'truby-i-fitingi'],
+    'smesiteli-i-sifony': ['armatura-i-komplektuyuschie', 'truby-i-fitingi', 'kanalizaciya'],
+    'otoplenie-i-kotelnaya': ['armatura-i-komplektuyuschie', 'truby-i-fitingi', 'nasosy'],
+    'krepezh-dlya-montazha': ['truby-i-fitingi', 'prochee-oborudovanie', 'armatura-i-komplektuyuschie'],
+    'truby-i-fitingi': ['armatura-i-komplektuyuschie', 'krepezh-dlya-montazha', 'prochee-oborudovanie'],
+    'armatura-i-komplektuyuschie': ['truby-i-fitingi', 'prochee-oborudovanie', 'krepezh-dlya-montazha'],
+    'prochee-oborudovanie': ['truby-i-fitingi', 'krepezh-dlya-montazha', 'armatura-i-komplektuyuschie'],
+  };
+  const sameCategory = getProductsByCategory(product.categorySlug)
     .filter((candidate) => (
-      candidate.categorySlug === product.categorySlug
-      && candidate.slug !== product.slug
-    ))
-    .sort((a, b) => {
-      const aScore = Number(a.supplier === product.supplier) * 2
-        + Number(Boolean(series) && (a.specs['Подраздел'] === series || a.specs['Группа'] === series));
-      const bScore = Number(b.supplier === product.supplier) * 2
-        + Number(Boolean(series) && (b.specs['Подраздел'] === series || b.specs['Группа'] === series));
-      return bScore - aScore;
-    })
+      candidate.slug !== product.slug
+      && getBuyerGroupLabel(candidate) !== getBuyerGroupLabel(product)
+      && hasDisplayableProductImage(candidate)
+    ));
+  const candidates = [
+    ...sameCategory,
+    ...(relatedCategoryOrder[product.categorySlug] ?? [])
+      .flatMap((categorySlug) => getFeaturedProductsByCategory(categorySlug, 1)),
+  ];
+  return candidates
+    .filter((candidate, index) => candidates.findIndex((item) => (
+      item.categorySlug === candidate.categorySlug && item.slug === candidate.slug
+    )) === index)
     .slice(0, limit);
 }
 

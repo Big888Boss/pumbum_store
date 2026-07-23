@@ -255,7 +255,8 @@ p { color: var(--muted); line-height: 1.65; }
 .manufacturer-logo-fallback { background: linear-gradient(145deg, #eff6ff, #f8fafc); }
 .manufacturer-sections { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; padding: 0; list-style: none; }
 .manufacturer-sections li { line-height: 1; }
-.manufacturer-sections a { display: inline-flex; align-items: center; min-height: 30px; border: 1px solid var(--line); border-radius: 12px; padding: 6px 9px; background: #f8fafc; color: #334155; font-size: 12px; font-weight: 800; }
+.manufacturer-sections a,
+.manufacturer-sections span { display: inline-flex; align-items: center; min-height: 30px; border: 1px solid var(--line); border-radius: 12px; padding: 6px 9px; background: #f8fafc; color: #334155; font-size: 12px; font-weight: 800; }
 .manufacturer-sections a:hover { border-color: #9cc7f5; color: var(--brand-dark); }
 .manufacturer-section-more { margin-top: 10px; }
 .manufacturer-section-more summary { cursor: pointer; color: var(--brand-dark); font-size: 13px; font-weight: 900; }
@@ -453,7 +454,8 @@ ul:not(.badges) { padding-left: 20px; }
   .manufacturer-logo { min-height: 78px; }
   .manufacturer-logo img { max-width: 132px; max-height: 52px; }
   .manufacturer-sections { gap: 7px; }
-  .manufacturer-sections a { min-height: 34px; font-size: 12px; }
+  .manufacturer-sections a,
+  .manufacturer-sections span { min-height: 34px; font-size: 12px; }
   .home-contact-panel { min-height: 0; padding: 24px; border-radius: 22px; }
   .home-contact-panel a { font-size: 28px; }
   .contact-card { padding: 20px; }

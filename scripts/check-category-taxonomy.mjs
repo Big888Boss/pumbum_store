@@ -1,4 +1,5 @@
 const baseUrl = (process.env.CATEGORY_TAXONOMY_BASE_URL || 'http://127.0.0.1:3010').replace(/\/$/, '');
+const navigationConcurrency = Math.max(1, Math.min(8, Number(process.env.CATEGORY_NAVIGATION_CONCURRENCY ?? '3')));
 const expectedPhone = '+7 (8452) 477-477';
 const categories = [
   ['vodosnabzhenie', 'Водоснабжение', 'ATV 500', /atv|емкост|бак|гидроаккумулятор/i],
@@ -10,7 +11,7 @@ const categories = [
   ['krepezh-dlya-montazha', 'Крепёж для монтажа', 'Хомуты металлические с резиновой прокладкой', /профиль|монтажная шина|хомут|клипса/i],
   ['truby-i-fitingi', 'Трубы и фитинги', 'Труба из нержавеющей стали', /труба|трубопроводная система/i],
   ['armatura-i-komplektuyuschie', 'Арматура и комплектующие', 'Кран шаровой VALTEC BASE', /кран|клапан|вентиль|редуктор/i],
-  ['prochee-oborudovanie', 'Прочее оборудование', 'Пресс-инструмент электрический', /инструмент|аппарат/i],
+  ['prochee-oborudovanie', 'Инструмент и расходные материалы', 'Пресс-инструмент электрический', /инструмент|аппарат/i],
 ];
 
 function assert(condition, message) {
@@ -49,17 +50,21 @@ for (const [slug, name, featuredText, firstProductPattern] of categories) {
   assert(page.body.includes(expectedPhone), `new phone format is missing from ${slug}`);
   assert(!page.body.includes('Популярный товар'), `unsupported popularity claim remains in ${slug}`);
   assert(!page.body.includes('Основной товар раздела'), `old featured-product label remains in ${slug}`);
+  const groupAttribute = page.body.match(/data-carousel-groups="([^"]+)"/)?.[1] ?? '';
+  const carouselGroups = groupAttribute.split('|').filter(Boolean);
+  assert(page.body.includes('data-carousel-size="3"'), `three-item carousel is missing for ${slug}`);
+  assert(carouselGroups.length === 3, `carousel group labels are missing for ${slug}: ${groupAttribute}`);
+  assert(new Set(carouselGroups).size === 3, `carousel repeats a product group for ${slug}: ${groupAttribute}`);
   const gridStart = page.body.indexOf('product-list-grid product-list-grid-with-images');
   const firstGridProduct = page.body.slice(gridStart, gridStart + 25_000).match(/<h3>(.*?)<\/h3>/s)?.[1]?.replace(/<[^>]+>/g, '') ?? '';
   assert(gridStart > 0 && firstProductPattern.test(firstGridProduct), `first product is not core for ${slug}: ${firstGridProduct}`);
 }
 
 const heating = await get('/catalog/otoplenie-i-kotelnaya');
-for (const boiler of ['ZOTA «Zuma»', 'ZOTA «Solid-X»', 'ZOTA «Тополь-ВК»']) {
-  assert(heating.body.includes(boiler), `heating carousel item is missing: ${boiler}`);
+for (const group of ['Котлы', 'Коллекторы и коллекторные группы', 'Радиаторная арматура']) {
+  assert(heating.body.includes(group), `heating carousel direction is missing: ${group}`);
 }
-const heatingText = heating.body.replaceAll('<!-- -->', '');
-assert(heatingText.includes('Рекомендуемые товары · 1 из 3'), 'heating carousel counter is missing');
+assert(heating.body.replaceAll('<!-- -->', '').includes('Рекомендуемые товары · 1 из 3'), 'heating carousel counter is missing');
 
 for (const [path, asset] of [
   ['/catalog/kanalizaciya', '/images/category-showcase/sinikon-sewer-pipe-detail.png'],
@@ -83,10 +88,29 @@ for (const [source, destination] of [
 const sitemap = await get('/sitemap.xml');
 assert(sitemap.response.ok, `/sitemap.xml returned ${sitemap.response.status}`);
 const locations = [...sitemap.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-assert(locations.length === 9293, `expected 9293 sitemap URLs, got ${locations.length}`);
+assert(locations.length > 9293, `expected new navigation routes in sitemap, got ${locations.length}`);
 assert(new Set(locations).size === locations.length, 'sitemap contains duplicate URLs');
+assert(locations.filter((url) => url.includes('/podrazdel/')).length >= 30, 'too few buyer subcategory routes in sitemap');
+assert(locations.filter((url) => url.includes('/catalog/po-zadache/')).length === 6, 'buyer task routes are incomplete');
+assert(locations.filter((url) => /\/catalog\/proizvoditeli\/[^/]+$/.test(url)).length === 9, 'manufacturer routes are incomplete');
 assert(!locations.some((url) => url.includes('/catalog/nasosy-i-vodosnabzhenie')), 'old pumps category remains in sitemap');
 assert(!locations.some((url) => url.includes('/catalog/kanalizaciya-i-vodootvedenie')), 'old sewer category remains in sitemap');
+
+const navigationLocations = locations.filter((url) => (
+  url.includes('/podrazdel/')
+  || url.includes('/catalog/po-zadache/')
+  || /\/catalog\/proizvoditeli\/[^/]+$/.test(url)
+));
+for (let index = 0; index < navigationLocations.length; index += navigationConcurrency) {
+  const batch = navigationLocations.slice(index, index + navigationConcurrency);
+  const results = await Promise.all(batch.map((url) => get(new URL(url).pathname)));
+  results.forEach(({ response, body }, resultIndex) => {
+    const url = batch[resultIndex];
+    assert(response.ok, `${url} returned ${response.status}`);
+    assert(body.includes('<h1'), `${url} has no page heading`);
+    assert(body.includes('product-list-card product-list-card-with-image'), `${url} has no product cards`);
+  });
+}
 
 console.log(JSON.stringify({
   baseUrl,
@@ -94,5 +118,10 @@ console.log(JSON.stringify({
   categories: health.catalog.categories,
   sitemapUrls: locations.length,
   redirects: 3,
+  buyerSubcategories: locations.filter((url) => url.includes('/podrazdel/')).length,
+  buyerTasks: 6,
+  manufacturers: 9,
+  navigationRoutesChecked: navigationLocations.length,
+  navigationConcurrency,
   phone: expectedPhone,
 }, null, 2));

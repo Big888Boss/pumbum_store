@@ -9,7 +9,7 @@ import type { Category } from '@/entities/category/model';
 import type { Product } from '@/entities/product/model';
 import type { CatalogFilterKey, CatalogFilterSelection } from '@/lib/catalog/filters';
 import { activeCatalogFilterCount, applyCatalogFilters, buildCatalogFilters, getProductGroupLabel, parseCatalogFilterSelection, priceRangeLabel } from '@/lib/catalog/filters';
-import { getCategoryBySlug, getFeaturedProductsByCategory, getProductsByCategory, getRelatedProducts } from '@/lib/catalog/loaders';
+import { getCatalogSubcategories, getCategoryBySlug, getFeaturedProductsByCategory, getProductsByCategory, getRelatedProducts } from '@/lib/catalog/loaders';
 import { formatProductPrice } from '@/lib/catalog/pricing';
 import { getProductImage } from '@/lib/catalog/product-images';
 import { getProductDistinctionFacts, getProductKeyFacts } from '@/lib/catalog/specs';
@@ -25,16 +25,6 @@ type PageProps = {
 };
 const productsPerPage = 60;
 type CatalogViewMode = 'grid' | 'list';
-
-function getTopProductGroups(products: Product[], limit = 14) {
-  const counts = new Map<string, number>();
-  for (const product of products) {
-    const label = getProductGroupLabel(product);
-    if (!label) continue;
-    counts.set(label, (counts.get(label) ?? 0) + 1);
-  }
-  return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ru')).slice(0, limit);
-}
 
 function formatPositions(count: number): string {
   const mod10 = count % 10;
@@ -214,7 +204,9 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
   const paginationPages = [...new Set([1, currentPage - 1, currentPage, currentPage + 1, pageCount])]
     .filter((page) => page >= 1 && page <= pageCount)
     .sort((a, b) => a - b);
-  const productGroups = getTopProductGroups(baseProducts);
+  const productGroups = getCatalogSubcategories(categorySlug)
+    .sort((a, b) => b.productCount - a.productCount || a.name.localeCompare(b.name, 'ru'))
+    .slice(0, 14);
   const activeCount = activeCatalogFilterCount(selected);
 
   return (
@@ -233,13 +225,13 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
         </div>
         {productGroups.length > 0 ? (
           <div className="catalog-groups" aria-label="Группы товаров раздела">
-            {productGroups.map(([name, count]) => (
+            {productGroups.map((group) => (
               <Link
-                key={name}
-                className={selected.group === name ? 'is-active' : ''}
-                href={buildCategoryHref(categorySlug, selected, viewMode, sort, { key: 'group', value: name })}
+                key={group.slug}
+                className={selected.group === group.name ? 'is-active' : ''}
+                href={`/catalog/${categorySlug}/podrazdel/${group.slug}`}
               >
-                {name} <strong>{count.toLocaleString('ru-RU')}</strong>
+                {group.name} <strong>{group.productCount.toLocaleString('ru-RU')}</strong>
               </Link>
             ))}
           </div>
@@ -444,7 +436,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const categoryData = getCategoryBySlug(category);
   const categoryProducts = getProductsByCategory(category);
   const filteredProducts = sortCatalogProducts(applyCatalogFilters(categoryProducts, selectedFilters), sort);
-  const featuredProducts = getFeaturedProductsByCategory(category, category === 'otoplenie-i-kotelnaya' ? 3 : 1);
+  const featuredProducts = getFeaturedProductsByCategory(category, 3);
   const product = featuredProducts[0];
   if (!categoryData || !product) {
     const legacyDestination = getLegacyCatalogRedirect([category]);
@@ -452,6 +444,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     notFound();
   }
   const related = getRelatedProducts(product.categorySlug);
+  const featuredGroupLabels = featuredProducts.map((item) => getProductGroupLabel(item) ?? item.purpose);
 
   if (product.categorySlug === 'radiators') {
     return <RadiatorsCategoryView category={categoryData} product={product} products={categoryProducts} related={related} viewMode={viewMode} sort={sort} page={page} nonce={nonce} />;
@@ -478,41 +471,24 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
               <Link className="btn btn-secondary" href="/contacts">Связаться с магазином</Link>
             </div>
           </div>
-          {featuredProducts.length > 1 ? (
-            <CategoryProductCarousel products={featuredProducts} />
-          ) : (
-            <ProductImage src={product.image} alt={product.name} logoSrc={product.logo} brand={product.brandName} hideBrandLogo={product.hideBrandLogo} priority />
-          )}
+          <CategoryProductCarousel products={featuredProducts} groupLabels={featuredGroupLabels} />
         </div>
       </section>
 
       <section className="section">
         <div className="container grid grid-2">
-          {featuredProducts.length > 1 ? (
-            <article className="card popular-product-card">
-              <h2>Рекомендуемые товары раздела</h2>
-              <h3>Котлы для разных типов систем</h3>
-              <p>В карусели показаны газовый, электрический и твердотопливный котлы. Коллекторы, арматура и монтажные комплектующие идут ниже после основного оборудования.</p>
-              <ul className="badges">
-                {featuredProducts.map((item) => <li className="badge" key={item.slug}>{item.name}</li>)}
-              </ul>
-            </article>
-          ) : (
-            <Link className="card popular-product-card" href={`/catalog/${product.categorySlug}/${product.slug}`}>
-              <h2>Рекомендуемый товар раздела</h2>
-              <h3>{product.name}</h3>
-              <p>{getProductCardDescription(product)}</p>
-              <ul className="badges">
-                {getProductKeyFacts(product, 4).map((item) => <li className="badge" key={item}>{item}</li>)}
-                <li className="badge price-badge">{formatProductPrice(product)}</li>
-              </ul>
-            </Link>
-          )}
+          <article className="card popular-product-card">
+            <h2>Основные направления раздела</h2>
+            <h3>Три разных типа товаров</h3>
+            <p>Карусель показывает разные направления категории, чтобы быстрее перейти к основному оборудованию, а не к случайной вспомогательной позиции.</p>
+            <ul className="badges">
+              {featuredGroupLabels.map((label) => <li className="badge" key={label}>{label}</li>)}
+            </ul>
+          </article>
           <aside className="card">
             <h2>Что уточнить перед покупкой</h2>
-            <ul>
-              {product.sellingPoints.map((point) => <li key={point}>{point}</li>)}
-            </ul>
+            <p>{categoryData.buyingGuide}</p>
+            <p className="meta">Менеджер проверит параметры и совместимость конкретных артикулов до заказа.</p>
           </aside>
         </div>
       </section>

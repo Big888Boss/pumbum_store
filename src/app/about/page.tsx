@@ -79,7 +79,7 @@ export default function AboutPage() {
           <div className="section-head"><h2>Производители и поставщики</h2></div>
           <div className="grid grid-3">
             {manufacturers.map((manufacturer) => (
-              <Link className="card brand-card" href={`/search?q=${encodeURIComponent(manufacturer.name)}`} key={manufacturer.name}>
+              <Link className="card brand-card" href={`/catalog/proizvoditeli/${manufacturer.slug}`} key={manufacturer.name}>
                 {manufacturer.logo ? (
                   <StaticImage src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={180} height={70} />
                 ) : (

@@ -73,6 +73,9 @@
 - runtime products: 9276 generated rows: 5700 base legacy, 3508 TIM and 68 ESPA;
 - sitemap-publishable runtime products: 9276;
 - manufacturer index route: `/catalog/proizvoditeli`;
+- manufacturer detail routes: nine verified pages under `/catalog/proizvoditeli/{manufacturer}`;
+- buyer task routes: `/catalog/po-zadache` plus six task pages;
+- buyer subcategories: 45 non-empty pages under `/catalog/{category}/podrazdel/{subcategory}`;
 - cart route: `/cart` redirects to `/contacts`; `/api/cart` and `/api/leads` return `410` until order intake is explicitly approved;
 - image references: all 9276 runtime products have real image references; legacy-local `/images/products/**` must be available as runtime static assets on server;
 - generated output: `content/generated/legacy-catalog.json`;
@@ -81,11 +84,11 @@
 
 Текущий production runtime:
 
-- image: `plumbing_store_v2-v2:carousel-polish-20260723-v1`;
-- active localhost port: `3022`;
-- verified rollback image/container: `category-showcase-20260722-v1` on `3021`, stopped after the public release checks to save RAM/swap;
+- image: `plumbing_store_v2-v2:catalog-navigation-20260723-v1`;
+- active localhost port: `3023`;
+- verified rollback image/container: `carousel-polish-20260723-v1` on `3022`, stopped after the public release checks to save RAM/swap;
 - build only on `administrator@100.95.56.90`; never build on the small production host;
-- release and rollback evidence: `docs/CAROUSEL_POLISH_RELEASE_2026-07-23.md`.
+- release and rollback evidence: `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md`.
 
 Нельзя:
 

@@ -16,9 +16,24 @@ const response = await fetch(`${baseUrl}/sitemap.xml`, {
 });
 assert(response.ok, `/sitemap.xml returned ${response.status}`);
 const sitemap = await response.text();
+const categorySlugs = new Set([
+  'vodosnabzhenie',
+  'kanalizaciya',
+  'filtraciya',
+  'nasosy',
+  'smesiteli-i-sifony',
+  'otoplenie-i-kotelnaya',
+  'krepezh-dlya-montazha',
+  'truby-i-fitingi',
+  'armatura-i-komplektuyuschie',
+  'prochee-oborudovanie',
+]);
 const productPaths = [...sitemap.matchAll(/<loc>https:\/\/477477\.ru(\/catalog\/[^<]+\/[^<]+)<\/loc>/g)]
   .map((match) => match[1])
-  .filter((path) => path !== '/catalog/proizvoditeli');
+  .filter((path) => {
+    const segments = path.split('/').filter(Boolean);
+    return segments.length === 3 && categorySlugs.has(segments[1]);
+  });
 const currentPaths = new Set(productPaths);
 const pathsBySlug = new Map();
 

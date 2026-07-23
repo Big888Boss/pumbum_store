@@ -1,4 +1,5 @@
 import type { Product } from '@/entities/product/model';
+import { getBuyerGroupLabel } from '@/lib/catalog/buyer-subcategories';
 
 export type CatalogFilterKey =
   | 'brand'
@@ -74,8 +75,7 @@ function getFirstSpecValue(product: Product, keys: string[] = []): string | unde
 }
 
 export function getProductGroupLabel(product: Product): string | undefined {
-  const label = cleanValue(product.specs['Подраздел']) || cleanValue(product.specs['Группа']) || cleanValue(product.specs.group) || cleanValue(product.specs.type);
-  return label && label !== product.name ? label : undefined;
+  return getBuyerGroupLabel(product);
 }
 
 function getFilterValue(product: Product, definition: FilterDefinition): string | undefined {

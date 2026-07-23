@@ -7,7 +7,13 @@ import type { Product } from '@/entities/product/model';
 
 const AUTOPLAY_DELAY_MS = 5000;
 
-export function CategoryProductCarousel({ products }: { products: Product[] }) {
+export function CategoryProductCarousel({
+  products,
+  groupLabels,
+}: {
+  products: Product[];
+  groupLabels?: string[];
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [hasFocusWithin, setHasFocusWithin] = useState(false);
@@ -58,6 +64,8 @@ export function CategoryProductCarousel({ products }: { products: Product[] }) {
     <section
       className="category-product-carousel"
       aria-label="Рекомендуемые товары раздела"
+      data-carousel-size={products.length}
+      data-carousel-groups={groupLabels?.join('|')}
       onFocusCapture={() => setHasFocusWithin(true)}
       onBlurCapture={(event) => {
         const nextTarget = event.relatedTarget;
@@ -83,7 +91,7 @@ export function CategoryProductCarousel({ products }: { products: Product[] }) {
       >
         <span className="category-carousel-counter">Рекомендуемые товары · {activeIndex + 1} из {products.length}</span>
         <h2>{activeProduct.name}</h2>
-        <p>{activeProduct.specs['Подраздел'] || activeProduct.purpose}</p>
+        <p>{groupLabels?.[activeIndex] || activeProduct.purpose}</p>
         <Link href={`/catalog/${activeProduct.categorySlug}/${activeProduct.slug}`}>Открыть товар</Link>
       </div>
       <div className="category-carousel-controls">

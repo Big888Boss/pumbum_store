@@ -29,12 +29,20 @@ export default function CatalogPage() {
           <h1>Каталог товаров по назначению</h1>
           <p className="lead">Выберите нужную инженерную систему, а внутри раздела сначала увидите основное оборудование и только затем комплектующие.</p>
           <div className="actions">
+            <Link className="btn btn-primary" href="/catalog/po-zadache">Подобрать по задаче</Link>
             <Link className="btn btn-secondary" href="/catalog/proizvoditeli">Открыть каталог по производителям</Link>
           </div>
           <MetrikaSearchForm className="search-panel search-panel-compact" action="/search" location="catalog_page">
             <input name="q" type="search" placeholder="Поиск по артикулу, бренду или параметру" />
             <button className="btn btn-primary" type="submit">Найти</button>
           </MetrikaSearchForm>
+        </div>
+      </section>
+      <section className="section section-tight">
+        <div className="container card info-card">
+          <h2>Не знаете точное название товара?</h2>
+          <p>Откройте подбор по задаче: водоснабжение дома, отопление, теплый пол, канализация, обвязка котельной или монтаж.</p>
+          <div className="actions"><Link className="btn btn-primary" href="/catalog/po-zadache">Выбрать задачу</Link></div>
         </div>
       </section>
       <section className="section">

@@ -54,14 +54,15 @@ export default function ManufacturersPage() {
                 )}
               </div>
               <div>
-                <h2>{manufacturer.name}</h2>
+                <h2><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>{manufacturer.name}</Link></h2>
                 <p>{formatPositions(manufacturer.productCount)} · {formatSections(manufacturer.categoryCount)}</p>
                 <ul className="manufacturer-sections">
                   {manufacturer.sections.slice(0, 6).map((section) => (
-                    <li key={section}><Link href={`/search?q=${encodeURIComponent(section)}`}>{section}</Link></li>
+                    <li key={section}><span>{section}</span></li>
                   ))}
-                  {manufacturer.sections.length > 6 ? <li><Link href={`/search?q=${encodeURIComponent(manufacturer.name)}`}>+{manufacturer.sections.length - 6} разделов</Link></li> : null}
+                  {manufacturer.sections.length > 6 ? <li><span>+{manufacturer.sections.length - 6} разделов</span></li> : null}
                 </ul>
+                <p className="manufacturer-section-more"><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>Все товары производителя</Link></p>
               </div>
             </article>
           ))}
