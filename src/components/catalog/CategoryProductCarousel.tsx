@@ -5,14 +5,22 @@ import Link from 'next/link';
 import { ProductImage } from '@/components/product/ProductImage';
 import type { Product } from '@/entities/product/model';
 
+const AUTOPLAY_DELAY_MS = 5000;
+
 export function CategoryProductCarousel({ products }: { products: Product[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
   const [hasFocusWithin, setHasFocusWithin] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isDocumentVisible, setIsDocumentVisible] = useState(true);
   const activeProduct = products[activeIndex] ?? products[0];
+
+  useEffect(() => {
+    products.slice(1).forEach((product) => {
+      const image = new Image();
+      image.src = product.image;
+    });
+  }, [products]);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -31,16 +39,15 @@ export function CategoryProductCarousel({ products }: { products: Product[] }) {
   useEffect(() => {
     const shouldRun = products.length > 1
       && !isPaused
-      && !isHovering
       && !hasFocusWithin
       && !prefersReducedMotion
       && isDocumentVisible;
     if (!shouldRun) return undefined;
     const timer = window.setTimeout(() => {
       setActiveIndex((current) => (current + 1) % products.length);
-    }, 5000);
+    }, AUTOPLAY_DELAY_MS);
     return () => window.clearTimeout(timer);
-  }, [activeIndex, hasFocusWithin, isDocumentVisible, isHovering, isPaused, prefersReducedMotion, products.length]);
+  }, [activeIndex, hasFocusWithin, isDocumentVisible, isPaused, prefersReducedMotion, products.length]);
 
   if (!activeProduct) return null;
 
@@ -51,8 +58,6 @@ export function CategoryProductCarousel({ products }: { products: Product[] }) {
     <section
       className="category-product-carousel"
       aria-label="Рекомендуемые товары раздела"
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
       onFocusCapture={() => setHasFocusWithin(true)}
       onBlurCapture={(event) => {
         const nextTarget = event.relatedTarget;
@@ -61,7 +66,7 @@ export function CategoryProductCarousel({ products }: { products: Product[] }) {
         }
       }}
     >
-      <div className="category-carousel-image">
+      <div className="category-carousel-image" key={`${activeProduct.slug}-image`}>
         <ProductImage
           src={activeProduct.image}
           alt={activeProduct.name}
@@ -71,7 +76,11 @@ export function CategoryProductCarousel({ products }: { products: Product[] }) {
           priority
         />
       </div>
-      <div className="category-carousel-copy" aria-live={isPaused || hasFocusWithin ? 'polite' : 'off'}>
+      <div
+        className="category-carousel-copy"
+        key={`${activeProduct.slug}-copy`}
+        aria-live={isPaused || hasFocusWithin ? 'polite' : 'off'}
+      >
         <span className="category-carousel-counter">Рекомендуемые товары · {activeIndex + 1} из {products.length}</span>
         <h2>{activeProduct.name}</h2>
         <p>{activeProduct.specs['Подраздел'] || activeProduct.purpose}</p>
@@ -84,7 +93,7 @@ export function CategoryProductCarousel({ products }: { products: Product[] }) {
             <button
               key={product.slug}
               type="button"
-              className={index === activeIndex ? 'is-active' : ''}
+              className={`category-carousel-dot${index === activeIndex ? ' is-active' : ''}`}
               onClick={() => setActiveIndex(index)}
               aria-label={`Показать товар ${index + 1}: ${product.name}`}
               aria-current={index === activeIndex ? 'true' : undefined}

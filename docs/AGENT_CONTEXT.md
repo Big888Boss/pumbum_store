@@ -81,11 +81,11 @@
 
 Текущий production runtime:
 
-- image: `plumbing_store_v2-v2:category-showcase-20260722-v1`;
-- active localhost port: `3021`;
-- verified rollback image/container: `catalog-taxonomy-20260722-v4` on `3020`, stopped after the public release checks to save RAM/swap;
+- image: `plumbing_store_v2-v2:carousel-polish-20260723-v1`;
+- active localhost port: `3022`;
+- verified rollback image/container: `category-showcase-20260722-v1` on `3021`, stopped after the public release checks to save RAM/swap;
 - build only on `administrator@100.95.56.90`; never build on the small production host;
-- release and rollback evidence: `docs/CATEGORY_SHOWCASE_RELEASE_2026-07-22.md`.
+- release and rollback evidence: `docs/CAROUSEL_POLISH_RELEASE_2026-07-23.md`.
 
 Нельзя:
 
