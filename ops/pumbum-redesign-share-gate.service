@@ -1,0 +1,32 @@
+[Unit]
+Description=Pumbum redesign invite-only share gate
+After=network-online.target pumbum-redesign-preview.service
+Wants=network-online.target
+Requires=pumbum-redesign-preview.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/administrator/agent-projects/pumbum-store-redesign-20260725
+Environment=NODE_ENV=production
+Environment=PREVIEW_SHARE_HOST=127.0.0.1
+Environment=PREVIEW_SHARE_PORT=3026
+Environment=PREVIEW_SHARE_UPSTREAM=http://127.0.0.1:3025
+Environment=PREVIEW_SHARE_SESSION_SECONDS=86400
+Environment=PREVIEW_TAILNET_HOST=100.95.56.90
+Environment=PREVIEW_TAILNET_PORT=3027
+EnvironmentFile=%h/.config/pumbum-redesign-preview/share.env
+ExecStart=/home/administrator/.nvm/versions/node/v22.22.2/bin/node scripts/preview-share-gate.mjs
+Restart=on-failure
+RestartSec=3s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryHigh=67108864
+MemoryMax=134217728
+CPUQuota=25%
+TasksMax=64
+
+[Install]
+WantedBy=default.target

@@ -3,8 +3,9 @@
 ## Status and boundary
 
 - Prototype source is prepared and passes a production `next build`.
-- The owner approved a temporary preview. It runs only on build-host loopback
-  `127.0.0.1:3025` with `MemoryHigh=1.5G`, `MemoryMax=2G` and `CPUQuota=150%`.
+- The owner approved a temporary preview. The Next.js process runs only on
+  build-host loopback `127.0.0.1:3025` with `MemoryHigh=1.5G`,
+  `MemoryMax=2G` and `CPUQuota=150%`.
 - Production `477477.ru`, nginx, containers, catalog data, product images and services were not changed.
 - Source baseline: clean production commit `a6bc64e4105a7de96a2b3f9fc29c9d1ba56c1981`.
 - Isolated build-host path: `/home/administrator/agent-projects/pumbum-store-redesign-20260725`.
@@ -120,6 +121,46 @@ The build ran while the SalesGame E2E stack stayed online.
 - No kernel OOM event was found.
 - All five SalesGame E2E containers remained running with `restarts=0` and `OOMKilled=false`.
 - The prototype directory including copied dependencies and build output is about `1.7 GiB`.
+
+## Temporary protected sharing
+
+The owner approved temporary external access for one reviewer who is not in
+the tailnet. Production routing remains unchanged.
+
+- Tailnet reviewers use `http://100.95.56.90:3027/`.
+- External traffic enters through a Cloudflare Quick Tunnel and reaches only
+  the loopback token gate on `127.0.0.1:3026`.
+- The invitation credential is carried in the URL fragment, which is not sent
+  in the HTTP request, then exchanged for a 24-hour `Secure`, `HttpOnly`,
+  `SameSite=Lax` cookie. The credential is stored only in the mode-0600 runtime
+  file `/home/administrator/.config/pumbum-redesign-preview/share.env`; it is
+  intentionally absent from Git and this documentation.
+- Anonymous requests receive only the closed-preview page. Shared responses
+  include `X-Robots-Tag: noindex, nofollow, noarchive`, `Cache-Control:
+  no-store` and a no-referrer policy.
+- No new listener was opened on `0.0.0.0` or `[::]`. The tunnel is
+  outbound-only; its metrics listener is loopback-only on `127.0.0.1:49327`.
+- User services:
+  - `pumbum-redesign-share-gate.service`;
+  - `pumbum-redesign-cloudflared.service`.
+- The official user-scoped `cloudflared` `2026.7.2` binary is installed at
+  `/home/administrator/.local/bin/cloudflared`. Verified SHA-256:
+  `ec905ea7b7e327ff8abdde8cb64697a2152de74dbcdbf6aec9db8364eb3886cd`.
+- Quick Tunnels are for temporary preview/testing, have no SLA and issue a new
+  random hostname after the tunnel service restarts. Capture the current
+  hostname from `journalctl --user -u pumbum-redesign-cloudflared.service`
+  instead of treating a recorded hostname as durable.
+
+Stop temporary sharing without stopping the loopback preview:
+
+```bash
+systemctl --user disable --now pumbum-redesign-cloudflared.service
+systemctl --user disable --now pumbum-redesign-share-gate.service
+```
+
+After review, remove the two service units, the gate script, the runtime secret
+file and the user-scoped `cloudflared` binary only with separate owner
+approval.
 
 ## Remaining release blockers
 

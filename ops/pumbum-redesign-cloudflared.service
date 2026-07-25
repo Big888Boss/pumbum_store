@@ -1,0 +1,23 @@
+[Unit]
+Description=Pumbum redesign temporary Cloudflare Quick Tunnel
+After=network-online.target pumbum-redesign-share-gate.service
+Wants=network-online.target
+Requires=pumbum-redesign-share-gate.service
+
+[Service]
+Type=simple
+ExecStart=/home/administrator/.local/bin/cloudflared tunnel --no-autoupdate --metrics 127.0.0.1:49327 --loglevel info --transport-loglevel warn --url http://127.0.0.1:3026
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryHigh=100663296
+MemoryMax=167772160
+CPUQuota=25%
+TasksMax=64
+
+[Install]
+WantedBy=default.target

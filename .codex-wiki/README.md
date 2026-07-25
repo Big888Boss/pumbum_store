@@ -9,7 +9,7 @@ The current production implementation notes are maintained in `docs/`.
 - Current category showcase release: `docs/CATEGORY_SHOWCASE_RELEASE_2026-07-22.md`
 - Current carousel polish release: `docs/CAROUSEL_POLISH_RELEASE_2026-07-23.md`
 - Current catalog navigation release: `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md`
-- Isolated high-end redesign prototype (temporary loopback preview, not deployed): `docs/HIGH_END_REDESIGN_PROTOTYPE_2026-07-25.md`
+- Isolated high-end redesign prototype (temporary protected preview, not deployed): `docs/HIGH_END_REDESIGN_PROTOTYPE_2026-07-25.md`
 - Performance release: `docs/PERFORMANCE_RELEASE_2026-07-11.md`
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`
@@ -17,9 +17,11 @@ The current production implementation notes are maintained in `docs/`.
 Production builds are created on the USA build host. The small production server must never run `next build` or `docker build`.
 
 The 2026-07-25 high-end redesign is an isolated source/build prototype based on
-production commit `a6bc64e`. The owner approved a temporary loopback-only
-preview on `127.0.0.1:3025`; it is not the active production release and is not
-publicly exposed. The second design iteration adds the current store logo,
+production commit `a6bc64e`. The owner approved a temporary preview whose app
+process stays on `127.0.0.1:3025`. Tailnet access is provided through
+`100.95.56.90:3027`; one non-tailnet reviewer uses an invitation-gated,
+outbound-only Cloudflare Quick Tunnel. No production route or public inbound
+port was changed. The second design iteration adds the current store logo,
 stable quality-gated category carousels, collection search/filter/sort
 controls, lightweight scroll reveals, a back-to-top control and a denser
 product-detail composition without the redundant photo explanation panel.
