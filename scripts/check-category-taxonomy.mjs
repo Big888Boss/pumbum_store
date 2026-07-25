@@ -52,9 +52,19 @@ for (const [slug, name, featuredText, firstProductPattern] of categories) {
   assert(!page.body.includes('Основной товар раздела'), `old featured-product label remains in ${slug}`);
   const groupAttribute = page.body.match(/data-carousel-groups="([^"]+)"/)?.[1] ?? '';
   const carouselGroups = groupAttribute.split('|').filter(Boolean);
-  assert(page.body.includes('data-carousel-size="3"'), `three-item carousel is missing for ${slug}`);
-  assert(carouselGroups.length === 3, `carousel group labels are missing for ${slug}: ${groupAttribute}`);
-  assert(new Set(carouselGroups).size === 3, `carousel repeats a product group for ${slug}: ${groupAttribute}`);
+  const expectedCarouselSize = slug === 'krepezh-dlya-montazha' ? 2 : 3;
+  assert(
+    page.body.includes(`data-carousel-size="${expectedCarouselSize}"`),
+    `${expectedCarouselSize}-item carousel is missing for ${slug}`,
+  );
+  assert(
+    carouselGroups.length === expectedCarouselSize,
+    `carousel group labels are missing for ${slug}: ${groupAttribute}`,
+  );
+  assert(
+    new Set(carouselGroups).size === expectedCarouselSize,
+    `carousel repeats a product group for ${slug}: ${groupAttribute}`,
+  );
   const gridStart = page.body.indexOf('product-list-grid product-list-grid-with-images');
   const firstGridProduct = page.body.slice(gridStart, gridStart + 25_000).match(/<h3>(.*?)<\/h3>/s)?.[1]?.replace(/<[^>]+>/g, '') ?? '';
   assert(gridStart > 0 && firstProductPattern.test(firstGridProduct), `first product is not core for ${slug}: ${firstGridProduct}`);

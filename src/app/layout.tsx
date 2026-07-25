@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
+import { ScrollEnhancements } from '@/components/layout/ScrollEnhancements';
 import { SiteHeader } from '@/components/layout/SiteHeader';
+import { StoreLogo } from '@/components/layout/StoreLogo';
 import { YandexMetrika } from '@/components/analytics/YandexMetrika';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getCompanyProfile } from '@/lib/catalog/loaders';
@@ -48,10 +50,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <div className="ambient ambient-right" aria-hidden="true" />
           <SiteHeader phone={company.phone} />
           <main className="main">{children}</main>
+          <ScrollEnhancements />
           <footer className="footer">
             <div className="container footer-grid">
               <div className="footer-brand">
-                <h3>САНТЕХНИКЪ</h3>
+                <Link href="/" aria-label="На главную Сантехникъ"><StoreLogo compact /></Link>
                 <p>Магазин сантехники, отопления, труб, фитингов и комплектующих в Саратове.</p>
               </div>
               <div>

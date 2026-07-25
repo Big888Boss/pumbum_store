@@ -50,7 +50,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     title: task.title,
     description: task.description,
     path: `/catalog/po-zadache/${task.slug}`,
-    noindex: parsePage(query) > 1,
+    noindex: parsePage(query) > 1 || Object.values(query).some((value) => (Array.isArray(value) ? value[0] : value ?? '').trim().length > 0),
     followWhenNoindex: true,
   });
 }
@@ -75,7 +75,11 @@ export default async function BuyerTaskPage({ params, searchParams }: PageProps)
           <ul className="badges">
             {task.subcategories.map(({ categorySlug, subcategorySlug }) => {
               const group = getCatalogSubcategory(categorySlug, subcategorySlug);
-              return group ? <li className="badge" key={`${categorySlug}/${subcategorySlug}`}>{group.name}</li> : null;
+              return group ? (
+                <li key={`${categorySlug}/${subcategorySlug}`}>
+                  <Link className="badge badge-link" href={`${basePath}?group=${encodeURIComponent(group.name)}`}>{group.name}</Link>
+                </li>
+              ) : null;
             })}
           </ul>
           <div className="actions">
@@ -84,7 +88,7 @@ export default async function BuyerTaskPage({ params, searchParams }: PageProps)
           </div>
         </div>
       </section>
-      <CatalogCollectionGrid products={getTaskProducts(task.slug)} basePath={basePath} requestedPage={parsePage(query)} title="Подходящие группы товаров" />
+      <CatalogCollectionGrid products={getTaskProducts(task.slug)} basePath={basePath} query={query} title="Подходящие группы товаров" />
       <section className="section section-tight">
         <div className="container">
           <article className="card info-card">

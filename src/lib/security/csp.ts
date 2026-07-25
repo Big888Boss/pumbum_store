@@ -24,6 +24,7 @@ export function createCspNonce(): string {
 
 export function buildContentSecurityPolicy(nonce: string): string {
   const development = process.env.NODE_ENV === 'development';
+  const productionSite = process.env.NEXT_PUBLIC_SITE_ENV === 'production';
   const scriptSources = [
     "'self'",
     `'nonce-${nonce}'`,
@@ -53,7 +54,7 @@ export function buildContentSecurityPolicy(nonce: string): string {
     "form-action 'self'",
     "frame-ancestors 'self'",
     `report-uri ${cspReportPath}`,
-    ...(development ? [] : ['upgrade-insecure-requests']),
+    ...(!development && productionSite ? ['upgrade-insecure-requests'] : []),
   ].join('; ');
 }
 

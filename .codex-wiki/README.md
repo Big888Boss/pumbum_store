@@ -19,9 +19,13 @@ Production builds are created on the USA build host. The small production server
 The 2026-07-25 high-end redesign is an isolated source/build prototype based on
 production commit `a6bc64e`. The owner approved a temporary loopback-only
 preview on `127.0.0.1:3025`; it is not the active production release and is not
-publicly exposed. Browser/design QA passed after desktop/mobile, dark/light,
-catalog, search, product, image, carousel and interaction checks. Production
-deployment still requires separate owner approval.
+publicly exposed. The second design iteration adds the current store logo,
+stable quality-gated category carousels, collection search/filter/sort
+controls, lightweight scroll reveals, a back-to-top control and a denser
+product-detail composition without the redundant photo explanation panel.
+Browser/design QA passed after desktop/mobile, dark/light, catalog, search,
+product, image, carousel and interaction checks. Production deployment still
+requires separate owner approval.
 
 Current production storefront release: `plumbing_store_v2-v2:catalog-navigation-20260723-v1` on localhost port `3023`. The previous `carousel-polish-20260723-v1` container on port `3022` is stopped to conserve RAM/swap; its image and stopped container are retained for rollback. No build runs on production. See `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md` for acceptance evidence and rollback.
 

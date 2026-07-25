@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Pause, Play } from 'lucide-react';
 import { ProductImage } from '@/components/product/ProductImage';
 import type { Product } from '@/entities/product/model';
 
@@ -16,8 +15,8 @@ export function CategoryProductCarousel({
   groupLabels?: string[];
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [hasFocusWithin, setHasFocusWithin] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isDocumentVisible, setIsDocumentVisible] = useState(true);
   const activeProduct = products[activeIndex] ?? products[0];
@@ -45,8 +44,8 @@ export function CategoryProductCarousel({
 
   useEffect(() => {
     const shouldRun = products.length > 1
-      && !isPaused
       && !hasFocusWithin
+      && !isHovered
       && !prefersReducedMotion
       && isDocumentVisible;
     if (!shouldRun) return undefined;
@@ -54,7 +53,7 @@ export function CategoryProductCarousel({
       setActiveIndex((current) => (current + 1) % products.length);
     }, AUTOPLAY_DELAY_MS);
     return () => window.clearTimeout(timer);
-  }, [activeIndex, hasFocusWithin, isDocumentVisible, isPaused, prefersReducedMotion, products.length]);
+  }, [activeIndex, hasFocusWithin, isDocumentVisible, isHovered, prefersReducedMotion, products.length]);
 
   if (!activeProduct) return null;
 
@@ -64,6 +63,9 @@ export function CategoryProductCarousel({
       aria-label="Рекомендуемые товары раздела"
       data-carousel-size={products.length}
       data-carousel-groups={groupLabels?.join('|')}
+      aria-roledescription="карусель"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onFocusCapture={() => setHasFocusWithin(true)}
       onBlurCapture={(event) => {
         const nextTarget = event.relatedTarget;
@@ -85,7 +87,7 @@ export function CategoryProductCarousel({
       <div
         className="category-carousel-copy"
         key={`${activeProduct.slug}-copy`}
-        aria-live={isPaused || hasFocusWithin ? 'polite' : 'off'}
+        aria-live={hasFocusWithin ? 'polite' : 'off'}
       >
         <span className="category-carousel-counter">Рекомендуемые товары · {activeIndex + 1} из {products.length}</span>
         <h2>{activeProduct.name}</h2>
@@ -105,16 +107,6 @@ export function CategoryProductCarousel({
             />
           ))}
         </div>
-        <button
-          className="category-carousel-pause"
-          type="button"
-          onClick={() => setIsPaused((current) => !current)}
-          aria-pressed={isPaused}
-          aria-label={isPaused ? 'Продолжить автоматическую прокрутку' : 'Остановить автоматическую прокрутку'}
-          title={isPaused ? 'Продолжить' : 'Пауза'}
-        >
-          {isPaused ? <Play aria-hidden="true" /> : <Pause aria-hidden="true" />}
-        </button>
       </div>
     </section>
   );

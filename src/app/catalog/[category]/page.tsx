@@ -479,7 +479,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
         <div className="container grid grid-2">
           <article className="card popular-product-card">
             <h2>Основные направления раздела</h2>
-            <h3>Три разных типа товаров</h3>
+            <h3>Разные типы товаров</h3>
             <p>Карусель показывает разные направления категории, чтобы быстрее перейти к основному оборудованию, а не к случайной вспомогательной позиции.</p>
             <ul className="badges">
               {featuredGroupLabels.map((label) => <li className="badge" key={label}>{label}</li>)}

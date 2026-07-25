@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CatalogCollectionGrid } from '@/components/catalog/CatalogCollectionGrid';
-import { StaticImage } from '@/components/media/StaticImage';
 import { getManufacturerGroupBySlug, getProductsByManufacturer } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -18,6 +17,10 @@ function parsePage(query: Record<string, string | string[] | undefined>): number
   return Number.isSafeInteger(page) && page > 0 ? page : 1;
 }
 
+function firstQueryValue(value: string | string[] | undefined): string {
+  return (Array.isArray(value) ? value[0] : value ?? '').trim();
+}
+
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { manufacturer: slug } = await params;
   const query = searchParams ? await searchParams : {};
@@ -27,7 +30,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     title: `${manufacturer.name} — каталог товаров в Саратове`,
     description: `${manufacturer.name}: ${manufacturer.productCount.toLocaleString('ru-RU')} товаров инженерной сантехники. Артикулы, характеристики и цены в каталоге «Сантехникъ».`,
     path: `/catalog/proizvoditeli/${slug}`,
-    noindex: parsePage(query) > 1,
+    noindex: parsePage(query) > 1 || Object.values(query).some((value) => firstQueryValue(value).length > 0),
     followWhenNoindex: true,
   });
 }
@@ -46,19 +49,21 @@ export default async function ManufacturerPage({ params, searchParams }: PagePro
       </div>
       <section className="hero">
         <div className="container">
-          <div className="eyebrow">Производитель</div>
-          {manufacturer.logo ? <StaticImage src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={180} height={72} /> : null}
           <h1>{manufacturer.name}</h1>
           <p className="lead">{manufacturer.productCount.toLocaleString('ru-RU')} товаров в покупательских разделах каталога.</p>
           <ul className="badges">
-            {manufacturer.sections.slice(0, 10).map((section) => <li className="badge" key={section}>{section}</li>)}
+            {manufacturer.sections.slice(0, 10).map((section) => (
+              <li key={section}>
+                <Link className="badge badge-link" href={`${basePath}?group=${encodeURIComponent(section)}`}>{section}</Link>
+              </li>
+            ))}
           </ul>
         </div>
       </section>
       <CatalogCollectionGrid
         products={getProductsByManufacturer(slug)}
         basePath={basePath}
-        requestedPage={parsePage(query)}
+        query={query}
         title={`Товары ${manufacturer.name}`}
       />
     </>

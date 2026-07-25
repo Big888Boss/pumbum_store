@@ -7,6 +7,7 @@ const forbiddenHeaderName = expectedMode === 'report-only'
   ? 'content-security-policy'
   : 'content-security-policy-report-only';
 const testPath = process.env.CSP_TEST_PATH ?? '/catalog/nasosy/aquario-7435';
+const expectUpgradeInsecureRequests = process.env.CSP_EXPECT_UPGRADE_INSECURE_REQUESTS;
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -39,6 +40,12 @@ function inspectPage(response, html) {
   assert(policy.includes("'sha256-2v0wUgRiMnQqfAAERz6WCRNJ9EZeUWOvHSCDVMftC6Q='"), 'CSP lacks the Next route-announcer content style hash');
   assert(policy.includes('wss://mc.yandex.ru'), 'CSP blocks Yandex Metrika WebSocket transport');
   assert(policy.includes('report-uri /api/csp-report'), 'CSP report endpoint is missing');
+  if (expectUpgradeInsecureRequests === '1') {
+    assert(policy.includes('upgrade-insecure-requests'), 'production CSP does not upgrade insecure requests');
+  }
+  if (expectUpgradeInsecureRequests === '0') {
+    assert(!policy.includes('upgrade-insecure-requests'), 'non-production CSP upgrades loopback assets to HTTPS');
+  }
 
   const nonceMatch = policy.match(/'nonce-([^']+)'/);
   assert(nonceMatch, 'CSP nonce is missing');

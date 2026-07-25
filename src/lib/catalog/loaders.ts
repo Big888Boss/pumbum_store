@@ -149,14 +149,24 @@ function supplierDisplayName(supplier: SupplierSlug): string {
 const categoryFeaturedProductOverrides: Record<string, string[]> = {
   vodosnabzhenie: ['akvatek-atv-500'],
   kanalizaciya: ['sistemy-naruzhnoy-kanalizacii-20015'],
-  filtraciya: ['tim-jh-1001'],
+  filtraciya: ['valtec-vt-389-n-06'],
   nasosy: ['aquario-7435'],
-  'smesiteli-i-sifony': ['tim-bas0802s'],
+  'smesiteli-i-sifony': ['tim-bas0802s', 'tim-bas0260b-a', 'tim-c-l50-02bk'],
   'otoplenie-i-kotelnaya': ['zota-zota-zuma'],
   'krepezh-dlya-montazha': ['sistemy-naruzhnoy-kanalizacii-km038-r'],
   'truby-i-fitingi': ['valtec-vti-900-304-1208'],
   'armatura-i-komplektuyuschie': ['valtec-vt-214-n-04'],
-  'prochee-oborudovanie': ['valtec-vt-1550-ucz-220-2'],
+  'prochee-oborudovanie': [
+    'valtec-vt-1550-ucz-220-2',
+    'valtec-vtm-396-0',
+    'valtec-vtp-799-e-020040',
+  ],
+};
+
+const carouselImageOverrides: Record<string, string> = {
+  'tim-bas0802s': '/images/carousel-products/tim-bas0802s.png',
+  'tim-bas0260b-a': '/images/carousel-products/tim-bas0260ba.png',
+  'tim-c-l50-02bk': '/images/carousel-products/tim-cl5002bk.png',
 };
 
 const categoryFeaturedSubcategoryOrder: Record<string, string[]> = {
@@ -169,7 +179,7 @@ const categoryFeaturedSubcategoryOrder: Record<string, string[]> = {
   'krepezh-dlya-montazha': ['homuty', 'montazhnye-profili', 'klipsy-i-krepleniya'],
   'truby-i-fitingi': ['nerzhaveyushchaya-stal', 'polipropilen', 'pex-i-metallopolimer'],
   'armatura-i-komplektuyuschie': ['sharovye-krany', 'reguliruyushchaya-armatura', 'armatura-bezopasnosti'],
-  'prochee-oborudovanie': ['press-instrument', 'rezka-i-podgotovka-trub', 'uplotniteli-i-rashodniki'],
+  'prochee-oborudovanie': ['press-instrument', 'rezka-i-podgotovka-trub', 'svarochnyy-instrument', 'uplotniteli-i-rashodniki'],
 };
 
 function hasDisplayableProductImage(product: Product): boolean {
@@ -181,6 +191,16 @@ function hasDisplayableProductImage(product: Product): boolean {
   if (image.includes('/images/brands/')) return false;
   if (/fallback|placeholder|logo/i.test(image)) return false;
   return true;
+}
+
+function hasCarouselQualityImage(product: Product): boolean {
+  if (!hasDisplayableProductImage(product)) return false;
+  const image = carouselImageOverrides[product.slug] ?? product.image;
+  return (
+    image.includes('/images/products/_normalized-v2/')
+    || image.includes('/images/category-showcase/')
+    || image.includes('/images/carousel-products/')
+  );
 }
 
 function applyManualProductPresentationFixes(product: Product): Product {
@@ -259,12 +279,20 @@ for (const product of allProducts) {
   else productsByUniqueSlug.set(product.slug, null);
 }
 
-for (const products of productsByCategory.values()) {
-  products.sort((a, b) => (
+function compareCatalogDefaultOrder(a: Product, b: Product): number {
+  return (
     getCategoryProductPriority(b) - getCategoryProductPriority(a)
     || a.name.localeCompare(b.name, 'ru')
     || a.slug.localeCompare(b.slug, 'ru')
-  ));
+  );
+}
+
+export function sortProductsByCatalogPriority(products: Product[]): Product[] {
+  return [...products].sort(compareCatalogDefaultOrder);
+}
+
+for (const products of productsByCategory.values()) {
+  products.sort(compareCatalogDefaultOrder);
 }
 
 export function getCompanyProfile(): CompanyProfile {
@@ -285,10 +313,10 @@ export function getAllProducts(): Product[] {
 
 export function getManufacturerGroups(): ManufacturerGroup[] {
   return supplierSourceGroups.map((supplier) => {
-    const items = allProducts.filter((product) => (
+    const items = sortProductsByCatalogPriority(allProducts.filter((product) => (
       inferSupplierSlug(product) === supplier.slug
       || productHasLegacySource(product, supplier.sources)
-    ));
+    )));
     const sections = [...new Set(items.map(getBuyerGroupLabel).filter(Boolean) as string[])]
       .sort((a, b) => a.localeCompare(b, 'ru'));
     const logo = items.find((product) => product.logo)?.logo || supplierLogoFallbacks[supplier.slug];
@@ -311,10 +339,10 @@ export function getManufacturerGroupBySlug(slug: string): ManufacturerGroup | un
 export function getProductsByManufacturer(slug: string): Product[] {
   const supplier = supplierSourceGroups.find((item) => item.slug === slug);
   if (!supplier) return [];
-  return allProducts.filter((product) => (
+  return sortProductsByCatalogPriority(allProducts.filter((product) => (
     inferSupplierSlug(product) === supplier.slug
     || productHasLegacySource(product, supplier.sources)
-  ));
+  )));
 }
 
 export function getProductsByCategory(categorySlug: string): Product[] {
@@ -354,13 +382,17 @@ export function getFeaturedProductsByCategory(categorySlug: string, limit = 3): 
   const products = getProductsByCategory(categorySlug);
   const featured: Product[] = [];
   const selectedGroups = new Set<string>();
+  const selectedProducts = new Set<string>();
 
   const addProduct = (product: Product | undefined) => {
-    if (!product || featured.includes(product) || !hasDisplayableProductImage(product)) return;
+    if (!product || selectedProducts.has(product.slug) || !hasCarouselQualityImage(product)) return;
     const group = getBuyerSubcategoryForProduct(product);
-    if (group && selectedGroups.has(group.slug)) return;
-    featured.push(product);
-    if (group) selectedGroups.add(group.slug);
+    if (!group || selectedGroups.has(group.slug)) return;
+    featured.push(carouselImageOverrides[product.slug]
+      ? { ...product, image: carouselImageOverrides[product.slug] }
+      : product);
+    selectedProducts.add(product.slug);
+    selectedGroups.add(group.slug);
   };
 
   for (const preferredSlug of categoryFeaturedProductOverrides[categorySlug] ?? []) {
@@ -370,13 +402,12 @@ export function getFeaturedProductsByCategory(categorySlug: string, limit = 3): 
     if (featured.length >= limit) break;
     const definition = getBuyerSubcategoryBySlug(categorySlug, subcategorySlug);
     if (!definition || selectedGroups.has(definition.slug)) continue;
-    addProduct(getBuyerSubcategoryProducts(products, definition).find(hasDisplayableProductImage));
+    addProduct(getBuyerSubcategoryProducts(products, definition).find(hasCarouselQualityImage));
   }
   for (const product of products) {
     if (featured.length >= limit) break;
     addProduct(product);
   }
-  if (featured.length === 0 && products[0]) featured.push(products[0]);
   return featured.slice(0, limit);
 }
 

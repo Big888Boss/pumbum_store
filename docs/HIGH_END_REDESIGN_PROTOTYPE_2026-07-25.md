@@ -23,7 +23,23 @@
 - Added a persistent dark/light theme toggle. Dark remains the default design; light uses the same typography, spacing, glass treatment and glow hierarchy.
 - Reworked the global header, footer, homepage hero, KPI strip, cards, catalog controls, product cards, product detail, manufacturers, delivery, about, contacts and supporting pages through the shared design system.
 - Added working information tabs between `/about`, `/delivery` and `/contacts`.
-- Kept the category carousel at five-second autoplay with product preloading, dot navigation, reduced-motion, focus/visibility pause and an accessible pause/play control. Removed the three large text controls.
+- Kept the category carousel at five-second autoplay with product preloading,
+  dot navigation, reduced-motion and automatic focus/visibility pause. Visible
+  previous/pause/next controls are removed; accessible slide selection remains.
+- Added a quality gate for carousel imagery. Each category uses strong products
+  from distinct buyer groups; the mounting category intentionally shows two
+  verified products instead of admitting a mismatched third source image.
+- Added three transparent TIM product cutouts for the mixers and siphons
+  carousel and placed carousel products directly on the technical grid surface.
+- Added the current supplied store logo to the shared header and footer.
+- Added lightweight intersection-based scroll reveals and a reduced-motion-safe
+  back-to-top control on long pages.
+- Added collection search, manufacturer/group/price filters, priority/price
+  sorting, grid/list view and pagination to manufacturer, task and buyer-group
+  pages. Manufacturer group tags now deep-link to the filtered collection.
+- Rebalanced the product-detail hero: the image, category, article and pickup
+  metadata fill the visual column to the same height as the purchase column.
+  The redundant `Фото товара` explanation panel was removed.
 - Kept real catalog product images and manufacturer assets instead of mock placeholders.
 
 ## Preserved without data/backend rewrites
@@ -43,14 +59,23 @@
 - New layout components:
   - `src/components/layout/EngineeringVisual.tsx`;
   - `src/components/layout/InfoTabs.tsx`;
-  - `src/components/layout/ThemeToggle.tsx`.
+  - `src/components/layout/ThemeToggle.tsx`;
+  - `src/components/layout/StoreLogo.tsx`;
+  - `src/components/layout/ScrollEnhancements.tsx`.
 - Main presentation changes:
   - `src/app/globals.css`;
   - `src/app/layout.tsx`;
   - `src/components/layout/SiteHeader.tsx`;
   - `src/app/page.tsx`;
   - about, delivery and contacts pages;
-  - `src/components/catalog/CategoryProductCarousel.tsx`.
+  - `src/components/catalog/CategoryProductCarousel.tsx`;
+  - `src/components/catalog/CatalogCollectionGrid.tsx`;
+  - category, buyer-group, task and manufacturer page loaders.
+- Brand and carousel assets:
+  - `public/brand/store-logo-current.jpg`;
+  - `public/images/carousel-products/tim-bas0802s.png`;
+  - `public/images/carousel-products/tim-bas0260ba.png`;
+  - `public/images/carousel-products/tim-cl5002bk.png`.
 - Font assets:
   - `public/fonts/oswald-cyrillic.woff2`;
   - `public/fonts/oswald-latin.woff2`;
@@ -65,7 +90,8 @@
 - `npm run check:isolation`: passed.
 - `npm run analytics:check`: passed; all five existing goals remain and raw search queries are not sent.
 - `npm run build`: passed under `taskset -c 0,1`, `nice`, `ionice` and a 4 GiB Node heap cap.
-- Build output remained compact: shared first-load JavaScript `102 kB`; homepage `109 kB`; category `110 kB`; product page `109 kB`.
+- Build output remained compact: shared first-load JavaScript `102 kB`;
+  homepage `109 kB`; category `109 kB`; product page `109 kB`.
 - Self-hosted fonts are valid WOFF2 files.
 - `font-src 'self'` already permits the new fonts. The theme bootstrap uses the existing per-request CSP nonce and does not create inline style attributes.
 - Browser/design QA passed at `1280 x 720` and `390 x 844` in dark/light and
@@ -76,6 +102,13 @@
 - The preview uses read-only runtime symlinks to combine the existing main,
   ESPA, TIM and normalized Aquatec/Sinikon image stores. The catalog image audit
   reports `8,410` local references and `localMissing=0`.
+- The current runtime gates pass with `9,276` products, `10` categories,
+  `9,354` sitemap URLs and `60` collection navigation routes checked.
+- Pagination covers all `3,379` products in the largest category without
+  duplicates. Legacy redirect coverage reports `missing=0` and `ambiguous=0`.
+- CSP remains enforced with rotating nonces, no unsafe inline/eval directives
+  and no inline style attributes. A 30-request constrained health load check
+  returned `30/30` HTTP 200 responses.
 
 ## Resource evidence
 

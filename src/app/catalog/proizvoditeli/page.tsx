@@ -58,7 +58,9 @@ export default function ManufacturersPage() {
                 <p>{formatPositions(manufacturer.productCount)} · {formatSections(manufacturer.categoryCount)}</p>
                 <ul className="manufacturer-sections">
                   {manufacturer.sections.slice(0, 6).map((section) => (
-                    <li key={section}><span>{section}</span></li>
+                    <li key={section}>
+                      <Link href={`/catalog/proizvoditeli/${manufacturer.slug}?group=${encodeURIComponent(section)}`}>{section}</Link>
+                    </li>
                   ))}
                   {manufacturer.sections.length > 6 ? <li><span>+{manufacturer.sections.length - 6} разделов</span></li> : null}
                 </ul>

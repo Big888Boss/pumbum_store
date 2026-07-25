@@ -72,8 +72,24 @@ export default async function ProductPage({ params }: PageProps) {
       <div className="container breadcrumbs"><Link href="/catalog">Каталог</Link> / <Link href={`/catalog/${product.categorySlug}`}>{categoryData.name}</Link> / {product.name}</div>
       <section className="hero">
         <div className="container pdp-grid">
-          <ProductImage src={product.image} alt={product.name} logoSrc={product.logo} brand={product.brandName} hideBrandLogo={product.hideBrandLogo} priority />
-          <div>
+          <div className="pdp-visual-card">
+            <ProductImage src={product.image} alt={product.name} logoSrc={product.logo} brand={product.brandName} hideBrandLogo={product.hideBrandLogo} priority />
+            <dl className="pdp-visual-meta">
+              <div>
+                <dt>Категория</dt>
+                <dd>{categoryData.name}</dd>
+              </div>
+              <div>
+                <dt>Артикул</dt>
+                <dd>{product.sku || product.vendorCode || 'уточняется'}</dd>
+              </div>
+              <div>
+                <dt>Получение</dt>
+                <dd>{availabilityPresentation?.label || 'уточняется'}</dd>
+              </div>
+            </dl>
+          </div>
+          <div className="pdp-main">
             <div className="eyebrow">{product.brandName} · инженерная комплектация</div>
             <h1>{displayTitle}</h1>
             <p className="lead">{localSummary}</p>
@@ -131,14 +147,9 @@ export default async function ProductPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="section">
-        <div className="container grid grid-2">
-          <div className="notice">
-            <h2>Фото товара</h2>
-            <p>Изображение помогает оценить форму, исполнение и общий вид позиции перед подбором комплекта.</p>
-            <p className="meta">Менеджер проверит совместимость, комплектность, срок и возможность отгрузки.</p>
-          </div>
-          <div className="cta-panel">
+      <section className="section section-tight">
+        <div className="container">
+          <div className="cta-panel pdp-contact-panel">
             <h2>Связаться с магазином</h2>
             <p>Проверим параметры, подскажем совместимые позиции и подтвердим возможность отгрузки по телефону или email.</p>
             <MetrikaGoalLink

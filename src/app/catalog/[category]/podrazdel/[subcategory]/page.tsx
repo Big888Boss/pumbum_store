@@ -26,7 +26,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     title: definition.title,
     description: definition.description,
     path: `/catalog/${category}/podrazdel/${subcategory}`,
-    noindex: parsePage(query) > 1,
+    noindex: parsePage(query) > 1 || Object.values(query).some((value) => (Array.isArray(value) ? value[0] : value ?? '').trim().length > 0),
     followWhenNoindex: true,
   });
 }
@@ -56,7 +56,7 @@ export default async function CatalogSubcategoryPage({ params, searchParams }: P
           </div>
         </div>
       </section>
-      <CatalogCollectionGrid products={products} basePath={basePath} requestedPage={parsePage(query)} />
+      <CatalogCollectionGrid products={products} basePath={basePath} query={query} />
       <section className="section section-tight">
         <div className="container">
           <article className="card info-card">

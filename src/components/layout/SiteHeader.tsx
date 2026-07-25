@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Menu, Phone } from 'lucide-react';
 import { MetrikaGoalAnchor } from '@/components/analytics/MetrikaEvents';
+import { StoreLogo } from '@/components/layout/StoreLogo';
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
 import { METRIKA_GOALS } from '@/lib/analytics/metrika';
 
@@ -45,7 +46,7 @@ export function SiteHeader({ phone }: SiteHeaderProps) {
     <header className="header">
       <div className="container header-row">
         <Link href="/" className="logo" aria-label="На главную Сантехникъ">
-          САНТЕХНИК<span>Ъ</span>
+          <StoreLogo />
         </Link>
 
         <HeaderNavigation className="nav nav-desktop" />
