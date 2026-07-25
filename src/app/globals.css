@@ -2088,7 +2088,7 @@ ul:not(.badges):not(.manufacturer-sections) {
     border: 1px solid var(--line);
     border-radius: 14px;
     padding: 14px;
-    background: var(--surface-strong);
+    background: color-mix(in srgb, var(--bg-deep) 96%, transparent);
     box-shadow: var(--shadow);
     backdrop-filter: blur(24px);
   }

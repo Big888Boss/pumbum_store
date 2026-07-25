@@ -4,65 +4,101 @@
 
 - Source visual truth:
   - `https://high-end-plumbing-landing-page.vercel.app/`
-  - captured desktop home: `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/01-reference-hero-desktop.png`
-  - captured desktop catalog: `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/02-reference-catalog-desktop.png`
-  - captured desktop delivery: `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/04-reference-delivery-tab-desktop.png`
-  - captured desktop contacts: `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/05-reference-contacts-tab-desktop.png`
-  - captured mobile states: `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/06-reference-hero-mobile.png` through `09-reference-delivery-content-mobile.png`
-- Implementation screenshot path: unavailable; the prototype was not launched by owner instruction.
-- Intended comparison viewports:
-  - desktop `1280 x 720`, device scale factor `1`;
-  - mobile `390 x 844`, device scale factor `1`.
-- Source pixel dimensions:
-  - desktop captures `1280 x 720`;
-  - mobile captures `390 x 844`.
-- Implementation pixel dimensions, CSS size and density normalization: unavailable until runtime capture is authorized.
-- Intended states: homepage and catalog in dark mode; delivery and contacts tabs in dark mode; homepage/catalog in light mode; desktop and mobile.
+  - desktop home:
+    `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/01-reference-hero-desktop.png`
+  - desktop catalog:
+    `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/02-reference-catalog-desktop.png`
+  - desktop contacts:
+    `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/05-reference-contacts-tab-desktop.png`
+  - mobile home:
+    `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/06-reference-hero-mobile.png`
+- Browser-rendered implementation:
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/runtime/home-desktop-dark.png`
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/runtime/catalog-desktop-dark.png`
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/runtime/contacts-desktop-dark.png`
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/runtime/home-mobile-dark.png`
+  - dark/light and interaction captures are in the same `runtime/` directory.
+- Comparison pairs:
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/comparison-home-desktop.png`
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/comparison-catalog-desktop.png`
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/comparison-contacts-desktop.png`
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/comparison-home-mobile.png`
+- Viewports and density:
+  - desktop source and implementation: `1280 x 720`, device scale factor `1`;
+  - mobile source and implementation: `390 x 844`, device scale factor `1`;
+  - comparison pairs use equal-size halves and require no density normalization.
+- States: homepage, catalog and contacts in dark mode; homepage in light mode; mobile menu open; mobile category/carousel; product page with a loaded local image.
 
 ## Full-view comparison evidence
 
-The source captures were opened and inspected. A browser-rendered implementation artifact does not exist because no preview process or listener was started. Code review and a successful Next.js build are not valid substitutes for visual comparison.
+The four source/implementation pairs were opened as combined images and reviewed at matching pixel dimensions.
+
+- Homepage: the implementation preserves the source slate/navy palette, Oswald display typography, compact uppercase navigation, cold ambient glow, technical grid, thin glass borders and the engineering symbol. The production copy and extra search/KPI functionality produce intentional wrapping and density differences.
+- Catalog: the source offers four illustrative groups; the implementation uses the same visual language around the real ten-category information architecture, search, task and manufacturer entry points. This is an intentional behavior-preserving adaptation rather than a missing section.
+- Contacts: the implementation preserves the source hierarchy, glass contact card, tabs, typography and dark technical map treatment while retaining current production details.
+- Mobile: the source capture clips a desktop-like layout horizontally. The implementation intentionally converts it to a fully responsive one-column flow, as required by the owner, while preserving the selected visual language.
 
 ## Focused region comparison evidence
 
-Blocked. Header typography, hero proportions, card border/opacity, product-image treatment, theme toggle, catalog toolbar, carousel state, mobile menu and information tabs require implementation screenshots before focused comparison.
-
-## Findings
-
-- [P1] Rendered fidelity cannot be verified
-  - Location: all redesigned routes.
-  - Evidence: source captures are available, but there is no implementation screenshot at a matching viewport and state.
-  - Impact: typography wrapping, spacing, color balance, image crop and responsive behavior cannot be accepted from source code alone.
-  - Fix: start the isolated preview only after owner approval, capture matching desktop/mobile dark/light states, combine each source/implementation pair, then run the comparison loop.
-
-- [P1] Runtime interactions remain visually untested
-  - Location: theme toggle, mobile menu, information tabs, catalog filters/sort/view controls, carousel and product/contact links.
-  - Evidence: lint, typecheck and build passed, but the browser was intentionally not opened.
-  - Impact: a hydration, CSP, overflow, focus, transition or console regression could remain invisible.
-  - Fix: test primary interactions and browser console under the same temporary preview used for visual QA.
+- Header and hero: exact Oswald/Inter subsets render without fallback; logo, compact navigation, theme control, hero hierarchy and technical visual were inspected in dark and light states.
+- Product image panel:
+  `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/runtime/product-desktop-dark.png`
+  shows a real `1167 x 600` ESPA product image after the runtime image union was corrected.
+- Mobile menu:
+  `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/runtime/home-mobile-menu-open.png`
+  confirms readable controls over a strengthened glass background.
+- Mobile category:
+  `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/runtime/category-mobile-dark.png`
+  confirms stable product media, readable typography, carousel markers and touch controls.
+- Light theme:
+  desktop and mobile captures confirm the same layout and effects with light tokens. Computed primary-button text is white on the dark brand gradient; secondary and header controls use dark text on translucent white surfaces.
 
 ## Required fidelity surfaces
 
-- Fonts and typography: exact Oswald/Inter WOFF2 subsets and source-style weights/tokens are implemented; rendered optical weight, wrapping and fallback behavior remain unverified.
-- Spacing and layout rhythm: desktop/mobile CSS breakpoints and source-style grids are implemented; rendered dimensions, overflow and vertical rhythm remain unverified.
-- Colors and visual tokens: source slate palette, glass opacity, borders, ambient light and a matching light theme are implemented; screenshot sampling remains pending.
-- Image quality and asset fidelity: real product/manufacturer images are preserved and Lucide supplies interface icons; rendered crop, sharpness and overlay treatment remain pending.
-- Copy and content: production copy, current catalog totals, prices and route content are preserved in source; browser rendering remains pending.
+- Fonts and typography: passed. Exact source Oswald and Inter WOFF2 subsets are self-hosted. Display weights, letter spacing, line heights and uppercase technical labels are consistent with the source. Production copy causes accepted line-wrap differences.
+- Spacing and layout rhythm: passed. Desktop composition follows the source split hero and glass-card rhythm. Mobile collapses without horizontal overflow and retains usable spacing, touch targets and content order.
+- Colors and visual tokens: passed. Slate/graphite surfaces, blue-grey ambient lighting, white borders, glass opacity and restrained glow match the source direction. The light theme preserves hierarchy and computed contrast.
+- Image quality and asset fidelity: passed. Real product/manufacturer images and Lucide interface icons are used. All `8,410` local catalog image references exist in the preview runtime; visible images in tested flows have non-zero natural dimensions.
+- Copy and content: passed. Production catalog totals, product names, prices/status language, phone, email, address and buyer journeys are retained. No mock product copy replaces source-backed content.
+
+## Primary interactions tested
+
+- dark/light theme switching and persistence after reload;
+- desktop and mobile overflow;
+- mobile menu open and catalog navigation;
+- catalog search for `ESPA` and result rendering;
+- product page, product image and contact CTA;
+- information tabs and SPA navigation;
+- all ten category carousels, three distinct products, `34px` touch controls and five-second autoplay;
+- browser console, page errors and same-origin request failures.
+
+No browser console errors, page errors or non-cancelled same-origin request failures remained.
 
 ## Comparison history
 
-- Pass 0: source captures inspected; implementation capture blocked because starting the prototype was not authorized. No visual fix loop can begin until both artifacts exist.
+- Pass 0 — blocked:
+  - implementation was not running by owner instruction, so screenshots and runtime interaction evidence were unavailable.
+- Pass 1 — P1 product images:
+  - ESPA and then TIM/Aquatec local images were missing from the isolated preview mapping even though catalog references were preserved;
+  - fixed by combining the existing factory image stores as read-only runtime symlinks;
+  - post-fix audit: `8,410` local references, `localMissing=0`;
+  - post-fix product evidence shows non-zero natural dimensions and the real product photo.
+- Pass 2 — P2 mobile menu density:
+  - the open glass menu allowed too much hero text to show through;
+  - fixed by increasing the menu background to a `96%` mix of `--bg-deep`;
+  - post-fix mobile menu capture remains readable and visually consistent.
+- Pass 3 — passed:
+  - matching desktop/mobile captures were regenerated after the final build;
+  - combined comparisons were inspected;
+  - no actionable P0/P1/P2 findings remained.
 
-## Implementation checklist
+## Findings
 
-1. Obtain approval to start a temporary Tailscale-only preview.
-2. Capture matching desktop/mobile, dark/light and key interaction states.
-3. Compare combined source/implementation pairs.
-4. Fix every P0/P1/P2 mismatch and repeat captures.
-5. Run runtime catalog, CSP, analytics and route checks.
+No actionable P0, P1 or P2 design findings remain.
 
 ## Follow-up polish
 
-Deferred until the first valid visual comparison.
+- P3: the desktop implementation headline wraps to four lines while the reference uses three. This is accepted because the production message includes the full “высшего класса” phrase and the real search/KPI content shares the first viewport.
+- P3: the reference catalog is an illustrative four-card mock, while the implementation exposes the real ten-category buyer architecture above the category grid. This is an intentional functional adaptation.
 
-final result: blocked
+final result: passed

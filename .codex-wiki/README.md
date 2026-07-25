@@ -9,7 +9,7 @@ The current production implementation notes are maintained in `docs/`.
 - Current category showcase release: `docs/CATEGORY_SHOWCASE_RELEASE_2026-07-22.md`
 - Current carousel polish release: `docs/CAROUSEL_POLISH_RELEASE_2026-07-23.md`
 - Current catalog navigation release: `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md`
-- Isolated high-end redesign prototype (not running and not deployed): `docs/HIGH_END_REDESIGN_PROTOTYPE_2026-07-25.md`
+- Isolated high-end redesign prototype (temporary loopback preview, not deployed): `docs/HIGH_END_REDESIGN_PROTOTYPE_2026-07-25.md`
 - Performance release: `docs/PERFORMANCE_RELEASE_2026-07-11.md`
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`
@@ -17,9 +17,11 @@ The current production implementation notes are maintained in `docs/`.
 Production builds are created on the USA build host. The small production server must never run `next build` or `docker build`.
 
 The 2026-07-25 high-end redesign is an isolated source/build prototype based on
-production commit `a6bc64e`. It is not the active production release and must
-not be started, exposed or deployed without a separate owner approval. Its
-browser visual gate remains documented as blocked in `design-qa.md`.
+production commit `a6bc64e`. The owner approved a temporary loopback-only
+preview on `127.0.0.1:3025`; it is not the active production release and is not
+publicly exposed. Browser/design QA passed after desktop/mobile, dark/light,
+catalog, search, product, image, carousel and interaction checks. Production
+deployment still requires separate owner approval.
 
 Current production storefront release: `plumbing_store_v2-v2:catalog-navigation-20260723-v1` on localhost port `3023`. The previous `carousel-polish-20260723-v1` container on port `3022` is stopped to conserve RAM/swap; its image and stopped container are retained for rollback. No build runs on production. See `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md` for acceptance evidence and rollback.
 

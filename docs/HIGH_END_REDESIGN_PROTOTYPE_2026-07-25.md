@@ -3,7 +3,8 @@
 ## Status and boundary
 
 - Prototype source is prepared and passes a production `next build`.
-- The prototype is not running and no HTTP port was opened.
+- The owner approved a temporary preview. It runs only on build-host loopback
+  `127.0.0.1:3025` with `MemoryHigh=1.5G`, `MemoryMax=2G` and `CPUQuota=150%`.
 - Production `477477.ru`, nginx, containers, catalog data, product images and services were not changed.
 - Source baseline: clean production commit `a6bc64e4105a7de96a2b3f9fc29c9d1ba56c1981`.
 - Isolated build-host path: `/home/administrator/agent-projects/pumbum-store-redesign-20260725`.
@@ -67,7 +68,14 @@
 - Build output remained compact: shared first-load JavaScript `102 kB`; homepage `109 kB`; category `110 kB`; product page `109 kB`.
 - Self-hosted fonts are valid WOFF2 files.
 - `font-src 'self'` already permits the new fonts. The theme bootstrap uses the existing per-request CSP nonce and does not create inline style attributes.
-- No redesign runtime process or listener was left behind.
+- Browser/design QA passed at `1280 x 720` and `390 x 844` in dark/light and
+  primary interaction states; see `design-qa.md`.
+- A reproducible `npm run redesign:check-browser` gate covers theme
+  persistence, mobile navigation, search, product images, tabs, carousel
+  autoplay, overflow, console errors and same-origin request failures.
+- The preview uses read-only runtime symlinks to combine the existing main,
+  ESPA, TIM and normalized Aquatec/Sinikon image stores. The catalog image audit
+  reports `8,410` local references and `localMissing=0`.
 
 ## Resource evidence
 
@@ -80,10 +88,10 @@ The build ran while the SalesGame E2E stack stayed online.
 - All five SalesGame E2E containers remained running with `restarts=0` and `OOMKilled=false`.
 - The prototype directory including copied dependencies and build output is about `1.7 GiB`.
 
-## Open verification and release blockers
+## Remaining release blockers
 
-- Browser rendering and visual comparison were intentionally not run because the owner instructed not to launch the prototype yet.
-- Runtime-dependent catalog taxonomy, route traversal, CSP and browser analytics checks require a temporary preview listener. They remain pending.
-- `design-qa.md` is therefore blocked until the prototype may be started and captured at matching desktop/mobile viewports in dark and light states.
+- Browser rendering, primary interactions, catalog taxonomy, pagination,
+  legacy redirects, CSP and carousel runtime checks pass. `design-qa.md` says
+  `final result: passed`.
 - The package-manager install step reported an aggregate `11 high severity` advisories for the current lock graph. Detailed advisory payload was not sent to an external audit service and no dependency upgrades were applied in this design-only task. This must be triaged before a production release.
 - Production deployment, image build, public routing and nginx work require a separate explicit approval.

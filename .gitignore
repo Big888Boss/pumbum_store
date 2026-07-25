@@ -22,6 +22,7 @@ artifacts/
 
 # Local/server-side image archives and generated operational reports
 .asset-store/
+public/images/products/
 
 # Generated validation/runtime evidence artifacts
 # Keep curated docs/evidence files only when intentionally added by a task handoff.

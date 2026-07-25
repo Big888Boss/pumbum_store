@@ -44,7 +44,7 @@ try {
       return { width: pseudo.width, height: pseudo.height, borderRadius: pseudo.borderRadius };
     });
     assert(dotBox && dotBox.width >= 32 && dotBox.height >= 32, `${category}: carousel touch target is too small`);
-    assert(markerStyle.width === '9px' && markerStyle.height === '9px' && markerStyle.borderRadius === '50%', `${category}: carousel marker styling regressed`);
+    assert(markerStyle.width === '8px' && markerStyle.height === '8px' && markerStyle.borderRadius === '50%', `${category}: carousel marker styling regressed`);
 
     if (index === 0) {
       const initialTitle = await carousel.locator('h2').textContent();
@@ -61,7 +61,7 @@ try {
     distinctGroups: true,
     autoplayMs: 5000,
     mobileTouchTargetPx: 32,
-    markerPx: 9,
+    markerPx: 8,
     pageErrors,
   }, null, 2));
 } finally {
