@@ -57,15 +57,13 @@ export function CategoryProductCarousel({
 
   if (!activeProduct) return null;
 
-  const showPrevious = () => setActiveIndex((current) => (current - 1 + products.length) % products.length);
-  const showNext = () => setActiveIndex((current) => (current + 1) % products.length);
-
   return (
     <section
       className="category-product-carousel"
       aria-label="Рекомендуемые товары раздела"
       data-carousel-size={products.length}
       data-carousel-groups={groupLabels?.join('|')}
+      data-carousel-autoplay-ms={AUTOPLAY_DELAY_MS}
       onFocusCapture={() => setHasFocusWithin(true)}
       onBlurCapture={(event) => {
         const nextTarget = event.relatedTarget;
@@ -95,7 +93,6 @@ export function CategoryProductCarousel({
         <Link href={`/catalog/${activeProduct.categorySlug}/${activeProduct.slug}`}>Открыть товар</Link>
       </div>
       <div className="category-carousel-controls">
-        <button type="button" onClick={showPrevious} aria-label="Предыдущий товар">Назад</button>
         <div className="category-carousel-dots" aria-label="Выбор товара">
           {products.map((product, index) => (
             <button
@@ -108,12 +105,14 @@ export function CategoryProductCarousel({
             />
           ))}
         </div>
-        <div className="category-carousel-actions">
-          <button type="button" onClick={() => setIsPaused((current) => !current)} aria-pressed={isPaused}>
-            {isPaused ? 'Продолжить' : 'Пауза'}
-          </button>
-          <button type="button" onClick={showNext} aria-label="Следующий товар">Далее</button>
-        </div>
+        <button
+          className="visually-hidden"
+          type="button"
+          onClick={() => setIsPaused((current) => !current)}
+          aria-pressed={isPaused}
+        >
+          {isPaused ? 'Продолжить автоматическую прокрутку' : 'Остановить автоматическую прокрутку'}
+        </button>
       </div>
     </section>
   );

@@ -300,7 +300,14 @@ export function searchProducts({ query = '', categorySlug = '', limit = 60 }: Pr
   return searchProductsWithTotal({ query, categorySlug, limit }).results;
 }
 
-function rankProducts({ query, categorySlug, limit, mode }: Required<ProductSearchInput> & { mode: 'strict' | 'related' }): ProductSearchResponse {
+function productRouteKey(product: Product): string {
+  return `${product.categorySlug}/${product.slug}`;
+}
+
+function rankProducts(
+  { query, categorySlug, limit, mode }: Required<ProductSearchInput> & { mode: 'strict' | 'related' },
+  allowedRoutes?: Set<string>,
+): ProductSearchResponse {
   const q = normalizeWords(query);
   const qCompact = compact(query);
   const terms = buildQueryTerms(query);
@@ -308,7 +315,10 @@ function rankProducts({ query, categorySlug, limit, mode }: Required<ProductSear
   if (terms.length === 0 && !categorySlug) return { results: [], total: 0, mode };
 
   const matches = searchIndex
-    .filter(({ product }) => !categorySlug || product.categorySlug === categorySlug)
+    .filter(({ product }) => (
+      (!categorySlug || product.categorySlug === categorySlug)
+      && (!allowedRoutes || allowedRoutes.has(productRouteKey(product)))
+    ))
     .map(({ product, sku, skuCompact, name, brand, category, specs, description }) => {
       const matchedBy: string[] = [];
       let score = 0;
@@ -415,4 +425,16 @@ export function searchProductsWithTotal({ query = '', categorySlug = '', limit =
   const strict = rankProducts({ query, categorySlug, limit, mode: 'strict' });
   if (strict.total > 0 || query.trim().length === 0) return strict;
   return rankProducts({ query, categorySlug, limit, mode: 'related' });
+}
+
+export function searchProductsInCollection(products: Product[], query: string): Product[] {
+  const cleanQuery = query.replace(/\s+/g, ' ').trim().slice(0, 100);
+  if (!cleanQuery) return products;
+  const allowedRoutes = new Set(products.map(productRouteKey));
+  const limit = Math.max(products.length, 1);
+  const strict = rankProducts({ query: cleanQuery, categorySlug: '', limit, mode: 'strict' }, allowedRoutes);
+  const response = strict.total > 0
+    ? strict
+    : rankProducts({ query: cleanQuery, categorySlug: '', limit, mode: 'related' }, allowedRoutes);
+  return response.results.map((result) => result.product);
 }

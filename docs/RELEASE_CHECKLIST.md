@@ -34,7 +34,9 @@
 - Confirm `NEXT_PUBLIC_SITE_ENV=production`
 - Confirm `NEXT_PUBLIC_YANDEX_METRIKA_ID` uses the approved production counter
 - Confirm the existing Metrika JavaScript goals `search_submit`, `click_phone`, `click_email`, `view_product` and `click_order` remain configured on counter `109783471`.
-- For an automatic carousel, verify exact five-second rotation, explicit pause, manual controls, keyboard-focus pause, hidden-tab pause and `prefers-reduced-motion` handling. Pointer hover must not silently stop the timer.
+- For an automatic carousel, verify exact five-second rotation, clickable slide dots, a screen-reader-only pause control, keyboard-focus pause, hidden-tab pause and `prefers-reduced-motion` handling. Do not restore visible previous/pause/next buttons. Pointer hover must not silently stop the timer.
+- Run `CAROUSEL_TEST_BASE_URL=<staging-url> npm run catalog:check-carousels-browser`; require 10 categories, three distinct buyer groups per category, 5,000 ms autoplay, stable carousel height and 30 source images at least 800×600.
+- Run `COLLECTION_TEST_BASE_URL=<staging-url> npm run catalog:check-collections-browser`; require clickable manufacturer/task group links, collection search/filter/sort/view controls and `noindex,follow` for stateful result URLs.
 - Run `METRIKA_TEST_BASE_URL=<staging-url> npm run analytics:check-browser` with Yandex requests intercepted; require one initial `hit`, one `hit` per SPA route change, all five goals, and no raw search query in goal parameters.
 - Confirm order intake is still disabled, or document the approved CRM/webhook owner before enabling it
 - Run PageSpeed/Lighthouse on HTTPS URL

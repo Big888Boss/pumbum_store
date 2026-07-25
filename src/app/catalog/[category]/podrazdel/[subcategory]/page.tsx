@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { CatalogCollectionGrid } from '@/components/catalog/CatalogCollectionGrid';
+import { CatalogCollectionGrid, hasCatalogCollectionState } from '@/components/catalog/CatalogCollectionGrid';
 import { getCatalogSubcategory, getCategoryBySlug, getProductsByCatalogSubcategory } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -9,13 +9,6 @@ type PageProps = {
   params: Promise<{ category: string; subcategory: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
-
-function parsePage(query: Record<string, string | string[] | undefined>): number {
-  const raw = query.page;
-  const value = Array.isArray(raw) ? raw[0] : raw;
-  const page = Number.parseInt(value ?? '1', 10);
-  return Number.isSafeInteger(page) && page > 0 ? page : 1;
-}
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { category, subcategory } = await params;
@@ -26,7 +19,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     title: definition.title,
     description: definition.description,
     path: `/catalog/${category}/podrazdel/${subcategory}`,
-    noindex: parsePage(query) > 1,
+    noindex: hasCatalogCollectionState(query),
     followWhenNoindex: true,
   });
 }
@@ -56,7 +49,7 @@ export default async function CatalogSubcategoryPage({ params, searchParams }: P
           </div>
         </div>
       </section>
-      <CatalogCollectionGrid products={products} basePath={basePath} requestedPage={parsePage(query)} />
+      <CatalogCollectionGrid products={products} basePath={basePath} query={query} />
       <section className="section section-tight">
         <div className="container">
           <article className="card info-card">

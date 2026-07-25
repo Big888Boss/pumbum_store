@@ -24,6 +24,11 @@ function formatSections(count: number): string {
   return `${count.toLocaleString('ru-RU')} ${word}`;
 }
 
+function manufacturerGroupHref(slug: string, group: string): string {
+  const params = new URLSearchParams({ group });
+  return `/catalog/proizvoditeli/${slug}?${params.toString()}`;
+}
+
 export default function ManufacturersPage() {
   const manufacturers = getManufacturerGroups();
 
@@ -43,7 +48,7 @@ export default function ManufacturersPage() {
       </section>
 
       <section className="section">
-        <div className="container manufacturer-grid">
+        <div className="container manufacturer-list">
           {manufacturers.map((manufacturer) => (
             <article key={manufacturer.name} id={manufacturer.slug} className="manufacturer-card">
               <div className={manufacturer.logo ? `manufacturer-logo manufacturer-logo-${manufacturer.slug}` : 'manufacturer-logo manufacturer-logo-fallback'}>
@@ -58,9 +63,13 @@ export default function ManufacturersPage() {
                 <p>{formatPositions(manufacturer.productCount)} · {formatSections(manufacturer.categoryCount)}</p>
                 <ul className="manufacturer-sections">
                   {manufacturer.sections.slice(0, 6).map((section) => (
-                    <li key={section}><span>{section}</span></li>
+                    <li key={section}>
+                      <Link href={manufacturerGroupHref(manufacturer.slug, section)}>{section}</Link>
+                    </li>
                   ))}
-                  {manufacturer.sections.length > 6 ? <li><span>+{manufacturer.sections.length - 6} разделов</span></li> : null}
+                  {manufacturer.sections.length > 6 ? (
+                    <li><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>+{manufacturer.sections.length - 6} разделов</Link></li>
+                  ) : null}
                 </ul>
                 <p className="manufacturer-section-more"><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>Все товары производителя</Link></p>
               </div>

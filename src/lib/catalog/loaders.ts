@@ -147,16 +147,66 @@ function supplierDisplayName(supplier: SupplierSlug): string {
 }
 
 const categoryFeaturedProductOverrides: Record<string, string[]> = {
-  vodosnabzhenie: ['akvatek-atv-500'],
-  kanalizaciya: ['sistemy-naruzhnoy-kanalizacii-20015'],
-  filtraciya: ['tim-jh-1001'],
-  nasosy: ['aquario-7435'],
-  'smesiteli-i-sifony': ['tim-bas0802s'],
-  'otoplenie-i-kotelnaya': ['zota-zota-zuma'],
-  'krepezh-dlya-montazha': ['sistemy-naruzhnoy-kanalizacii-km038-r'],
-  'truby-i-fitingi': ['valtec-vti-900-304-1208'],
-  'armatura-i-komplektuyuschie': ['valtec-vt-214-n-04'],
-  'prochee-oborudovanie': ['valtec-vt-1550-ucz-220-2'],
+  vodosnabzhenie: [
+    'akvatek-atv-500',
+    'cimm-cm-afesb-050',
+    'valtec-vtf-001-is-0404030',
+  ],
+  kanalizaciya: [
+    'sistemy-naruzhnoy-kanalizacii-20015',
+    'sistemy-dlya-vnutrennih-vodostokov-10-d-050-n-m',
+    'tim-bad478002gy',
+  ],
+  filtraciya: [
+    'valtec-vt-389-n-06',
+    'valtec-vt-192-n-08',
+    'valtec-vt-380-b-05',
+  ],
+  nasosy: [
+    'aquario-7435',
+    'gidrox-gk-586113507',
+    'valtec-vrs-121em-15-0',
+  ],
+  'smesiteli-i-sifony': [
+    'tim-bas0802s',
+    'tim-bas0260b-a',
+    'tim-c-l50-02bk',
+  ],
+  'otoplenie-i-kotelnaya': [
+    'zota-zota-zuma',
+    'valtec-vtc-582-emnx-0610',
+    'tenrad-tnrd-35-10',
+  ],
+  'krepezh-dlya-montazha': [
+    'sistemy-naruzhnoy-kanalizacii-km038-r',
+    'tim-zsr-2501-5002',
+    'tim-p20-2',
+  ],
+  'truby-i-fitingi': [
+    'valtec-vti-900-304-1208',
+    'valtec-vtp-700-al25-20',
+    'valtec-vr1620-200',
+  ],
+  'armatura-i-komplektuyuschie': [
+    'valtec-vt-214-n-04',
+    'valtec-vt-281-gbc-0404',
+    'valtec-vtp-716-0-020',
+  ],
+  'prochee-oborudovanie': [
+    'valtec-vt-60100-ed-108',
+    'valtec-vtm-396-0-162026',
+    'tim-mb1519-030',
+  ],
+};
+
+const categoryFeaturedImageOverrides: Record<string, string> = {
+  'kanalizaciya/tim-bad478002gy': '/images/category-showcase/tim-bad478002gy-detail.png',
+  'smesiteli-i-sifony/tim-bas0802s': '/images/category-showcase/tim-bas0802s-detail.png',
+  'smesiteli-i-sifony/tim-bas0260b-a': '/images/category-showcase/tim-bas0260ba-detail.png',
+  'smesiteli-i-sifony/tim-c-l50-02bk': '/images/category-showcase/tim-cl5002bk-detail.png',
+  'krepezh-dlya-montazha/tim-zsr-2501-5002': '/images/category-showcase/zeisler-zsr25015002-detail.png',
+  'krepezh-dlya-montazha/tim-p20-2': '/images/category-showcase/tim-p20-2-detail.png',
+  'prochee-oborudovanie/tim-mb1519-030': '/images/category-showcase/tim-ptfe-tape-detail.png',
 };
 
 const categoryFeaturedSubcategoryOrder: Record<string, string[]> = {
@@ -241,6 +291,14 @@ const allProducts = assertUniqueProducts(
     .map(applyProductImageManifest),
 );
 
+function sortProductsByRetailPriority(products: Product[]): Product[] {
+  return [...products].sort((a, b) => (
+    getCategoryProductPriority(b) - getCategoryProductPriority(a)
+    || a.name.localeCompare(b.name, 'ru')
+    || a.slug.localeCompare(b.slug, 'ru')
+  ));
+}
+
 function productHasLegacySource(product: Product, sources: readonly string[]): boolean {
   return product.sourceRefs.some((source) => sources.includes(source.label));
 }
@@ -249,6 +307,8 @@ const sortedCategories = [...allCategories].sort((a, b) => b.priority - a.priori
 const categoryBySlug = new Map(allCategories.map((category) => [category.slug, category]));
 const productsByCategory = new Map<string, Product[]>();
 const productsByUniqueSlug = new Map<string, Product | null>();
+const productsByManufacturer = new Map<string, Product[]>();
+let manufacturerGroupsCache: ManufacturerGroup[] | undefined;
 
 for (const product of allProducts) {
   const categoryProducts = productsByCategory.get(product.categorySlug);
@@ -284,11 +344,9 @@ export function getAllProducts(): Product[] {
 }
 
 export function getManufacturerGroups(): ManufacturerGroup[] {
-  return supplierSourceGroups.map((supplier) => {
-    const items = allProducts.filter((product) => (
-      inferSupplierSlug(product) === supplier.slug
-      || productHasLegacySource(product, supplier.sources)
-    ));
+  if (manufacturerGroupsCache) return manufacturerGroupsCache;
+  manufacturerGroupsCache = supplierSourceGroups.map((supplier) => {
+    const items = getProductsByManufacturer(supplier.slug);
     const sections = [...new Set(items.map(getBuyerGroupLabel).filter(Boolean) as string[])]
       .sort((a, b) => a.localeCompare(b, 'ru'));
     const logo = items.find((product) => product.logo)?.logo || supplierLogoFallbacks[supplier.slug];
@@ -302,6 +360,7 @@ export function getManufacturerGroups(): ManufacturerGroup[] {
       featuredProducts: items.slice(0, 3),
     };
   }).filter((group) => group.productCount > 0);
+  return manufacturerGroupsCache;
 }
 
 export function getManufacturerGroupBySlug(slug: string): ManufacturerGroup | undefined {
@@ -309,12 +368,16 @@ export function getManufacturerGroupBySlug(slug: string): ManufacturerGroup | un
 }
 
 export function getProductsByManufacturer(slug: string): Product[] {
+  const cached = productsByManufacturer.get(slug);
+  if (cached) return cached;
   const supplier = supplierSourceGroups.find((item) => item.slug === slug);
   if (!supplier) return [];
-  return allProducts.filter((product) => (
-    inferSupplierSlug(product) === supplier.slug
-    || productHasLegacySource(product, supplier.sources)
-  ));
+  const products = sortProductsByRetailPriority(allProducts.filter((product) => (
+      inferSupplierSlug(product) === supplier.slug
+      || productHasLegacySource(product, supplier.sources)
+  )));
+  productsByManufacturer.set(slug, products);
+  return products;
 }
 
 export function getProductsByCategory(categorySlug: string): Product[] {
@@ -353,13 +416,16 @@ export function getFeaturedProductByCategory(categorySlug: string): Product | un
 export function getFeaturedProductsByCategory(categorySlug: string, limit = 3): Product[] {
   const products = getProductsByCategory(categorySlug);
   const featured: Product[] = [];
+  const selectedProducts = new Set<string>();
   const selectedGroups = new Set<string>();
 
   const addProduct = (product: Product | undefined) => {
-    if (!product || featured.includes(product) || !hasDisplayableProductImage(product)) return;
+    if (!product || selectedProducts.has(product.slug) || !hasDisplayableProductImage(product)) return;
     const group = getBuyerSubcategoryForProduct(product);
     if (group && selectedGroups.has(group.slug)) return;
-    featured.push(product);
+    const image = categoryFeaturedImageOverrides[`${categorySlug}/${product.slug}`] ?? product.image;
+    featured.push(image === product.image ? product : { ...product, image });
+    selectedProducts.add(product.slug);
     if (group) selectedGroups.add(group.slug);
   };
 

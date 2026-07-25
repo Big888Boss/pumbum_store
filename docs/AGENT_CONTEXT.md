@@ -84,11 +84,11 @@
 
 Текущий production runtime:
 
-- image: `plumbing_store_v2-v2:catalog-navigation-20260723-v1`;
-- active localhost port: `3023`;
-- verified rollback image/container: `carousel-polish-20260723-v1` on `3022`, stopped after the public release checks to save RAM/swap;
+- image: `plumbing_store_v2-v2:catalog-ux-20260725-v3`;
+- active localhost port: `3026`;
+- verified rollback image/container: `catalog-ux-20260725-v2` on `3025`, stopped after the public release checks to save RAM/swap;
 - build only on `administrator@100.95.56.90`; never build on the small production host;
-- release and rollback evidence: `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md`.
+- release and rollback evidence: `docs/CATALOG_UX_RELEASE_2026-07-25.md`.
 
 Нельзя:
 

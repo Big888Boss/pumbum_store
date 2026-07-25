@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { CatalogCollectionGrid } from '@/components/catalog/CatalogCollectionGrid';
+import { CatalogCollectionGrid, hasCatalogCollectionState } from '@/components/catalog/CatalogCollectionGrid';
 import type { Product } from '@/entities/product/model';
 import { getBuyerTaskBySlug } from '@/lib/catalog/buyer-tasks';
 import { getCatalogSubcategory, getProductsByCatalogSubcategory } from '@/lib/catalog/loaders';
@@ -12,11 +12,9 @@ type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-function parsePage(query: Record<string, string | string[] | undefined>): number {
-  const raw = query.page;
-  const value = Array.isArray(raw) ? raw[0] : raw;
-  const page = Number.parseInt(value ?? '1', 10);
-  return Number.isSafeInteger(page) && page > 0 ? page : 1;
+function groupHref(basePath: string, group: string): string {
+  const params = new URLSearchParams({ group });
+  return `${basePath}?${params.toString()}`;
 }
 
 function getTaskProducts(taskSlug: string): Product[] {
@@ -50,7 +48,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     title: task.title,
     description: task.description,
     path: `/catalog/po-zadache/${task.slug}`,
-    noindex: parsePage(query) > 1,
+    noindex: hasCatalogCollectionState(query),
     followWhenNoindex: true,
   });
 }
@@ -75,7 +73,11 @@ export default async function BuyerTaskPage({ params, searchParams }: PageProps)
           <ul className="badges">
             {task.subcategories.map(({ categorySlug, subcategorySlug }) => {
               const group = getCatalogSubcategory(categorySlug, subcategorySlug);
-              return group ? <li className="badge" key={`${categorySlug}/${subcategorySlug}`}>{group.name}</li> : null;
+              return group ? (
+                <li className="badge" key={`${categorySlug}/${subcategorySlug}`}>
+                  <Link href={groupHref(basePath, group.name)}>{group.name}</Link>
+                </li>
+              ) : null;
             })}
           </ul>
           <div className="actions">
@@ -84,7 +86,7 @@ export default async function BuyerTaskPage({ params, searchParams }: PageProps)
           </div>
         </div>
       </section>
-      <CatalogCollectionGrid products={getTaskProducts(task.slug)} basePath={basePath} requestedPage={parsePage(query)} title="Подходящие группы товаров" />
+      <CatalogCollectionGrid products={getTaskProducts(task.slug)} basePath={basePath} query={query} title="Подходящие группы товаров" />
       <section className="section section-tight">
         <div className="container">
           <article className="card info-card">

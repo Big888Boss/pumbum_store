@@ -59,6 +59,7 @@ const filterDefinitions: FilterDefinition[] = [
 
 const maxFilters = 7;
 const maxOptionsPerFilter = 14;
+const defaultFilterCache = new WeakMap<Product[], CatalogFilter[]>();
 
 function cleanValue(value: unknown): string | undefined {
   const text = String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -154,6 +155,11 @@ export function getCatalogFilterValue(product: Product, key: CatalogFilterKey): 
 }
 
 export function buildCatalogFilters(products: Product[], selected: CatalogFilterSelection): CatalogFilter[] {
+  const hasSelection = Object.values(selected).some(Boolean);
+  if (!hasSelection) {
+    const cached = defaultFilterCache.get(products);
+    if (cached) return cached;
+  }
   const priceFilter = buildPriceFilter(products, selected.price);
   const filters = filterDefinitions
     .map((definition) => {
@@ -176,6 +182,7 @@ export function buildCatalogFilters(products: Product[], selected: CatalogFilter
     const alwaysShowCount = filters.filter((filter) => filterDefinitions.find((d) => d.key === filter.key)?.alwaysShow).length;
     filters.splice(alwaysShowCount, 0, priceFilter);
   }
+  if (!hasSelection) defaultFilterCache.set(products, filters);
   return filters;
 }
 

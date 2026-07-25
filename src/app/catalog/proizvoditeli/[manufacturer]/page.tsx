@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { CatalogCollectionGrid } from '@/components/catalog/CatalogCollectionGrid';
-import { StaticImage } from '@/components/media/StaticImage';
+import { CatalogCollectionGrid, hasCatalogCollectionState } from '@/components/catalog/CatalogCollectionGrid';
 import { getManufacturerGroupBySlug, getProductsByManufacturer } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -11,11 +10,9 @@ type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-function parsePage(query: Record<string, string | string[] | undefined>): number {
-  const raw = query.page;
-  const value = Array.isArray(raw) ? raw[0] : raw;
-  const page = Number.parseInt(value ?? '1', 10);
-  return Number.isSafeInteger(page) && page > 0 ? page : 1;
+function groupHref(basePath: string, group: string): string {
+  const params = new URLSearchParams({ group });
+  return `${basePath}?${params.toString()}`;
 }
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
@@ -27,7 +24,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     title: `${manufacturer.name} — каталог товаров в Саратове`,
     description: `${manufacturer.name}: ${manufacturer.productCount.toLocaleString('ru-RU')} товаров инженерной сантехники. Артикулы, характеристики и цены в каталоге «Сантехникъ».`,
     path: `/catalog/proizvoditeli/${slug}`,
-    noindex: parsePage(query) > 1,
+    noindex: hasCatalogCollectionState(query),
     followWhenNoindex: true,
   });
 }
@@ -46,20 +43,21 @@ export default async function ManufacturerPage({ params, searchParams }: PagePro
       </div>
       <section className="hero">
         <div className="container">
-          <div className="eyebrow">Производитель</div>
-          {manufacturer.logo ? <StaticImage src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={180} height={72} /> : null}
           <h1>{manufacturer.name}</h1>
           <p className="lead">{manufacturer.productCount.toLocaleString('ru-RU')} товаров в покупательских разделах каталога.</p>
           <ul className="badges">
-            {manufacturer.sections.slice(0, 10).map((section) => <li className="badge" key={section}>{section}</li>)}
+            {manufacturer.sections.slice(0, 10).map((section) => (
+              <li className="badge" key={section}><Link href={groupHref(basePath, section)}>{section}</Link></li>
+            ))}
           </ul>
         </div>
       </section>
       <CatalogCollectionGrid
         products={getProductsByManufacturer(slug)}
         basePath={basePath}
-        requestedPage={parsePage(query)}
+        query={query}
         title={`Товары ${manufacturer.name}`}
+        hideBrandFilter
       />
     </>
   );
