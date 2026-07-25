@@ -1,0 +1,12 @@
+[Unit]
+Description=Keep the 477477 storefront catalog resident
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=5s
+RandomizedDelaySec=5s
+Unit=pumbum-store-warmup.service
+
+[Install]
+WantedBy=timers.target

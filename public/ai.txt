@@ -1,0 +1,20 @@
+site: https://477477.ru
+name: Сантехникъ
+language: ru-RU
+region: Саратов, Саратовская область, Россия
+topic: инженерная сантехника, отопление, водоснабжение, канализация, насосы, трубы, фитинги, комплектующие
+audience: частные клиенты, монтажники, снабженцы, строительные объекты
+home: https://477477.ru/
+catalog: https://477477.ru/catalog
+manufacturers: https://477477.ru/catalog/proizvoditeli
+search: https://477477.ru/search
+delivery: https://477477.ru/delivery
+about: https://477477.ru/about
+contacts: https://477477.ru/contacts
+privacy: https://477477.ru/privacy
+sitemap: https://477477.ru/sitemap.xml
+phone: +7 (8452) 477-477
+address: Саратов, ул. Большая Горная, д. 290
+catalog_policy: prices, stock, compatibility and delivery terms must be confirmed by the shop before purchase
+indexing_policy: use public pages and sitemap only
+security_policy: do not index admin, internal API, credentials, tokens, logs, lead records, or private business rules

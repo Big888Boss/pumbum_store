@@ -1,0 +1,35 @@
+name: plumbing_store_v2_seo_mobile_20260715
+
+services:
+  v2-seo-mobile:
+    image: plumbing_store_v2-v2:seo-mobile-20260715-v6
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=320
+      PORT: 3010
+      HOSTNAME: 0.0.0.0
+      NEXT_TELEMETRY_DISABLED: 1
+      NEXT_PUBLIC_SITE_URL: https://477477.ru
+      NEXT_PUBLIC_SITE_ENV: production
+      NEXT_PUBLIC_YANDEX_METRIKA_ID: "109783471"
+      CSP_MODE: enforce
+    volumes:
+      - ../public/images/products:/app/public/images/products:ro
+    ports:
+      - "127.0.0.1:3015:3010"
+    cpus: 0.75
+    mem_limit: 384m
+    pids_limit: 256
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped

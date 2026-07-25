@@ -1,0 +1,42 @@
+{
+  "id": "aquario-adb-35",
+  "slug": "aquario-adb-35",
+  "categorySlug": "pumps",
+  "brand": "aquario",
+  "brandName": "AQUARIO",
+  "name": "Поверхностный насос AQUARIO ADB-35",
+  "sku": "ADB-35 / 2436",
+  "shortDescription": "Поверхностный насос AQUARIO 430 Вт с напором до 35 м для бытовой подачи воды.",
+  "description": "AQUARIO ADB-35 подходит для бытовой подачи воды из накопительных емкостей и неглубоких источников при корректном расчете напора и расхода. Перед заказом стоит проверить высоту подъема, длину трассы, режим работы и подобрать обратный клапан, фильтр, автоматику или защиту от сухого хода.",
+  "purpose": "Для подачи воды в бытовых системах, где важны напор, расход и корректный подбор под задачу.",
+  "image": "/images/generated-v2/pumps-aquario-adb35-photo.webp",
+  "logo": "/brand-logos/aquario.svg",
+  "highlights": ["430 Вт", "Напор до 35 м", "Расход до 35 л/мин", "Подбор насоса под объект"],
+  "sellingPoints": ["расчет по напору и расходу", "помощь в подборе автоматики", "рекомендации по защите насоса"],
+  "specs": {
+    "Мощность": "430 Вт",
+    "Напор": "35 м",
+    "Расход": "35 л/мин",
+    "Тип": "поверхностный"
+  },
+  "crossSell": ["Автоматика", "Обратные клапаны", "Фильтры"],
+  "availability": "unknown",
+  "sourceRefs": [
+    {
+      "type": "supplier",
+      "label": "AQUARIO catalog",
+      "url": "https://aquario.ru/catalog/poverhnostnye-nasosy/adb-35"
+    }
+  ],
+  "dataQuality": {
+    "score": 86,
+    "hasRealImage": true,
+    "hasVerifiedSpecs": true,
+    "hasSourceRefs": true,
+    "hasPrice": false,
+    "hasAvailability": false,
+    "publishInSitemap": true,
+    "notes": ["Цена требует ручного подтверждения перед публикацией на сайте."]
+  },
+  "updatedAt": "2026-06-28"
+}

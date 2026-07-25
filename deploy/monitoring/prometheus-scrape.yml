@@ -1,0 +1,43 @@
+# Scrape blocks to add on the private Prometheus host.
+# Do not expose Prometheus or Grafana publicly; keep them on Tailscale/VPN.
+
+scrape_configs:
+  - job_name: ru_vps_node
+    static_configs:
+      - targets:
+          - 100.66.106.32:9100
+        labels:
+          host: ru-vps
+          service: 477477
+
+  - job_name: ru_vps_nginx
+    static_configs:
+      - targets:
+          - 100.66.106.32:9113
+        labels:
+          host: ru-vps
+          service: 477477
+
+  # Optional: enable if the monitoring host already has blackbox_exporter.
+  # This gives real HTTP availability and latency checks for the storefront.
+  - job_name: pumbum_store_http
+    metrics_path: /probe
+    params:
+      module:
+        - http_2xx
+    static_configs:
+      - targets:
+          - https://477477.ru/
+          - https://477477.ru/api/health
+          - https://477477.ru/catalog
+          - https://477477.ru/search?q=Valtec
+          - https://477477.ru/sitemap.xml
+    relabel_configs:
+      - source_labels:
+          - __address__
+        target_label: __param_target
+      - source_labels:
+          - __param_target
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115

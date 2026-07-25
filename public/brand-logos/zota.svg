@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="72" viewBox="0 0 240 72" role="img" aria-label="ZOTA">
+  <path d="M24 18h44v9L39 45h30v9H23v-9l29-18H24v-9Z" fill="#1d4f91"/>
+  <path d="M78 18h52v36H78V18Zm11 9v18h30V27H89Z" fill="#1d4f91"/>
+  <path d="M139 18h55v9h-22v27h-11V27h-22v-9Z" fill="#1d4f91"/>
+  <path d="M193 54l22-36h12l22 36h-12l-4-7h-24l-4 7h-12Zm21-16h14l-7-12-7 12Z" fill="#1d4f91" transform="translate(-9 0)"/>
+</svg>

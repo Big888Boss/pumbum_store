@@ -1,0 +1,41 @@
+{
+  "id": "valtec-vt4410-ne16",
+  "slug": "valtec-vt4410-ne16",
+  "categorySlug": "valves",
+  "brand": "valtec",
+  "brandName": "VALTEC",
+  "name": "Шаровой кран VALTEC VT.4410.NE.16",
+  "sku": "VT.4410.NE.16",
+  "shortDescription": "Шаровой кран VALTEC для быстрого перекрытия линии в системах воды и отопления.",
+  "description": "Кран VALTEC VT.4410.NE.16 используют на участках водоснабжения и отопления, где важно быстро отключить отдельную линию, прибор или сервисный узел. При подборе учитывают место установки, тип присоединения, диаметр трубопровода и соседние фитинги, чтобы узел был удобен для обслуживания.",
+  "purpose": "Для надежного перекрытия воды в узлах водоснабжения, отопления и сервисных точках.",
+  "image": "/images/generated-v2/valves-valtec-vt4410-ne16-photo.webp",
+  "logo": "/brand-logos/valtec.svg",
+  "highlights": ["Запорная арматура для инженерных систем", "Четкое место в схеме", "Подбор по диаметру и резьбе", "Быстрое оформление заявки"],
+  "sellingPoints": ["ясная роль в инженерной схеме", "подбор соседних фитингов", "быстрое добавление в заявку"],
+  "specs": {
+    "Тип": "шаровой кран",
+    "Бренд": "VALTEC",
+    "Подключение": "1/2\""
+  },
+  "crossSell": ["Трубы", "Фитинги", "Фильтры грубой очистки"],
+  "availability": "unknown",
+  "sourceRefs": [
+    {
+      "type": "supplier",
+      "label": "VALTEC catalog",
+      "url": "https://valtec.ru/"
+    }
+  ],
+  "dataQuality": {
+    "score": 78,
+    "hasRealImage": true,
+    "hasVerifiedSpecs": true,
+    "hasSourceRefs": true,
+    "hasPrice": false,
+    "hasAvailability": false,
+    "publishInSitemap": true,
+    "notes": ["Нужны подтвержденные цена, наличие и точная ссылка поставщика."]
+  },
+  "updatedAt": "2026-06-28"
+}
