@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { MetrikaGoalAnchor } from '@/components/analytics/MetrikaEvents';
-import { StaticImage } from '@/components/media/StaticImage';
+import { MetrikaGoalAnchor, MetrikaSearchForm } from '@/components/analytics/MetrikaEvents';
+import { EngineeringVisual } from '@/components/layout/EngineeringVisual';
 import { ProductImage } from '@/components/product/ProductImage';
 import { getAllCategories, getAllProducts, getCategoryShowcaseBySlug } from '@/lib/catalog/loaders';
 import { METRIKA_GOALS } from '@/lib/analytics/metrika';
@@ -14,31 +14,31 @@ export default function HomePage() {
       <section className="hero">
         <div className="container hero-grid">
           <div>
-            <div className="eyebrow">Магазин сантехники в Саратове</div>
-            <h1>Трубы, фитинги, отопление, насосы и канализация</h1>
-            <p className="lead">Сантехникъ на Большой Горной: товары для водоснабжения, отопления, канализации и монтажа инженерных систем.</p>
+            <div className="eyebrow">Инженерный каталог · Саратов</div>
+            <h1>Инженерная сантехника высшего класса</h1>
+            <p className="lead">Профессиональный подбор оборудования под задачу: точные параметры, совместимость, актуальные цены и наличие подтверждает магазин.</p>
             <div className="actions">
               <Link className="btn btn-primary" href="/catalog">Открыть каталог</Link>
-              <Link className="btn btn-secondary" href="/contacts">Контакты магазина</Link>
+              <Link className="btn btn-secondary" href="/contacts">Консультация</Link>
             </div>
-            <div className="kpi-row" aria-label="Преимущества каталога">
-              <div className="kpi"><strong>16 лет</strong><span>на рынке Саратова</span></div>
-              <div className="kpi"><strong>{totalProducts.toLocaleString('ru-RU')}</strong><span>товарных позиций</span></div>
-              <div className="kpi"><strong>1500+</strong><span>клиентов в месяц</span></div>
-            </div>
+            <MetrikaSearchForm className="search-panel search-panel-compact hero-search" action="/search" location="home_hero">
+              <input name="q" type="search" placeholder="Артикул, бренд или характеристика" aria-label="Поиск по каталогу" />
+              <button className="btn btn-primary" type="submit">Найти</button>
+            </MetrikaSearchForm>
           </div>
-          <aside className="home-contact-panel" aria-label="Контакты магазина">
-            <StaticImage className="home-contact-logo" src="/brand-logos/santekhnik-logo.png" alt="Сантехникъ" width={360} height={70} priority />
-            <MetrikaGoalAnchor
-              href="tel:+78452477477"
-              goal={METRIKA_GOALS.phoneClick}
-              goalParams={{ location: 'home_contact_panel' }}
-            >
-              +7 (8452) 477-477
+          <EngineeringVisual totalProducts={totalProducts} />
+        </div>
+      </section>
+
+      <section className="stats-section" aria-label="Преимущества магазина">
+        <div className="container kpi-row">
+          <div className="kpi"><strong>16 лет</strong><span>на рынке Саратова</span></div>
+          <div className="kpi"><strong>{totalProducts.toLocaleString('ru-RU')}</strong><span>товарных позиций</span></div>
+          <div className="kpi">
+            <MetrikaGoalAnchor href="tel:+78452477477" goal={METRIKA_GOALS.phoneClick} goalParams={{ location: 'home_stats' }}>
+              <strong>477-477</strong><span>консультация ежедневно</span>
             </MetrikaGoalAnchor>
-            <p>г. Саратов, ул. Большая Горная, 290</p>
-            <p>Ежедневно 08:00-19:00</p>
-          </aside>
+          </div>
         </div>
       </section>
 

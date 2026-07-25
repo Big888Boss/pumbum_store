@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { InfoTabs } from '@/components/layout/InfoTabs';
 import { MetrikaGoalAnchor } from '@/components/analytics/MetrikaEvents';
 import { getCompanyProfile, getProductBySlug } from '@/lib/catalog/loaders';
 import { METRIKA_GOALS } from '@/lib/analytics/metrika';
@@ -31,6 +32,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
             <div className="eyebrow">Контакты</div>
             <h1>Связаться с магазином</h1>
             <p className="lead">Позвоните, напишите на email или приезжайте в магазин на Большой Горной. По артикулу быстрее проверим цену, наличие и совместимые позиции.</p>
+            <InfoTabs active="contacts" />
           </div>
           <div className="cta-panel">
             <h2>Магазин «Сантехникъ»</h2>

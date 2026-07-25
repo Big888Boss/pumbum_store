@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import { Menu, Phone } from 'lucide-react';
 import { MetrikaGoalAnchor } from '@/components/analytics/MetrikaEvents';
-import { StaticImage } from '@/components/media/StaticImage';
+import { ThemeToggle } from '@/components/layout/ThemeToggle';
 import { METRIKA_GOALS } from '@/lib/analytics/metrika';
 
 type SiteHeaderProps = {
@@ -33,7 +34,7 @@ function HeaderPhone({ phone, location, className }: { phone: string; location: 
       goal={METRIKA_GOALS.phoneClick}
       goalParams={{ location }}
     >
-      <span>Телефон магазина</span>
+      <Phone aria-hidden="true" />
       <strong>{phone}</strong>
     </MetrikaGoalAnchor>
   );
@@ -44,19 +45,21 @@ export function SiteHeader({ phone }: SiteHeaderProps) {
     <header className="header">
       <div className="container header-row">
         <Link href="/" className="logo" aria-label="На главную Сантехникъ">
-          <StaticImage src="/brand-logos/santekhnik-logo.png" alt="Сантехникъ" width={264} height={52} priority />
+          САНТЕХНИК<span>Ъ</span>
         </Link>
 
         <HeaderNavigation className="nav nav-desktop" />
-        <HeaderPhone phone={phone} location="header" className="phone-link phone-link-desktop" />
-
-        <details className="mobile-menu">
-          <summary className="mobile-menu-toggle">Меню</summary>
-          <div className="mobile-menu-panel">
-            <HeaderNavigation className="mobile-menu-nav" />
-            <HeaderPhone phone={phone} location="mobile_menu" className="phone-link mobile-menu-phone" />
-          </div>
-        </details>
+        <div className="header-actions">
+          <ThemeToggle />
+          <HeaderPhone phone={phone} location="header" className="phone-link phone-link-desktop" />
+          <details className="mobile-menu">
+            <summary className="mobile-menu-toggle"><Menu aria-hidden="true" /><span>Меню</span></summary>
+            <div className="mobile-menu-panel">
+              <HeaderNavigation className="mobile-menu-nav" />
+              <HeaderPhone phone={phone} location="mobile_menu" className="phone-link mobile-menu-phone" />
+            </div>
+          </details>
+        </div>
       </div>
     </header>
   );

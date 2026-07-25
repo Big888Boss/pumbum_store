@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { StaticImage } from '@/components/media/StaticImage';
+import { InfoTabs } from '@/components/layout/InfoTabs';
 import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { getManufacturerGroups } from '@/lib/catalog/loaders';
@@ -27,6 +28,7 @@ export default function AboutPage() {
           <div className="eyebrow">О компании</div>
           <h1>Магазин инженерной сантехники в Саратове</h1>
           <p className="lead">Сантехникъ работает с 2010 года и помогает подбирать комплектующие для водоснабжения, отопления, канализации и монтажа инженерных систем.</p>
+          <InfoTabs active="about" />
         </div>
       </section>
       <section className="section">

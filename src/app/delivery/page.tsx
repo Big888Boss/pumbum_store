@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { InfoTabs } from '@/components/layout/InfoTabs';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
@@ -18,6 +19,7 @@ export default function DeliveryPage() {
             <h1>Отгрузка под объект: проверяем состав заказа до доставки</h1>
             <p className="lead">Важно не только привезти товар, но и заранее проверить, что труба, краны, насосы и комплектующие подходят друг к другу.</p>
             <div className="actions"><Link className="btn btn-primary" href="/contacts">Уточнить доставку</Link><Link className="btn btn-secondary" href="/catalog">Открыть каталог</Link></div>
+            <InfoTabs active="delivery" />
           </div>
           <div className="card">
             <h2>Что уточняем</h2>

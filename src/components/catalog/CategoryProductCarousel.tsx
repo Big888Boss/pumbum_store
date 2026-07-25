@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Pause, Play } from 'lucide-react';
 import { ProductImage } from '@/components/product/ProductImage';
 import type { Product } from '@/entities/product/model';
 
@@ -57,9 +58,6 @@ export function CategoryProductCarousel({
 
   if (!activeProduct) return null;
 
-  const showPrevious = () => setActiveIndex((current) => (current - 1 + products.length) % products.length);
-  const showNext = () => setActiveIndex((current) => (current + 1) % products.length);
-
   return (
     <section
       className="category-product-carousel"
@@ -95,7 +93,6 @@ export function CategoryProductCarousel({
         <Link href={`/catalog/${activeProduct.categorySlug}/${activeProduct.slug}`}>Открыть товар</Link>
       </div>
       <div className="category-carousel-controls">
-        <button type="button" onClick={showPrevious} aria-label="Предыдущий товар">Назад</button>
         <div className="category-carousel-dots" aria-label="Выбор товара">
           {products.map((product, index) => (
             <button
@@ -108,12 +105,16 @@ export function CategoryProductCarousel({
             />
           ))}
         </div>
-        <div className="category-carousel-actions">
-          <button type="button" onClick={() => setIsPaused((current) => !current)} aria-pressed={isPaused}>
-            {isPaused ? 'Продолжить' : 'Пауза'}
-          </button>
-          <button type="button" onClick={showNext} aria-label="Следующий товар">Далее</button>
-        </div>
+        <button
+          className="category-carousel-pause"
+          type="button"
+          onClick={() => setIsPaused((current) => !current)}
+          aria-pressed={isPaused}
+          aria-label={isPaused ? 'Продолжить автоматическую прокрутку' : 'Остановить автоматическую прокрутку'}
+          title={isPaused ? 'Продолжить' : 'Пауза'}
+        >
+          {isPaused ? <Play aria-hidden="true" /> : <Pause aria-hidden="true" />}
+        </button>
       </div>
     </section>
   );

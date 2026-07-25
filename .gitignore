@@ -33,6 +33,7 @@ docs/evidence/task-130-ocr-images*.json
 # Package/cache noise
 .npm/
 .cache/
+*.tsbuildinfo
 __pycache__/
 *.pyc
 .DS_Store

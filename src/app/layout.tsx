@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { YandexMetrika } from '@/components/analytics/YandexMetrika';
@@ -15,23 +15,43 @@ export const metadata: Metadata = buildMetadata({
   path: '/',
 });
 
+export const viewport: Viewport = {
+  colorScheme: 'dark light',
+  themeColor: '#020618',
+};
+
+const themeBootScript = `
+try {
+  var savedTheme = window.localStorage.getItem('pumbum-theme');
+  var theme = savedTheme === 'light' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = theme;
+} catch (error) {
+  document.documentElement.dataset.theme = 'dark';
+}
+`;
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const nonce = await getCspNonce();
   const company = getCompanyProfile();
   const globalJsonLd = [organizationJsonLd(company), localBusinessJsonLd(company), websiteJsonLd()];
 
   return (
-    <html lang="ru">
+    <html lang="ru" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body>
         <JsonLd data={globalJsonLd} nonce={nonce} />
         <YandexMetrika nonce={nonce} />
         <div className="page-shell">
+          <div className="ambient ambient-left" aria-hidden="true" />
+          <div className="ambient ambient-right" aria-hidden="true" />
           <SiteHeader phone={company.phone} />
           <main className="main">{children}</main>
           <footer className="footer">
             <div className="container footer-grid">
-              <div>
-                <h3>Сантехникъ</h3>
+              <div className="footer-brand">
+                <h3>САНТЕХНИКЪ</h3>
                 <p>Магазин сантехники, отопления, труб, фитингов и комплектующих в Саратове.</p>
               </div>
               <div>
@@ -43,8 +63,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <p>Ежедневно 08:00-19:00. Можно позвонить, написать или приехать в магазин.</p>
               </div>
               <div>
-                <h3>Производители</h3>
-                <p><Link href="/catalog/proizvoditeli">Производители и поставщики</Link></p>
+                <h3>Навигация</h3>
+                <p><Link href="/catalog">Каталог</Link><br /><Link href="/catalog/proizvoditeli">Производители</Link><br /><Link href="/privacy">Обработка данных</Link></p>
               </div>
             </div>
           </footer>
