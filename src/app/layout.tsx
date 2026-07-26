@@ -55,7 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <ScrollEnhancements />
           <footer className="footer">
             <div className="footer-mascot" aria-hidden="true">
-              <StaticImage src="/images/mascots/krestovich-sitting.webp" alt="" width={874} height={1034} />
+              <StaticImage src="/images/mascots/krestovich-footer-seated.webp" alt="" width={1254} height={1254} />
             </div>
             <div className="container footer-grid">
               <div className="footer-brand">

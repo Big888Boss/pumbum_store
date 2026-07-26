@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MetrikaSearchForm } from '@/components/analytics/MetrikaEvents';
+import { PageMascot } from '@/components/layout/PageMascot';
 import { getBuyerTasks } from '@/lib/catalog/buyer-tasks';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -15,14 +16,22 @@ export default function BuyerTasksPage() {
     <>
       <div className="container breadcrumbs"><Link href="/catalog">Каталог</Link> / По задаче</div>
       <section className="hero">
-        <div className="container">
-          <div className="eyebrow">Подбор по задаче</div>
-          <h1>Что нужно сделать</h1>
-          <p className="lead">Выберите инженерную задачу — покажем основные группы оборудования без смешивания с каталогом поставщика.</p>
-          <MetrikaSearchForm className="search-panel search-panel-compact hero-search" action="/search" location="buyer_tasks">
-            <input name="q" type="search" placeholder="Опишите задачу, товар или параметр" aria-label="Поиск оборудования по задаче" />
-            <button className="btn btn-primary" type="submit">Найти решение</button>
-          </MetrikaSearchForm>
+        <div className="container hero-grid hero-grid-mascot">
+          <div>
+            <div className="eyebrow">Подбор по задаче</div>
+            <h1>Что нужно сделать</h1>
+            <p className="lead">Выберите инженерную задачу — покажем основные группы оборудования без смешивания с каталогом поставщика.</p>
+            <MetrikaSearchForm className="search-panel search-panel-compact hero-search" action="/search" location="buyer_tasks">
+              <input name="q" type="search" placeholder="Опишите задачу, товар или параметр" aria-label="Поиск оборудования по задаче" />
+              <button className="btn btn-primary" type="submit">Найти решение</button>
+            </MetrikaSearchForm>
+          </div>
+          <PageMascot
+            src="/images/mascots/krestovich-task-guide.webp"
+            alt="Крестович показывает план подбора оборудования"
+            label="Крестович помогает подобрать оборудование по задаче"
+            variant="task"
+          />
         </div>
       </section>
       <section className="section">

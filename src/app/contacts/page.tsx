@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { InfoTabs } from '@/components/layout/InfoTabs';
+import { PageMascot } from '@/components/layout/PageMascot';
 import { MetrikaGoalAnchor } from '@/components/analytics/MetrikaEvents';
 import { getCompanyProfile, getProductBySlug } from '@/lib/catalog/loaders';
 import { METRIKA_GOALS } from '@/lib/analytics/metrika';
@@ -27,28 +28,24 @@ export default async function ContactsPage({ searchParams }: PageProps) {
   return (
     <>
       <section className="hero">
-        <div className="container hero-grid">
+        <div className="container hero-grid hero-grid-mascot">
           <div>
             <div className="eyebrow">Контакты</div>
             <h1>Связаться с магазином</h1>
             <p className="lead">Позвоните, напишите на email или приезжайте в магазин на Большой Горной. По артикулу быстрее проверим цену, наличие и совместимые позиции.</p>
+            {selectedProduct ? <p className="hero-context">Выбранная позиция: <strong>{selectedProduct.brandName} · {selectedProduct.sku ?? selectedProduct.vendorCode}</strong></p> : null}
+            <div className="actions">
+              <MetrikaGoalAnchor className="btn btn-primary" href={phoneHref} goal={METRIKA_GOALS.phoneClick} goalParams={{ location: 'contacts_hero' }}>Позвонить</MetrikaGoalAnchor>
+              <MetrikaGoalAnchor className="btn btn-secondary" href={emailHref} goal={METRIKA_GOALS.emailClick} goalParams={{ location: 'contacts_hero' }}>Написать на email</MetrikaGoalAnchor>
+            </div>
             <InfoTabs active="contacts" />
           </div>
-          <div className="cta-panel">
-            <h2>Магазин «Сантехникъ»</h2>
-            {selectedProduct ? (
-              <>
-                <p>Выбранная позиция: {selectedProduct.brandName} · {selectedProduct.sku ?? selectedProduct.vendorCode}</p>
-                <h3>{selectedProduct.name}</h3>
-              </>
-            ) : (
-              <p>{company.address.addressLocality}, {company.address.streetAddress}. Ежедневно 08:00-19:00.</p>
-            )}
-            <div className="actions">
-              <MetrikaGoalAnchor className="btn" href={phoneHref} goal={METRIKA_GOALS.phoneClick} goalParams={{ location: 'contacts_hero' }}>Позвонить</MetrikaGoalAnchor>
-              <MetrikaGoalAnchor className="btn btn-secondary" href={emailHref} goal={METRIKA_GOALS.emailClick} goalParams={{ location: 'contacts_hero' }}>Написать</MetrikaGoalAnchor>
-            </div>
-          </div>
+          <PageMascot
+            src="/images/mascots/bak-hlopotun-contacts.webp"
+            alt="Бак Хлопотун отвечает на звонок"
+            label="Бак Хлопотун приглашает связаться с магазином"
+            variant="contacts"
+          />
         </div>
       </section>
       <section className="section">

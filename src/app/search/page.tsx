@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MetrikaSearchForm } from '@/components/analytics/MetrikaEvents';
+import { PageMascot } from '@/components/layout/PageMascot';
 import { ProductAvailabilityBadge } from '@/components/product/ProductAvailability';
 import { ProductImage } from '@/components/product/ProductImage';
 import { getAllCategories, getAllProducts, getCategoryBySlug } from '@/lib/catalog/loaders';
@@ -57,18 +58,26 @@ export default async function SearchPage({ searchParams }: PageProps) {
   return (
     <>
       <section className="hero">
-        <div className="container">
-          <div className="eyebrow">Поиск</div>
-          <h1>Поиск по {totalProducts.toLocaleString('ru-RU')} позициям</h1>
-          <p className="lead">Ищите по артикулу, бренду, названию, диаметру, серии или характеристике. Актуальную цену и возможность отгрузки подтвердит менеджер.</p>
-          <MetrikaSearchForm className="search-panel" action="/search" location="search_page">
-            <input name="q" type="search" placeholder="Например: V1620.040, AQUARIO, 32 мм" defaultValue={query} />
-            <select name="category" defaultValue={categorySlug}>
-              <option value="">Все разделы</option>
-              {categories.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
-            </select>
-            <button className="btn btn-primary" type="submit">Найти</button>
-          </MetrikaSearchForm>
+        <div className="container hero-grid hero-grid-mascot">
+          <div>
+            <div className="eyebrow">Поиск</div>
+            <h1>Поиск по {totalProducts.toLocaleString('ru-RU')} позициям</h1>
+            <p className="lead">Ищите по артикулу, бренду, названию, диаметру, серии или характеристике. Актуальную цену и возможность отгрузки подтвердит менеджер.</p>
+            <MetrikaSearchForm className="search-panel" action="/search" location="search_page">
+              <input name="q" type="search" placeholder="Например: V1620.040, AQUARIO, 32 мм" defaultValue={query} />
+              <select name="category" defaultValue={categorySlug}>
+                <option value="">Все разделы</option>
+                {categories.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
+              </select>
+              <button className="btn btn-primary" type="submit">Найти</button>
+            </MetrikaSearchForm>
+          </div>
+          <PageMascot
+            src="/images/mascots/bak-hlopotun-search.webp"
+            alt="Бак Хлопотун ищет товар с лупой"
+            label="Бак Хлопотун помогает искать товары"
+            variant="search"
+          />
         </div>
       </section>
 

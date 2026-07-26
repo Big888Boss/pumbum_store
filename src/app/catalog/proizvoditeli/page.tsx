@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { StaticImage } from '@/components/media/StaticImage';
 import Link from 'next/link';
+import { PageMascot } from '@/components/layout/PageMascot';
 import { getManufacturerGroups } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -31,14 +32,22 @@ export default function ManufacturersPage() {
     <>
       <div className="container breadcrumbs"><Link href="/catalog">Каталог</Link> / Производители</div>
       <section className="hero">
-        <div className="container">
-          <div className="eyebrow">Производители</div>
-          <h1>Каталог по производителям</h1>
-          <p className="lead">Разделы поставщиков из полного каталога: позиции, артикулы и группы для быстрого подбора.</p>
-          <div className="actions">
-            <Link className="btn btn-primary" href="/catalog">Каталог по назначению</Link>
-            <Link className="btn btn-secondary" href="/search">Поиск по артикулу</Link>
+        <div className="container hero-grid hero-grid-mascot">
+          <div>
+            <div className="eyebrow">Производители</div>
+            <h1 className="page-title-mobile-compact">Каталог по производителям</h1>
+            <p className="lead">Разделы поставщиков из полного каталога: позиции, артикулы и группы для быстрого подбора.</p>
+            <div className="actions">
+              <Link className="btn btn-primary" href="/catalog">Каталог по назначению</Link>
+              <Link className="btn btn-secondary" href="/search">Поиск по артикулу</Link>
+            </div>
           </div>
+          <PageMascot
+            src="/images/mascots/teplovik-manufacturers.webp"
+            alt="Тепловик показывает технические каталоги"
+            label="Тепловик помогает выбрать производителя"
+            variant="manufacturers"
+          />
         </div>
       </section>
 

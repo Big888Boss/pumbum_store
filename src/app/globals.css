@@ -726,7 +726,50 @@ p {
 }
 
 .mascot-stage-about .mascot-image {
-  transform: translateY(6%);
+  transform: translateY(3%);
+}
+
+.mascot-stage-manufacturers .mascot-image,
+.mascot-stage-contacts .mascot-image,
+.mascot-stage-task .mascot-image {
+  transform: scale(1.04);
+}
+
+.mascot-stage-search .mascot-image,
+.mascot-stage-delivery .mascot-image,
+.mascot-stage-privacy .mascot-image {
+  transform: scale(1.06) translateY(2%);
+}
+
+.delivery-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.delivery-checklist {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.42fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 28px;
+}
+
+.delivery-checklist h2 {
+  margin-bottom: 0;
+}
+
+.delivery-checklist ul {
+  margin: 0;
+  columns: 2;
+  column-gap: 36px;
+}
+
+.hero-context {
+  margin: 20px 0 0;
+  color: var(--ink-muted);
+}
+
+.privacy-section {
+  padding-top: 12px;
 }
 
 .stats-section {
@@ -2228,7 +2271,7 @@ ul:not(.badges):not(.manufacturer-sections) {
 .footer-mascot {
   position: absolute;
   z-index: 2;
-  top: -116px;
+  top: -104px;
   right: max(20px, calc((100vw - 1280px) / 2));
   width: 126px;
   height: 150px;
@@ -2609,6 +2652,11 @@ ul:not(.badges):not(.manufacturer-sections) {
     justify-self: center;
   }
 
+  .delivery-checklist {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
   .pdp-visual-card {
     max-width: 720px;
     width: 100%;
@@ -2764,6 +2812,10 @@ ul:not(.badges):not(.manufacturer-sections) {
     line-height: 0.96;
   }
 
+  .page-title-mobile-compact {
+    font-size: clamp(38px, 10.7vw, 50px);
+  }
+
   h2 {
     font-size: 29px;
     line-height: 1.06;
@@ -2789,6 +2841,10 @@ ul:not(.badges):not(.manufacturer-sections) {
 
   .mascot-stage-inline {
     min-height: 330px;
+  }
+
+  .delivery-checklist ul {
+    columns: 1;
   }
 
   .stats-section {
@@ -2888,7 +2944,7 @@ ul:not(.badges):not(.manufacturer-sections) {
   }
 
   .footer-mascot {
-    top: -78px;
+    top: -76px;
     right: 16px;
     width: 92px;
     height: 110px;

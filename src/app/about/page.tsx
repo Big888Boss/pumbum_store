@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { StaticImage } from '@/components/media/StaticImage';
 import { InfoTabs } from '@/components/layout/InfoTabs';
+import { PageMascot } from '@/components/layout/PageMascot';
 import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { getManufacturerGroups } from '@/lib/catalog/loaders';
@@ -31,10 +32,12 @@ export default function AboutPage() {
             <p className="lead">Сантехникъ работает с 2010 года и помогает подбирать комплектующие для водоснабжения, отопления, канализации и монтажа инженерных систем.</p>
             <InfoTabs active="about" />
           </div>
-          <aside className="mascot-stage mascot-stage-inline mascot-stage-about" aria-label="Крестович приветствует посетителей магазина">
-            <span className="mascot-stage-glow" aria-hidden="true" />
-            <StaticImage className="mascot-image" src="/images/mascots/krestovich-sitting.webp" alt="Крестович приветливо машет" width={874} height={1034} priority />
-          </aside>
+          <PageMascot
+            src="/images/mascots/krestovich-about-present.webp"
+            alt="Крестович рассказывает о магазине"
+            label="Крестович рассказывает о магазине Сантехникъ"
+            variant="about"
+          />
         </div>
       </section>
       <section className="section">
