@@ -69,7 +69,10 @@ image safe zone, so the product cannot cover the badge. The active candidate is
 protected gate is `pumbum-redesign-share-gate-image-recovery.service`.
 For reviewers outside Tailscale, a separate public read-only proxy allows only
 `GET` and `HEAD`, adds `noindex/nofollow/noarchive`, disables caching and returns
-`405` for write requests. It does not expose a preview credential in chat.
+`405` for write requests. The active external transport is the bounded
+`pumbum-redesign-cloudflared-public-readonly.service`; anonymous
+`localhost.run` was removed after it reassigned the hostname while the SSH
+process was still alive. It does not expose a preview credential in chat.
 
 Current production storefront release: `plumbing_store_v2-v2:catalog-navigation-20260723-v1` on localhost port `3023`. The previous `carousel-polish-20260723-v1` container on port `3022` is stopped to conserve RAM/swap; its image and stopped container are retained for rollback. No build runs on production. See `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md` for acceptance evidence and rollback.
 

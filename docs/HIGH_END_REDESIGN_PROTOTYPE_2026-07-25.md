@@ -441,8 +441,14 @@ Staging runtime:
 - anonymous external request returns `401`; Tailnet health returns `200`;
 - public reviewer proxy: `pumbum-redesign-public-readonly-gate.service` on
   loopback `3028`, reached only through the outbound
-  `pumbum-redesign-public-readonly-tunnel.service`; it allows only `GET`/`HEAD`,
+  `pumbum-redesign-cloudflared-public-readonly.service`; it allows only `GET`/`HEAD`,
   returns `405` for `POST`, sets `X-Robots-Tag: noindex, nofollow, noarchive`
   and `Cache-Control: no-store`;
+- the anonymous `localhost.run` public-review tunnel was stopped after it
+  reassigned its random hostname on an otherwise-live SSH session. Never treat
+  that transport's hostname as stable or hand it off as the durable review URL;
+- the active Cloudflare route was verified from the server and in Safari:
+  home, catalog, heating, search and health returned `200`, the real storefront
+  rendered, and the missing-tunnel page did not appear;
 - the earlier scroll-alpha worktree and generated override backups remain the
   rollback path. Production was not changed.

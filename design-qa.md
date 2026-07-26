@@ -170,7 +170,8 @@ final result: passed
 - Server-side acceptance passed: build/lint/types, 9,276-product taxonomy,
   9,354 sitemap URLs, 60 navigation routes, all 3,379 products over 141 pages,
   and the analytics contract.
-- Safari visual verification remains to be captured once the local Mac is
-  unlocked; the staging candidate itself is healthy on Tailnet and behind the
-  invitation gate. A separate public reviewer route is read-only (`GET`/`HEAD`),
-  noindex and no-store; attempted `POST /api/leads` returns `405`.
+- Safari loaded the replacement Cloudflare route as the real storefront with
+  the correct header, hero, Teplovik, category links and footer actions; the
+  missing-tunnel page did not appear. The public reviewer route is read-only
+  (`GET`/`HEAD`), noindex and no-store; attempted `POST /api/leads` returns
+  `405`.
