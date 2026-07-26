@@ -10,6 +10,9 @@
 - Source baseline: clean production commit `a6bc64e4105a7de96a2b3f9fc29c9d1ba56c1981`.
 - Isolated build-host path: `/home/administrator/agent-projects/pumbum-store-redesign-20260725`.
 - Visual source: `https://high-end-plumbing-landing-page.vercel.app/`.
+- Current staging presentation build: `b7f370647b8307da8d7fd6fddb0fa37c16bb7316`.
+  The previous `.next` is retained at
+  `/home/administrator/backups/pumbum-redesign/.next-949bfb8-pre-b7f3706-20260726`.
 
 ## Implemented
 
@@ -168,6 +171,11 @@ map actions without Cloudflare email-rewrite injection.
   state. Browser console and warning logs remained empty.
 - Header hit testing at the left edge, center and right edge of the visible logo
   resolves to the `/` link, including the lettering rather than only a frame.
+- The same checks passed through the invitation-gated Cloudflare route after
+  the reversible staging switch: dark/light desktop, mobile home and category,
+  autoplay, manual carousel controls, all mascot placements, footer boundary
+  placement and browser logs. The anonymous route still returns HTTP 401 with
+  noindex/noarchive, no-store/no-transform, CSP and frame-deny headers.
 
 ## Resource evidence
 

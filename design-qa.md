@@ -113,7 +113,7 @@ No browser console errors, page errors or non-cancelled same-origin request fail
   - verified locally at `390 x 844`: category loaded in 361 ms and task page in 74 ms;
   - verified again through the protected Cloudflare staging route at `390 x 844`: category loaded in 990 ms, task page in 594 ms, light theme persisted across navigation, the carousel advanced from slide 1 to 2 in 3.4 seconds, the footer exposed `tel:`, `mailto:` and the exact Yandex Maps organization URL, and the visible email was not rewritten by Cloudflare;
   - inspected both colleague screenshot/render pairs in the same combined images; the requested search and contact affordances are visible and no new P0/P1/P2 finding remains.
-- Pass 5 — mascot, logo and product-cutout follow-up, passed locally:
+- Pass 5 — mascot, logo and product-cutout follow-up, passed on protected staging:
   - compared the generated Teplovik, Bak Hlopotun and Krestovich placements to
     the supplied character sheets on desktop and mobile; poses read clearly,
     remain subordinate to the buyer actions, and Krestovich has no alcohol;
@@ -125,6 +125,9 @@ No browser console errors, page errors or non-cancelled same-origin request fail
     `/`, and browser console/warning logs are empty.
   - verified the limited server candidate with 9,276 products, 9,354 sitemap
     URLs, 60 navigation routes, all 3,379 paginated products and enforced CSP.
+  - repeated desktop dark/light, mobile home/category, carousel, catalog/about
+    mascots, footer boundary, complete logo hitbox and console checks through
+    the invitation-gated Cloudflare route after staging activation.
 
 ## Findings
 
