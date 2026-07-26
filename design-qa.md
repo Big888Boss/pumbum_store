@@ -172,4 +172,5 @@ final result: passed
   and the analytics contract.
 - Safari visual verification remains to be captured once the local Mac is
   unlocked; the staging candidate itself is healthy on Tailnet and behind the
-  invitation gate.
+  invitation gate. A separate public reviewer route is read-only (`GET`/`HEAD`),
+  noindex and no-store; attempted `POST /api/leads` returns `405`.

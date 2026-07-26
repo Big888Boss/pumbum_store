@@ -8,10 +8,11 @@ const tailnetPort = Number(process.env.PREVIEW_TAILNET_PORT ?? '3027');
 const upstream = new URL(process.env.PREVIEW_SHARE_UPSTREAM ?? 'http://127.0.0.1:3025');
 const accessToken = process.env.PREVIEW_SHARE_TOKEN ?? '';
 const sessionMaxAgeSeconds = Number(process.env.PREVIEW_SHARE_SESSION_SECONDS ?? '86400');
+const publicReadOnly = process.env.PREVIEW_SHARE_PUBLIC_READONLY === 'true';
 const cookieName = '__Host-pumbum_preview';
 const attempts = new Map();
 
-if (accessToken.length < 32) {
+if (!publicReadOnly && accessToken.length < 32) {
   throw new Error('PREVIEW_SHARE_TOKEN must contain at least 32 characters');
 }
 if (!Number.isInteger(listenPort) || listenPort < 1024 || listenPort > 65535) {
@@ -182,6 +183,19 @@ const server = http.createServer(async (request, response) => {
   if (request.url === '/__preview_gate_health') {
     response.writeHead(200, securityHeaders({ 'Content-Type': 'application/json; charset=utf-8' }));
     response.end('{"status":"ok"}');
+    return;
+  }
+
+  if (publicReadOnly) {
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
+      response.writeHead(405, securityHeaders({
+        'Allow': 'GET, HEAD',
+        'Content-Type': 'text/plain; charset=utf-8',
+      }));
+      response.end('Read-only preview');
+      return;
+    }
+    proxyRequest(request, response);
     return;
   }
 

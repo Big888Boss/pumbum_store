@@ -439,5 +439,10 @@ Staging runtime:
 - invitation gate: `pumbum-redesign-share-gate-image-recovery.service` on
   `127.0.0.1:3026` and Tailnet `100.95.56.90:3027`;
 - anonymous external request returns `401`; Tailnet health returns `200`;
+- public reviewer proxy: `pumbum-redesign-public-readonly-gate.service` on
+  loopback `3028`, reached only through the outbound
+  `pumbum-redesign-public-readonly-tunnel.service`; it allows only `GET`/`HEAD`,
+  returns `405` for `POST`, sets `X-Robots-Tag: noindex, nofollow, noarchive`
+  and `Cache-Control: no-store`;
 - the earlier scroll-alpha worktree and generated override backups remain the
   rollback path. Production was not changed.
