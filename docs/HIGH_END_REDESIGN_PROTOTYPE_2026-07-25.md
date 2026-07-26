@@ -225,7 +225,9 @@ the tailnet. Production routing remains unchanged.
   outbound-only; its metrics listener is loopback-only on `127.0.0.1:49327`.
 - User services:
   - `pumbum-redesign-share-gate.service`;
-  - `pumbum-redesign-cloudflared.service`.
+  - `pumbum-redesign-cloudflared.service` (preferred Quick Tunnel transport);
+  - transient `pumbum-redesign-localhost-run.service` (temporary fallback only
+    while Cloudflare returns Quick Tunnel allocation `1015/429`).
 - The official user-scoped `cloudflared` `2026.7.2` binary is installed at
   `/home/administrator/.local/bin/cloudflared`. Verified SHA-256:
   `ec905ea7b7e327ff8abdde8cb64697a2152de74dbcdbf6aec9db8364eb3886cd`.
@@ -233,6 +235,11 @@ the tailnet. Production routing remains unchanged.
   random hostname after the tunnel service restarts. Capture the current
   hostname from `journalctl --user -u pumbum-redesign-cloudflared.service`
   instead of treating a recorded hostname as durable.
+- The localhost.run fallback is also outbound-only, terminates public TLS and
+  forwards exclusively to `127.0.0.1:3026`. It is limited to 96 MiB memory,
+  20% CPU and inherits the same invitation cookie, noindex, no-store, CSP and
+  frame-deny gate. Its random hostname is likewise not durable and must not be
+  recorded with the invitation fragment. Stop it when Cloudflare is healthy.
 
 Stop temporary sharing without stopping the loopback preview:
 
@@ -366,6 +373,11 @@ store until the owner separately approves cleanup.
 - After the build the host had about 10 GiB available RAM and memory PSI was
   zero. All five SalesGame E2E containers remained running with `restarts=0`
   and `OOMKilled=false`.
+- The activated staging runtime is
+  `pumbum-redesign-preview-scroll-alpha.service` on `127.0.0.1:3025`; the
+  invitation gate remains on `127.0.0.1:3026` and tailnet proxy on
+  `100.95.56.90:3027`. The temporary external fallback passed anonymous 401,
+  invitation exchange 204, authenticated health 200 and category 200 checks.
 
 Reports are retained in the operator workspace rather than the public site:
 

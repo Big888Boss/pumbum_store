@@ -20,8 +20,11 @@ The 2026-07-25 high-end redesign is an isolated source/build prototype based on
 production commit `a6bc64e`. The owner approved a temporary preview whose app
 process stays on `127.0.0.1:3025`. Tailnet access is provided through
 `100.95.56.90:3027`; one non-tailnet reviewer uses an invitation-gated,
-outbound-only Cloudflare Quick Tunnel. No production route or public inbound
-port was changed. The second design iteration adds the current store logo,
+outbound-only TLS tunnel. Cloudflare Quick Tunnel is the preferred transport;
+an outbound-only `localhost.run` SSH tunnel is the temporary fallback while
+Cloudflare returns allocation rate-limit `1015/429`. Both reach the same
+loopback invitation gate. No production route or public inbound port was
+changed. The second design iteration adds the current store logo,
 stable quality-gated category carousels, collection search/filter/sort
 controls, lightweight scroll reveals, a back-to-top control and a denser
 product-detail composition without the redundant photo explanation panel.
