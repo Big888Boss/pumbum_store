@@ -147,7 +147,7 @@ function supplierDisplayName(supplier: SupplierSlug): string {
 }
 
 const categoryFeaturedProductOverrides: Record<string, string[]> = {
-  vodosnabzhenie: ['akvatek-atv-500'],
+  vodosnabzhenie: ['akvatek-atv-500', 'cimm-cm-afesb-050', 'valtec-vt-uspd-r1-4'],
   kanalizaciya: ['sistemy-naruzhnoy-kanalizacii-20015'],
   filtraciya: ['valtec-vt-389-n-06'],
   nasosy: ['aquario-7435'],
@@ -168,6 +168,7 @@ const carouselImageOverrides: Record<string, string> = {
   'tim-bas0260b-a': '/images/carousel-products/tim-bas0260ba.png',
   'tim-c-l50-02bk': '/images/carousel-products/tim-cl5002bk.png',
   'cimm-cm-afesb-050': '/images/carousel-products/CM.AFESB.050_0-clean.webp',
+  'valtec-vt-uspd-r1-4': '/images/products/_transparent-v1/vt.uspd.r1.4-34c96a602ffde9b4-detail-22e88d2fe55dd831-detail.webp',
 };
 
 const categoryFeaturedSubcategoryOrder: Record<string, string[]> = {
@@ -199,6 +200,7 @@ function hasCarouselQualityImage(product: Product): boolean {
   const image = carouselImageOverrides[product.slug] ?? product.image;
   return (
     image.includes('/images/products/_normalized-v2/')
+    || image.includes('/images/products/_transparent-v1/')
     || image.includes('/images/category-showcase/')
     || image.includes('/images/carousel-products/')
   );

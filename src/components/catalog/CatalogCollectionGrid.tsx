@@ -193,7 +193,7 @@ export function CatalogCollectionGrid({
   const activeCount = activeCatalogFilterCount(selected);
 
   return (
-    <section className="section">
+    <section className="section" id="catalog-products">
       <div className="container">
         <div className="section-head">
           <div>
@@ -291,7 +291,7 @@ export function CatalogCollectionGrid({
           </div>
         ) : (
           <div className="product-list-grid product-list-grid-with-images">
-            {visibleProducts.map((product) => (
+            {visibleProducts.map((product, index) => (
               <Link
                 key={`${product.categorySlug}/${product.slug}`}
                 className="product-list-card product-list-card-with-image"
@@ -304,6 +304,7 @@ export function CatalogCollectionGrid({
                   brand={product.brandName}
                   hideBrandLogo={product.hideBrandLogo}
                   compact
+                  priority={index < 6}
                 />
                 <span className="brand-line">{product.brandName}</span>
                 <h3>{product.name}</h3>
@@ -321,20 +322,20 @@ export function CatalogCollectionGrid({
 
         {pageCount > 1 ? (
           <nav className="catalog-pagination" aria-label="Страницы каталога">
-            {currentPage > 1 ? <Link rel="prev" href={buildCollectionHref(basePath, selected, search, view, sort, { page: currentPage - 1 })}>Назад</Link> : null}
+            {currentPage > 1 ? <Link rel="prev" href={`${buildCollectionHref(basePath, selected, search, view, sort, { page: currentPage - 1 })}#catalog-products`}>Назад</Link> : null}
             {paginationPages.map((page, index) => (
               <span className="catalog-pagination-item" key={page}>
                 {index > 0 && page - paginationPages[index - 1] > 1 ? <span className="catalog-pagination-gap" aria-hidden="true">…</span> : null}
                 <Link
                   className={page === currentPage ? 'is-active' : ''}
-                  href={buildCollectionHref(basePath, selected, search, view, sort, { page })}
+                  href={`${buildCollectionHref(basePath, selected, search, view, sort, { page })}#catalog-products`}
                   aria-current={page === currentPage ? 'page' : undefined}
                 >
                   {page}
                 </Link>
               </span>
             ))}
-            {currentPage < pageCount ? <Link rel="next" href={buildCollectionHref(basePath, selected, search, view, sort, { page: currentPage + 1 })}>Вперёд</Link> : null}
+            {currentPage < pageCount ? <Link rel="next" href={`${buildCollectionHref(basePath, selected, search, view, sort, { page: currentPage + 1 })}#catalog-products`}>Вперёд</Link> : null}
           </nav>
         ) : null}
       </div>

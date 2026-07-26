@@ -292,3 +292,83 @@ the document reaches `complete` and the application remains interactive.
 Pre-switch rollback build:
 `/home/administrator/backups/pumbum-redesign/.next-c660077-pre-2a42d76-20260726`.
 Production was not modified.
+
+## Scroll reveal and transparent catalog pass — 2026-07-26
+
+This pass remains isolated to the USA staging host. Production was not read,
+rebuilt, restarted or deployed.
+
+### Runtime changes
+
+- `ScrollEnhancements` now registers cards added after Next.js client
+  navigation and reveals category, product, manufacturer and information cards
+  with a short opacity/translate/scale transition. The observer is disabled for
+  `prefers-reduced-motion` and does not run a per-frame scroll handler.
+- Every catalog pagination URL ends in `#catalog-products`; the section has a
+  sticky-header-aware `scroll-margin-top`, so page 2 opens at the product grid
+  rather than at the page hero.
+- Cached mascot and product images use their real `complete` state as well as
+  `load`, preventing late or permanently invisible images after client-side
+  navigation. The first six list images are eager/high-priority; remaining
+  images keep lazy loading and a lightweight skeleton/fade-in state.
+- Water-supply recommendations use three distinct, quality-gated groups. All
+  ten category carousels expose two or three usable items; mounting fasteners
+  intentionally expose two because no third image passed the quality gate.
+
+### Reversible transparent-image pipeline
+
+- `scripts/process-product-transparency.mjs` uses the already-installed Sharp
+  dependency and bounded sequential processing. It does not call a remote
+  image service or overwrite a source file.
+- 1,836 unique current display sources were inspected. Results: 1,451 accepted
+  transparent derivatives, 226 already-transparent originals, 158 rejected
+  unsafe conversions and one placeholder/manual-background case.
+- 184 images were automatically flagged as low-resolution/problematic. The
+  manual-review CSV contains 159 retained sources. Unsafe subject loss and
+  edge coverage are rejected instead of being published.
+- Versioned derivatives are stored at
+  `/home/administrator/agent-projects/pumbum-store-redesign-assets/catalog-alpha-v1`
+  (about 81 MiB). The application path
+  `public/images/products/_transparent-v1` is a symlink to that store.
+- Runtime selection is controlled only by
+  `content/generated/product-transparent-image-overrides.json`. Originals under
+  `public/images/products` remain untouched.
+
+Rollback the transparent presentation without deleting any derivative:
+
+```bash
+git revert <scroll-alpha-commit>
+npm run build
+```
+
+The prior source tree remains at
+`/home/administrator/agent-projects/pumbum-store-redesign-20260725`. A staging
+runtime rollback is therefore also possible by stopping the scroll-alpha unit
+and starting that tree again on loopback port 3025. Do not remove the asset
+store until the owner separately approves cleanup.
+
+### Acceptance evidence
+
+- Next build ID: `A03IuqrFdvVb_Mw2BDEdQ`; build succeeded in 2.9 GiB peak unit
+  memory with zero unit swap.
+- Browser QA passed at 1280 x 720 and 390 x 844: dark/light persistence, mobile
+  menu, no horizontal overflow, search, product detail, information tabs,
+  scroll reveal completion, cached mascot loading, pagination anchor, carousel
+  autoplay and zero console/page/same-origin request errors.
+- All ten category carousels passed distinct-group, 32 px mobile control,
+  8 px marker and five-second autoplay checks. Nine expose three items; mounting
+  fasteners expose two quality-gated items.
+- Taxonomy validation: 9,276 products, 10 categories, 9 manufacturers, 9,354
+  sitemap URLs and 60 navigation routes. Legacy redirect coverage: 7,546 moved
+  product paths covered, zero missing and zero ambiguous.
+- Complete water-supply pagination exposes all 436 products as 19 pages of 24
+  without duplicates; page 2 lands at the product grid.
+- After the build the host had about 10 GiB available RAM and memory PSI was
+  zero. All five SalesGame E2E containers remained running with `restarts=0`
+  and `OOMKilled=false`.
+
+Reports are retained in the operator workspace rather than the public site:
+
+- `product-image-quality-problems.csv`;
+- `product-image-transparency-review.csv`;
+- `product-image-transparency-report.json`.

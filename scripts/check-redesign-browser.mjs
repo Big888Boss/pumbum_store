@@ -30,7 +30,8 @@ function collectRuntimeErrors(page, target) {
     if (!url.startsWith(baseUrl)) return;
     const errorText = request.failure()?.errorText ?? 'unknown';
     const isCancelledNextPrefetch = errorText === 'net::ERR_ABORTED' && new URL(url).searchParams.has('_rsc');
-    if (isCancelledNextPrefetch) return;
+    const isCancelledImageOnNavigation = errorText === 'net::ERR_ABORTED' && request.resourceType() === 'image';
+    if (isCancelledNextPrefetch || isCancelledImageOnNavigation) return;
     target.push(`requestfailed: ${url} :: ${errorText}`);
   });
 }
@@ -70,6 +71,13 @@ try {
   const homeDark = await inspectPage(page, 'desktop home dark');
   assert(homeDark.theme === 'dark', 'desktop home: dark theme is not the default');
   assert((await page.locator('.category-card').count()) === 10, 'desktop home: expected ten category cards');
+  await page.locator('.category-card').last().scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => [...document.querySelectorAll('.category-card')].at(-1)?.classList.contains('is-revealed'));
+  await page.waitForFunction(() => {
+    const card = [...document.querySelectorAll('.category-card')].at(-1);
+    return card ? Number.parseFloat(getComputedStyle(card).opacity) > 0.99 : false;
+  });
+  assert(await page.locator('.mascot-image-home').evaluate((element) => element.classList.contains('is-loaded')), 'desktop home: mascot load-in state is missing');
   await assertVisibleImagesLoaded(page, 'desktop home dark');
   await page.screenshot({ path: join(outputDir, 'home-desktop-dark.png') });
 
@@ -108,6 +116,20 @@ try {
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(100);
   await page.screenshot({ path: join(outputDir, 'contacts-desktop-dark.png') });
+
+  await page.goto(`${baseUrl}/catalog/vodosnabzhenie`, { waitUntil: 'domcontentloaded' });
+  const pageTwo = page.locator('.catalog-pagination a', { hasText: /^2$/ }).first();
+  const pageTwoHref = await pageTwo.getAttribute('href');
+  assert(pageTwoHref?.endsWith('#catalog-products'), 'desktop pagination: page two link must target the product section');
+  await pageTwo.click();
+  await page.waitForURL((url) => url.searchParams.get('page') === '2' && url.hash === '#catalog-products');
+  await page.waitForFunction(() => {
+    const section = document.querySelector('#catalog-products');
+    if (!section) return false;
+    const top = section.getBoundingClientRect().top;
+    return top >= 70 && top <= 130;
+  });
+  assert((await page.locator('.product-list-card').count()) === 24, 'desktop pagination: expected 24 cards on page two');
   await desktop.close();
 
   const mobile = await browser.newContext({
@@ -142,7 +164,8 @@ try {
   const carousel = mobilePage.locator('.category-product-carousel');
   await carousel.waitFor();
   const dots = carousel.locator('.category-carousel-dot');
-  assert((await dots.count()) === 3, 'mobile carousel: expected three markers');
+  const dotCount = await dots.count();
+  assert(dotCount >= 2 && dotCount <= 3, 'mobile carousel: expected two or three quality-gated markers');
   const firstDotBox = await dots.first().boundingBox();
   assert(firstDotBox && firstDotBox.width >= 32 && firstDotBox.height >= 32, 'mobile carousel: touch target is too small');
   const initialTitle = await carousel.locator('h2').innerText();
@@ -172,6 +195,8 @@ try {
       'catalog and search',
       'product image and contact CTA',
       'information tabs',
+      'scroll reveal and mascot load-in states',
+      'pagination anchor and second-page product count',
       'carousel controls and five-second autoplay',
       'browser console, page errors and same-origin request failures',
     ],

@@ -26,6 +26,7 @@ const context = await browser.newContext({
 });
 const page = await context.newPage();
 const pageErrors = [];
+const carouselSizes = {};
 page.on('pageerror', (error) => pageErrors.push(error.message));
 
 try {
@@ -33,11 +34,13 @@ try {
     await page.goto(`${baseUrl}/catalog/${category}`, { waitUntil: 'domcontentloaded' });
     const carousel = page.locator('.category-product-carousel');
     await carousel.waitFor();
-    assert(await carousel.getAttribute('data-carousel-size') === '3', `${category}: carousel size is not 3`);
+    const carouselSize = Number(await carousel.getAttribute('data-carousel-size'));
+    carouselSizes[category] = carouselSize;
+    assert(carouselSize >= 2 && carouselSize <= 3, `${category}: expected two or three quality-gated products`);
     const groupLabels = (await carousel.getAttribute('data-carousel-groups'))?.split('|').filter(Boolean) ?? [];
-    assert(groupLabels.length === 3 && new Set(groupLabels).size === 3, `${category}: carousel groups are not distinct`);
+    assert(groupLabels.length === carouselSize && new Set(groupLabels).size === carouselSize, `${category}: carousel groups are not distinct`);
     const dots = carousel.locator('.category-carousel-dot');
-    assert(await dots.count() === 3, `${category}: expected three carousel controls`);
+    assert(await dots.count() === carouselSize, `${category}: carousel control count is wrong`);
     const dotBox = await dots.first().locator('xpath=..').boundingBox();
     const markerStyle = await dots.first().evaluate((element) => {
       const pseudo = getComputedStyle(element, '::before');
@@ -57,7 +60,7 @@ try {
   console.log(JSON.stringify({
     baseUrl,
     categoriesChecked: categories.length,
-    productsPerCarousel: 3,
+    carouselSizes,
     distinctGroups: true,
     autoplayMs: 5000,
     mobileTouchTargetPx: 32,

@@ -26,6 +26,8 @@
     "catalog:check-legacy-purpose-redirects": "node scripts/check-legacy-purpose-redirect-coverage.mjs",
     "images:audit": "node scripts/audit-product-images.mjs",
     "images:normalize": "node scripts/normalize-product-images.mjs",
+    "images:audit-transparency": "node scripts/process-product-transparency.mjs",
+    "images:process-transparency": "node scripts/process-product-transparency.mjs --process",
     "images:apply-sinikon-source": "node scripts/apply-sinikon-source-images.mjs",
     "images:apply-aquatec-source": "node scripts/apply-aquatec-source-images.mjs",
     "images:repair-manifest-suppliers": "node scripts/repair-product-image-manifest-suppliers.mjs",

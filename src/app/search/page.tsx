@@ -101,9 +101,9 @@ export default async function SearchPage({ searchParams }: PageProps) {
 
           {results.length > 0 ? (
             <div className="product-list-grid">
-              {results.map(({ product }) => (
+              {results.map(({ product }, index) => (
                 <Link key={`${product.categorySlug}/${product.slug}`} className="product-list-card product-list-card-with-image" href={`/catalog/${product.categorySlug}/${product.slug}`}>
-                  <ProductImage src={getProductImage(product, 'card')} alt={product.name} logoSrc={product.logo} brand={product.brandName} hideBrandLogo={product.hideBrandLogo} compact />
+                  <ProductImage src={getProductImage(product, 'card')} alt={product.name} logoSrc={product.logo} brand={product.brandName} hideBrandLogo={product.hideBrandLogo} compact priority={index < 6} />
                   <span className="brand-line">{product.brandName}</span>
                   <h3>{product.name}</h3>
                   <p>{cleanPreviewText(getProductCardDescription(product))}</p>

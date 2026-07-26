@@ -39,6 +39,17 @@ seated alcohol-free Krestovich at the footer seam. Manufacturers, search,
 delivery, about, contacts, task selection and privacy now have distinct poses;
 the existing home and catalog scenes remain unchanged. The footer figure is
 positioned with its seat on the section boundary instead of floating above it.
+The 2026-07-26 staging-only interaction and catalog-image pass adds visible,
+low-cost IntersectionObserver reveals for category and product cards, anchors
+pagination to the beginning of the product grid, makes cached mascot and
+product-image loading deterministic, and keeps the first six catalog/search
+images eager. A versioned, reversible Sharp pipeline inspected 1,836 current
+display sources: 1,451 received accepted transparent derivatives, 226 were
+already transparent, and 159 were retained for manual review instead of being
+damaged by an unsafe cutout. Original files remain unchanged; the generated
+asset store is outside Git and the checked-in override map is the only runtime
+switch. Desktop/mobile browser QA, all ten category carousels, taxonomy,
+pagination and legacy-route coverage pass on the isolated staging candidate.
 Browser/design QA passed after desktop/mobile, dark/light, catalog, search,
 product, image, carousel and interaction checks. Production deployment still
 requires separate owner approval.

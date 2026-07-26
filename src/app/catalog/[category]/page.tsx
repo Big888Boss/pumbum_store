@@ -210,7 +210,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
   const activeCount = activeCatalogFilterCount(selected);
 
   return (
-    <section className="section">
+    <section className="section" id="catalog-products">
       <div className="container">
         <div className="section-head">
           <div>
@@ -280,9 +280,9 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
           </div>
         ) : (
           <div className="product-list-grid product-list-grid-with-images">
-            {visibleProducts.map((item) => (
+            {visibleProducts.map((item, index) => (
               <Link key={`${item.categorySlug}/${item.slug}`} className="product-list-card product-list-card-with-image" href={`/catalog/${item.categorySlug}/${item.slug}`}>
-                <ProductImage src={getProductImage(item, 'card')} alt={item.name} logoSrc={item.logo} brand={item.brandName} hideBrandLogo={item.hideBrandLogo} compact />
+                <ProductImage src={getProductImage(item, 'card')} alt={item.name} logoSrc={item.logo} brand={item.brandName} hideBrandLogo={item.hideBrandLogo} compact priority={index < 6} />
                 <span className="brand-line">{item.brandName}</span>
                 <h3>{item.name}</h3>
                 <p>{getProductCardDescription(item)}</p>
@@ -299,14 +299,14 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
         {pageCount > 1 ? (
           <nav className="catalog-pagination" aria-label="Страницы каталога">
             {currentPage > 1 ? (
-              <Link rel="prev" href={buildCategoryHref(categorySlug, selected, viewMode, sort, { page: currentPage - 1 })}>Назад</Link>
+              <Link rel="prev" href={`${buildCategoryHref(categorySlug, selected, viewMode, sort, { page: currentPage - 1 })}#catalog-products`}>Назад</Link>
             ) : null}
             {paginationPages.map((page, index) => (
               <span className="catalog-pagination-item" key={page}>
                 {index > 0 && page - paginationPages[index - 1] > 1 ? <span className="catalog-pagination-gap" aria-hidden="true">…</span> : null}
                 <Link
                   className={page === currentPage ? 'is-active' : ''}
-                  href={buildCategoryHref(categorySlug, selected, viewMode, sort, { page })}
+                  href={`${buildCategoryHref(categorySlug, selected, viewMode, sort, { page })}#catalog-products`}
                   aria-current={page === currentPage ? 'page' : undefined}
                 >
                   {page}
@@ -314,7 +314,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
               </span>
             ))}
             {currentPage < pageCount ? (
-              <Link rel="next" href={buildCategoryHref(categorySlug, selected, viewMode, sort, { page: currentPage + 1 })}>Вперёд</Link>
+              <Link rel="next" href={`${buildCategoryHref(categorySlug, selected, viewMode, sort, { page: currentPage + 1 })}#catalog-products`}>Вперёд</Link>
             ) : null}
           </nav>
         ) : null}

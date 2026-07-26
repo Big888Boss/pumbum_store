@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MetrikaSearchForm } from '@/components/analytics/MetrikaEvents';
 import { ProductImage } from '@/components/product/ProductImage';
-import { StaticImage } from '@/components/media/StaticImage';
+import { PageMascot } from '@/components/layout/PageMascot';
 import { getAllCategories, getCategoryShowcaseBySlug, getProductsByCategory } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -39,10 +39,12 @@ export default function CatalogPage() {
               <button className="btn btn-primary" type="submit">Найти</button>
             </MetrikaSearchForm>
           </div>
-          <aside className="mascot-stage mascot-stage-inline mascot-stage-catalog" aria-label="Бак Хлопотун показывает разделы каталога">
-            <span className="mascot-stage-glow" aria-hidden="true" />
-            <StaticImage className="mascot-image" src="/images/mascots/bak-hlopotun-present.webp" alt="Бак Хлопотун показывает каталог" width={830} height={1082} priority />
-          </aside>
+          <PageMascot
+            src="/images/mascots/bak-hlopotun-present.webp"
+            alt="Бак Хлопотун показывает каталог"
+            label="Бак Хлопотун показывает разделы каталога"
+            variant="catalog"
+          />
         </div>
       </section>
       <section className="section section-tight">

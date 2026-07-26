@@ -6,6 +6,22 @@ import { ArrowUp } from 'lucide-react';
 const revealSelector = [
   '.section > .container',
   '.cta-panel',
+  '.category-card',
+  '.product-list-card',
+  '.product-row',
+  '.manufacturer-card',
+  '.contact-card',
+  '.mini-product-card',
+  '.category-product-carousel',
+].join(',');
+
+const revealCardSelector = [
+  '.category-card',
+  '.product-list-card',
+  '.product-row',
+  '.manufacturer-card',
+  '.contact-card',
+  '.mini-product-card',
 ].join(',');
 
 export function ScrollEnhancements() {
@@ -23,11 +39,6 @@ export function ScrollEnhancements() {
       return () => window.removeEventListener('scroll', syncBackToTop);
     }
 
-    elements.forEach((element, index) => {
-      element.classList.add('scroll-reveal');
-      element.classList.add(`scroll-reveal-delay-${Math.min(index % 5, 4)}`);
-    });
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
@@ -35,13 +46,39 @@ export function ScrollEnhancements() {
         observer.unobserve(entry.target);
       });
     }, {
-      rootMargin: '0px 0px 12% 0px',
-      threshold: 0.02,
+      rootMargin: '0px 0px -6% 0px',
+      threshold: 0.08,
     });
 
-    elements.forEach((element) => observer.observe(element));
+    const registered = new WeakSet<HTMLElement>();
+    let revealIndex = 0;
+    const registerElement = (element: HTMLElement) => {
+      if (registered.has(element)) return;
+      registered.add(element);
+      element.classList.add('scroll-reveal');
+      if (element.matches(revealCardSelector)) element.classList.add('scroll-reveal-card');
+      element.classList.add(`scroll-reveal-delay-${Math.min(revealIndex % 5, 4)}`);
+      revealIndex += 1;
+      observer.observe(element);
+    };
+    const registerTree = (root: ParentNode | HTMLElement) => {
+      if (root instanceof HTMLElement && root.matches(revealSelector)) registerElement(root);
+      root.querySelectorAll<HTMLElement>(revealSelector).forEach(registerElement);
+    };
+
+    registerTree(document);
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof HTMLElement) registerTree(node);
+        });
+      });
+    });
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
     return () => {
       observer.disconnect();
+      mutationObserver.disconnect();
       window.removeEventListener('scroll', syncBackToTop);
     };
   }, []);
