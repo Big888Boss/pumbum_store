@@ -23,7 +23,7 @@ type PageProps = {
   params: Promise<{ category: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
-const productsPerPage = 60;
+const productsPerPage = 24;
 type CatalogViewMode = 'grid' | 'list';
 
 function formatPositions(count: number): string {

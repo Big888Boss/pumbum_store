@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ProductImage } from '@/components/product/ProductImage';
 import type { Product } from '@/entities/product/model';
 
-const AUTOPLAY_DELAY_MS = 5000;
+const AUTOPLAY_DELAY_MS = 3200;
 
 export function CategoryProductCarousel({
   products,
@@ -22,11 +22,16 @@ export function CategoryProductCarousel({
   const activeProduct = products[activeIndex] ?? products[0];
 
   useEffect(() => {
-    products.slice(1).forEach((product) => {
+    const nextProduct = products[(activeIndex + 1) % products.length];
+    if (!nextProduct || nextProduct.slug === activeProduct?.slug) return undefined;
+    const timer = window.setTimeout(() => {
       const image = new Image();
-      image.src = product.image;
-    });
-  }, [products]);
+      image.decoding = 'async';
+      image.fetchPriority = 'low';
+      image.src = nextProduct.image;
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, activeProduct?.slug, products]);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');

@@ -30,7 +30,7 @@ function safeEqual(left, right) {
 
 function securityHeaders(extra = {}) {
   return {
-    'Cache-Control': 'no-store, max-age=0',
+    'Cache-Control': 'no-store, no-transform, max-age=0',
     'Referrer-Policy': 'no-referrer',
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'DENY',
@@ -157,7 +157,7 @@ function proxyRequest(request, response, scheme = 'https') {
   }, (upstreamResponse) => {
     const headers = {
       ...upstreamResponse.headers,
-      'cache-control': 'no-store, max-age=0',
+      'cache-control': 'no-store, no-transform, max-age=0',
       'referrer-policy': 'no-referrer',
       'x-robots-tag': 'noindex, nofollow, noarchive',
     };

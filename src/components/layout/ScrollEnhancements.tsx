@@ -5,8 +5,6 @@ import { ArrowUp } from 'lucide-react';
 
 const revealSelector = [
   '.section > .container',
-  '.manufacturer-card',
-  '.product-list-card',
   '.cta-panel',
 ].join(',');
 
@@ -37,8 +35,8 @@ export function ScrollEnhancements() {
         observer.unobserve(entry.target);
       });
     }, {
-      rootMargin: '0px 0px -8% 0px',
-      threshold: 0.08,
+      rootMargin: '0px 0px 12% 0px',
+      threshold: 0.02,
     });
 
     elements.forEach((element) => observer.observe(element));

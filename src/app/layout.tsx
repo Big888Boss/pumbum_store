@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ScrollEnhancements } from '@/components/layout/ScrollEnhancements';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { StoreLogo } from '@/components/layout/StoreLogo';
+import { FooterContacts } from '@/components/layout/FooterContacts';
 import { YandexMetrika } from '@/components/analytics/YandexMetrika';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getCompanyProfile } from '@/lib/catalog/loaders';
@@ -38,7 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const globalJsonLd = [organizationJsonLd(company), localBusinessJsonLd(company), websiteJsonLd()];
 
   return (
-    <html lang="ru" data-theme="dark" suppressHydrationWarning>
+    <html lang="ru" suppressHydrationWarning>
       <head>
         <script nonce={nonce} dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
@@ -59,15 +60,27 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </div>
               <div>
                 <h3>Контакты</h3>
-                <p>{company.phone}<br />{company.email}<br />{company.address.addressLocality}, {company.address.streetAddress}</p>
+                <FooterContacts
+                  phone={company.phone}
+                  email={company.email}
+                  address={`${company.address.addressLocality}, ${company.address.streetAddress}`}
+                  mapHref={company.sameAs.find((url) => url.includes('yandex.'))}
+                />
               </div>
               <div>
                 <h3>Магазин</h3>
-                <p>Ежедневно 08:00-19:00. Можно позвонить, написать или приехать в магазин.</p>
+                <p>Ежедневно 08:00-19:00. Позвоните для консультации, напишите на электронную почту или приезжайте в магазин.</p>
               </div>
               <div>
                 <h3>Навигация</h3>
-                <p><Link href="/catalog">Каталог</Link><br /><Link href="/catalog/proizvoditeli">Производители</Link><br /><Link href="/privacy">Обработка данных</Link></p>
+                <nav className="footer-nav" aria-label="Навигация в подвале">
+                  <Link href="/catalog">Каталог</Link>
+                  <Link href="/catalog/proizvoditeli">Производители</Link>
+                  <Link href="/catalog/po-zadache">Подбор по задаче</Link>
+                  <Link href="/delivery">Доставка</Link>
+                  <Link href="/contacts">Контакты</Link>
+                  <Link href="/privacy">Обработка данных</Link>
+                </nav>
               </div>
             </div>
           </footer>

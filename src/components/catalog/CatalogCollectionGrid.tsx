@@ -16,7 +16,7 @@ import { getProductImage } from '@/lib/catalog/product-images';
 import { getProductDistinctionFacts } from '@/lib/catalog/specs';
 import { getProductCardDescription } from '@/lib/seo/product';
 
-const productsPerPage = 60;
+const productsPerPage = 24;
 type CollectionViewMode = 'grid' | 'list';
 type CollectionSortMode = 'default' | 'price_asc' | 'price_desc';
 

@@ -18,11 +18,23 @@
   - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/runtime/contacts-desktop-dark.png`
   - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/runtime/home-mobile-dark.png`
   - dark/light and interaction captures are in the same `runtime/` directory.
+  - colleague-feedback mobile captures:
+    - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/pumbum-redesign-a6bc64e/docs/design-qa-assets/category-mobile-light.png`;
+    - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/pumbum-redesign-a6bc64e/docs/design-qa-assets/task-search-mobile-light.png`;
+    - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/pumbum-redesign-a6bc64e/docs/design-qa-assets/footer-mobile-light.png`.
+  - final protected-staging captures:
+    - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/pumbum-redesign-a6bc64e/docs/design-qa-assets/public-home-desktop-dark.png`;
+    - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/pumbum-redesign-a6bc64e/docs/design-qa-assets/public-category-mobile-light.png`;
+    - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/pumbum-redesign-a6bc64e/docs/design-qa-assets/public-task-search-mobile-light.png`;
+    - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/pumbum-redesign-a6bc64e/docs/design-qa-assets/public-footer-mobile-light.png`.
 - Comparison pairs:
   - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/comparison-home-desktop.png`
   - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/comparison-catalog-desktop.png`
   - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/comparison-contacts-desktop.png`
   - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/outputs/design-audit-477477/comparison-home-mobile.png`
+  - colleague-feedback combined inputs:
+    - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/pumbum-redesign-a6bc64e/docs/design-qa-assets/comparison-task.png`;
+    - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/pumbum-redesign-a6bc64e/docs/design-qa-assets/comparison-footer.png`.
 - Viewports and density:
   - desktop source and implementation: `1280 x 720`, device scale factor `1`;
   - mobile source and implementation: `390 x 844`, device scale factor `1`;
@@ -69,7 +81,7 @@ The four source/implementation pairs were opened as combined images and reviewed
 - catalog search for `ESPA` and result rendering;
 - product page, product image and contact CTA;
 - information tabs and SPA navigation;
-- all ten category carousels, three distinct products, `34px` touch controls and five-second autoplay;
+- all ten category carousels, three distinct products, `34px` touch controls and 3.2-second autoplay;
 - browser console, page errors and same-origin request failures.
 
 No browser console errors, page errors or non-cancelled same-origin request failures remained.
@@ -91,6 +103,15 @@ No browser console errors, page errors or non-cancelled same-origin request fail
   - matching desktop/mobile captures were regenerated after the final build;
   - combined comparisons were inspected;
   - no actionable P0/P1/P2 findings remained.
+- Pass 4 — colleague mobile feedback, passed on protected staging:
+  - removed the light-theme hydration race that could restore the dark DOM and make product media appear missing after navigation;
+  - reduced the initial collection page from 60 to 24 products and limited scroll reveal to section-level containers, avoiding dozens of hidden card observers on mobile;
+  - reduced carousel autoplay from five seconds to 3.2 seconds and changed eager preloading of every slide into delayed preloading of only the next slide;
+  - added catalog search to `/catalog/po-zadache` and verified the `насос` submission reaches `/search?q=насос`;
+  - made footer phone, email and address explicit actions, added email copy feedback, and clarified that “написать” means electronic mail;
+  - verified locally at `390 x 844`: category loaded in 361 ms and task page in 74 ms;
+  - verified again through the protected Cloudflare staging route at `390 x 844`: category loaded in 990 ms, task page in 594 ms, light theme persisted across navigation, the carousel advanced from slide 1 to 2 in 3.4 seconds, the footer exposed `tel:`, `mailto:` and the exact Yandex Maps organization URL, and the visible email was not rewritten by Cloudflare;
+  - inspected both colleague screenshot/render pairs in the same combined images; the requested search and contact affordances are visible and no new P0/P1/P2 finding remains.
 
 ## Findings
 

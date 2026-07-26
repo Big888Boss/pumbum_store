@@ -24,7 +24,7 @@
 - Added a persistent dark/light theme toggle. Dark remains the default design; light uses the same typography, spacing, glass treatment and glow hierarchy.
 - Reworked the global header, footer, homepage hero, KPI strip, cards, catalog controls, product cards, product detail, manufacturers, delivery, about, contacts and supporting pages through the shared design system.
 - Added working information tabs between `/about`, `/delivery` and `/contacts`.
-- Kept the category carousel at five-second autoplay with product preloading,
+- Kept the category carousel at 3.2-second autoplay with next-slide preloading,
   dot navigation, reduced-motion and automatic focus/visibility pause. Visible
   previous/pause/next controls are removed; accessible slide selection remains.
 - Added a quality gate for carousel imagery. Each category uses strong products
@@ -111,6 +111,34 @@
   and no inline style attributes. A 30-request constrained health load check
   returned `30/30` HTTP 200 responses.
 
+## Colleague mobile feedback pass
+
+The staging-only follow-up addresses the review screenshots without changing
+the production storefront:
+
+- light-theme selection now survives navigation without a hydration mismatch;
+- category and collection pages render 24 products per page instead of 60,
+  while pagination still exposes the complete catalog;
+- scroll-reveal observers are limited to section containers rather than every
+  product card;
+- category carousel autoplay is 3.2 seconds and only the next image is
+  preloaded after the active slide changes;
+- `/catalog/po-zadache` includes a catalog search field;
+- footer phone, email and address are explicit actions; email also has a copy
+  button, and the store wording explicitly says “электронная почта”.
+
+Local mobile browser verification at `390 x 844` passed for theme persistence,
+category content, search submission, carousel timing, footer actions and copy
+feedback. The comparison evidence is recorded in `design-qa.md` and
+the local QA evidence directory listed there; reviewer screenshots are not
+tracked in the repository.
+
+The same flow was then rechecked through the protected Cloudflare staging
+route. Category and task pages rendered in 990 ms and 594 ms respectively,
+the light theme persisted, 24 product cards were present, the carousel advanced
+after 3.2 seconds, and the footer exposed working phone, email, copy-email and
+map actions without Cloudflare email-rewrite injection.
+
 ## Resource evidence
 
 The build ran while the SalesGame E2E stack stayed online.
@@ -121,6 +149,10 @@ The build ran while the SalesGame E2E stack stayed online.
 - No kernel OOM event was found.
 - All five SalesGame E2E containers remained running with `restarts=0` and `OOMKilled=false`.
 - The prototype directory including copied dependencies and build output is about `1.7 GiB`.
+- The colleague-feedback candidate build used a separate worktree and a 4 GiB
+  memory limit. It peaked at 3.0 GiB with zero unit swap, while host available
+  RAM stayed at or above about 7.8 GiB. All five SalesGame E2E containers
+  remained running with `restarts=0` and `OOMKilled=false`.
 
 ## Temporary protected sharing
 
@@ -137,7 +169,9 @@ the tailnet. Production routing remains unchanged.
   intentionally absent from Git and this documentation.
 - Anonymous requests receive only the closed-preview page. Shared responses
   include `X-Robots-Tag: noindex, nofollow, noarchive`, `Cache-Control:
-  no-store` and a no-referrer policy.
+  no-store, no-transform` and a no-referrer policy. `no-transform` also keeps
+  Cloudflare from rewriting the clickable store email into a decoder script
+  that the storefront CSP intentionally blocks.
 - No new listener was opened on `0.0.0.0` or `[::]`. The tunnel is
   outbound-only; its metrics listener is loopback-only on `127.0.0.1:49327`.
 - User services:
