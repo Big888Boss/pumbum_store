@@ -22,7 +22,7 @@ export function ProductImage({ src, alt, logoSrc, brand, priority = false, hideB
       : 'product-fallback-logo';
 
   return (
-    <figure className={`${compact ? 'product-frame product-frame-compact' : 'product-frame'}${loaded || isPlaceholder ? ' is-image-ready' : ''}`}>
+    <figure className={`${compact ? 'product-frame product-frame-compact' : 'product-frame'}${showBrandLogo && !isPlaceholder ? ' product-frame-has-logo' : ''}${loaded || isPlaceholder ? ' is-image-ready' : ''}`}>
       {isPlaceholder ? (
         <div className="product-fallback" role="img" aria-label={alt}>
           {showBrandLogo ? (

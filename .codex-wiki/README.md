@@ -57,6 +57,17 @@ Browser/design QA passed after desktop/mobile, dark/light, catalog, search,
 product, image, carousel and interaction checks. Production deployment still
 requires separate owner approval.
 
+The 2026-07-26 source-recovery pass is staging-only and reversible. It searched
+all 343 quality/transparency review sources by exact article and supplier,
+recovered 342 source candidates, and published 312 visually accepted transparent
+WebP pairs. The remaining 31 keep their previous runtime image because the
+foreground mask damaged the product, preserved a visible rectangle, or no
+trustworthy improvement was available. Originals and every prior override map
+remain intact. Supplier badges now sit in an isolated top layer with a responsive
+image safe zone, so the product cannot cover the badge. The active candidate is
+`pumbum-redesign-preview-image-recovery.service` on loopback port `3025`; the
+protected gate is `pumbum-redesign-share-gate-image-recovery.service`.
+
 Current production storefront release: `plumbing_store_v2-v2:catalog-navigation-20260723-v1` on localhost port `3023`. The previous `carousel-polish-20260723-v1` container on port `3022` is stopped to conserve RAM/swap; its image and stopped container are retained for rollback. No build runs on production. See `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md` for acceptance evidence and rollback.
 
 The verified organization identity links for structured data are the exact

@@ -1438,6 +1438,7 @@ p {
 
 .product-frame {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   border: 1px solid rgba(148, 163, 184, 0.34);
   border-radius: 18px;
@@ -1487,6 +1488,11 @@ p {
   transition: transform 320ms ease, opacity 280ms ease, scale 360ms ease;
 }
 
+.product-frame-has-logo img.product-photo {
+  padding-top: 58px;
+  padding-right: 104px;
+}
+
 .product-frame img.product-photo.is-loaded {
   opacity: 1;
   scale: 1;
@@ -1504,6 +1510,11 @@ a:hover .product-frame img.product-photo,
 
 .product-frame-compact img.product-photo {
   padding: 14px;
+}
+
+.product-frame-compact.product-frame-has-logo img.product-photo {
+  padding-top: 38px;
+  padding-right: 70px;
 }
 
 .product-fallback {
@@ -1548,6 +1559,7 @@ a:hover .product-frame img.product-photo,
 .logo-overlay {
   pointer-events: none;
   position: absolute;
+  z-index: 5;
   top: 12px;
   right: 12px;
   min-width: 104px;
@@ -2947,6 +2959,11 @@ ul:not(.badges):not(.manufacturer-sections) {
 
   .product-frame img.product-photo {
     padding: 18px;
+  }
+
+  .product-frame-has-logo img.product-photo {
+    padding-top: 50px;
+    padding-right: 78px;
   }
 
   .product-list-card {

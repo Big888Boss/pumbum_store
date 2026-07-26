@@ -151,3 +151,25 @@ No actionable P0, P1 or P2 design findings remain.
 - P3: the reference catalog is an illustrative four-card mock, while the implementation exposes the real ten-category buyer architecture above the category grid. This is an intentional functional adaptation.
 
 final result: passed
+
+## Pass 7 — source recovery, alpha-edge review and supplier safe zone
+
+- Audited all 343 unique rows from the quality and transparency review sets.
+- Recovered 342 source candidates and generated transparent card/detail pairs
+  locally. Published 312 only after geometry checks and visual inspection on
+  the actual dark card background.
+- Rejected three visible mask/rectangle failures and retained 28 additional
+  unsafe/unresolved originals. No questionable derivative is active.
+- Inspected two contact sheets covering all 51 white-edge threshold candidates;
+  48 had clean subject edges and three were rejected.
+- Supplier badges now have their own stacking context and a desktop/compact/
+  mobile safe zone. Product media cannot paint above the badge.
+- Revalidated curated carousel order after `_transparent-v2` became eligible;
+  ZOTA Zuma remains the heating lead and mounting fasteners remains a deliberate
+  two-item carousel.
+- Server-side acceptance passed: build/lint/types, 9,276-product taxonomy,
+  9,354 sitemap URLs, 60 navigation routes, all 3,379 products over 141 pages,
+  and the analytics contract.
+- Safari visual verification remains to be captured once the local Mac is
+  unlocked; the staging candidate itself is healthy on Tailnet and behind the
+  invitation gate.

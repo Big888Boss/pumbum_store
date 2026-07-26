@@ -201,6 +201,7 @@ function hasCarouselQualityImage(product: Product): boolean {
   return (
     image.includes('/images/products/_normalized-v2/')
     || image.includes('/images/products/_transparent-v1/')
+    || image.includes('/images/products/_transparent-v2/')
     || image.includes('/images/category-showcase/')
     || image.includes('/images/carousel-products/')
   );
@@ -383,6 +384,7 @@ export function getFeaturedProductByCategory(categorySlug: string): Product | un
 
 export function getFeaturedProductsByCategory(categorySlug: string, limit = 3): Product[] {
   const products = getProductsByCategory(categorySlug);
+  const effectiveLimit = categorySlug === 'krepezh-dlya-montazha' ? Math.min(limit, 2) : limit;
   const featured: Product[] = [];
   const selectedGroups = new Set<string>();
   const selectedProducts = new Set<string>();
@@ -402,16 +404,16 @@ export function getFeaturedProductsByCategory(categorySlug: string, limit = 3): 
     addProduct(products.find((product) => product.slug === preferredSlug));
   }
   for (const subcategorySlug of categoryFeaturedSubcategoryOrder[categorySlug] ?? []) {
-    if (featured.length >= limit) break;
+    if (featured.length >= effectiveLimit) break;
     const definition = getBuyerSubcategoryBySlug(categorySlug, subcategorySlug);
     if (!definition || selectedGroups.has(definition.slug)) continue;
     addProduct(getBuyerSubcategoryProducts(products, definition).find(hasCarouselQualityImage));
   }
   for (const product of products) {
-    if (featured.length >= limit) break;
+    if (featured.length >= effectiveLimit) break;
     addProduct(product);
   }
-  return featured.slice(0, limit);
+  return featured.slice(0, effectiveLimit);
 }
 
 export function getCategoryShowcaseBySlug(categorySlug: string): CategoryShowcase | undefined {

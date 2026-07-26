@@ -384,3 +384,60 @@ Reports are retained in the operator workspace rather than the public site:
 - `product-image-quality-problems.csv`;
 - `product-image-transparency-review.csv`;
 - `product-image-transparency-report.json`.
+
+## Source recovery and clean-alpha pass — 2026-07-26
+
+This pass remains isolated from production. It processed the union of the 184
+low-resolution/problem flags and 159 transparency-review flags: 343 unique
+display sources in total.
+
+- Exact-article recovery found source candidates for 342 rows. Supplier and
+  article evidence is retained in
+  `/home/administrator/agent-projects/pumbum-store-redesign-assets/reports-image-recovery-v2/source-recovery-manifest.json`.
+- Apple Vision generated local foreground masks without sending catalog images
+  to an external image API. Sharp then removed the white matte, trimmed the
+  subject, and emitted transparent `1100 x 825` detail plus `480 x 360` card
+  WebP files.
+- 312 sources passed automatic geometry checks plus a visual dark-background
+  edge review and are active through
+  `content/generated/product-transparent-image-overrides.json`.
+- 31 sources retain the previous runtime image: three visible mask/rectangle
+  failures were explicitly rejected, while 28 had no safe foreground, an
+  unsafe subject ratio, an unsupported placeholder, or no trustworthy improved
+  source. A rejected conversion never replaces the current image.
+- Original files were not overwritten. Versioned derivatives live in
+  `/home/administrator/agent-projects/pumbum-store-redesign-assets/catalog-alpha-v2`;
+  source downloads, Vision output, reports and timestamped override backups are
+  retained beside that store.
+- Five cross-supplier samples were copied to
+  `/Users/zilbertov/Downloads/Pumbum-product-image-recovery-2026-07-26`.
+
+The supplier badge fix uses `isolation:isolate` on the media frame, `z-index:5`
+on the badge and responsive image padding for frames that have a badge. This
+keeps the badge above the product while reserving enough canvas for the subject
+on desktop, compact carousel cards and mobile.
+
+Adding `_transparent-v2` to the existing carousel-quality rule initially made
+more products eligible. The curated first products and the intentional
+two-product mounting-fastener carousel were therefore preserved explicitly;
+image improvements do not change category priority or navigation behavior.
+
+Validation after the final build:
+
+- Next.js production build, TypeScript and ESLint: passed;
+- taxonomy/navigation: 9,276 products, 10 categories, 9 manufacturers, 9,354
+  sitemap URLs and 60 buyer/navigation routes: passed;
+- complete 141-page `truby-i-fitingi` pagination: 3,379 unique products, no
+  duplicates, p50 159 ms and maximum 291 ms on the local candidate: passed;
+- analytics contract and query redaction: passed;
+- host resources after processing: about 10 GiB available RAM, memory PSI zero;
+  SalesGame E2E containers remained up without restarts.
+
+Staging runtime:
+
+- app: `pumbum-redesign-preview-image-recovery.service` on `127.0.0.1:3025`;
+- invitation gate: `pumbum-redesign-share-gate-image-recovery.service` on
+  `127.0.0.1:3026` and Tailnet `100.95.56.90:3027`;
+- anonymous external request returns `401`; Tailnet health returns `200`;
+- the earlier scroll-alpha worktree and generated override backups remain the
+  rollback path. Production was not changed.
