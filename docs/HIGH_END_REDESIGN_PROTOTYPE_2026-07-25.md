@@ -24,15 +24,25 @@
 - Added a persistent dark/light theme toggle. Dark remains the default design; light uses the same typography, spacing, glass treatment and glow hierarchy.
 - Reworked the global header, footer, homepage hero, KPI strip, cards, catalog controls, product cards, product detail, manufacturers, delivery, about, contacts and supporting pages through the shared design system.
 - Added working information tabs between `/about`, `/delivery` and `/contacts`.
-- Kept the category carousel at 3.2-second autoplay with next-slide preloading,
-  dot navigation, reduced-motion and automatic focus/visibility pause. Visible
-  previous/pause/next controls are removed; accessible slide selection remains.
+- Kept the category carousel at 2.4-second autoplay with next-slide preloading,
+  page-visibility pause, dot navigation and explicit previous/next controls.
+  Reduced-motion disables transitions, but does not leave the carousel frozen.
 - Added a quality gate for carousel imagery. Each category uses strong products
   from distinct buyer groups; the mounting category intentionally shows two
   verified products instead of admitting a mismatched third source image.
 - Added three transparent TIM product cutouts for the mixers and siphons
   carousel and placed carousel products directly on the technical grid surface.
-- Added the current supplied store logo to the shared header and footer.
+- Rebuilt the supplied store logo as transparent light/dark variants. The light
+  theme keeps the original blue/black palette; the dark theme uses white type
+  with brighter blue accents. The complete logo rectangle is one home link and
+  has no white backing card.
+- Replaced the homepage status ornament with a welcoming Teplovik mascot, added
+  Bak Hlopotun to the catalog hero, and placed alcohol-free Krestovich artwork
+  in the about hero and on the footer boundary. Mascot motion is limited to
+  lightweight CSS transforms and is disabled by reduced-motion preferences.
+- Recut the CIMM `CM.AFESB.050` carousel tank as an alpha WebP. The test asset
+  has no white matte/halo on the dark technical grid; only this reported item
+  is overridden, so a larger cleanup can be reviewed separately.
 - Added lightweight intersection-based scroll reveals and a reduced-motion-safe
   back-to-top control on long pages.
 - Added collection search, manufacturer/group/price filters, priority/price
@@ -74,9 +84,16 @@
   - category, buyer-group, task and manufacturer page loaders.
 - Brand and carousel assets:
   - `public/brand/store-logo-current.jpg`;
+  - `public/brand/store-logo-light.webp`;
+  - `public/brand/store-logo-dark.webp`;
+  - `public/images/carousel-products/CM.AFESB.050_0-clean.webp`;
   - `public/images/carousel-products/tim-bas0802s.png`;
   - `public/images/carousel-products/tim-bas0260ba.png`;
   - `public/images/carousel-products/tim-cl5002bk.png`.
+- Mascot assets:
+  - `public/images/mascots/teplovik-welcome.webp`;
+  - `public/images/mascots/bak-hlopotun-present.webp`;
+  - `public/images/mascots/krestovich-sitting.webp`.
 - Font assets:
   - `public/fonts/oswald-cyrillic.woff2`;
   - `public/fonts/oswald-latin.woff2`;
@@ -139,6 +156,19 @@ the light theme persisted, 24 product cards were present, the carousel advanced
 after 3.2 seconds, and the footer exposed working phone, email, copy-email and
 map actions without Cloudflare email-rewrite injection.
 
+## Mascot and carousel follow-up
+
+- Browser QA at `1440 x 1000` and `390 x 844` confirms that the home, catalog
+  and about mascots fit their assigned surfaces without covering navigation or
+  actions. Krestovich contains no bottle, glass or alcohol branding.
+- The regenerated CIMM tank is served from the local optimized WebP override
+  and displays cleanly on the dark grid without an outer white fringe.
+- Autoplay was observed changing slide 2 to slide 3 after 2.4 seconds; the
+  previous/next buttons and all three direct-selection dots update the same
+  state. Browser console and warning logs remained empty.
+- Header hit testing at the left edge, center and right edge of the visible logo
+  resolves to the `/` link, including the lettering rather than only a frame.
+
 ## Resource evidence
 
 The build ran while the SalesGame E2E stack stayed online.
@@ -153,6 +183,17 @@ The build ran while the SalesGame E2E stack stayed online.
   memory limit. It peaked at 3.0 GiB with zero unit swap, while host available
   RAM stayed at or above about 7.8 GiB. All five SalesGame E2E containers
   remained running with `restarts=0` and `OOMKilled=false`.
+- The mascot/carousel candidate build also used a separate worktree with
+  `MemoryMax=4G` and `CPUQuota=160%`. It completed in 3m02s, peaked at 3.0 GiB
+  plus 288.5 MiB unit swap, and left at least about 7.5 GiB host RAM available.
+  Peak observed memory PSI was below 0.5 and returned to zero. All five
+  SalesGame E2E containers again remained at `restarts=0`, `OOMKilled=false`.
+- The candidate returned HTTP 200 for health, home, catalog, water supply,
+  about, contacts, search, the reported CIMM product, sitemap and every new
+  WebP. Taxonomy validation found 9,276 products, 10 categories, 9,354 sitemap
+  URLs and 60 working navigation routes. Pagination exposed all 3,379 products
+  in the largest category as 141 pages of 24 without duplicates; CSP nonce,
+  inline-style and report-endpoint checks passed.
 
 ## Temporary protected sharing
 

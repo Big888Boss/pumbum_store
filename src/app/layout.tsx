@@ -4,6 +4,7 @@ import { ScrollEnhancements } from '@/components/layout/ScrollEnhancements';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { StoreLogo } from '@/components/layout/StoreLogo';
 import { FooterContacts } from '@/components/layout/FooterContacts';
+import { StaticImage } from '@/components/media/StaticImage';
 import { YandexMetrika } from '@/components/analytics/YandexMetrika';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getCompanyProfile } from '@/lib/catalog/loaders';
@@ -53,6 +54,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main className="main">{children}</main>
           <ScrollEnhancements />
           <footer className="footer">
+            <div className="footer-mascot" aria-hidden="true">
+              <StaticImage src="/images/mascots/krestovich-sitting.webp" alt="" width={874} height={1034} />
+            </div>
             <div className="container footer-grid">
               <div className="footer-brand">
                 <Link href="/" aria-label="На главную Сантехникъ"><StoreLogo compact /></Link>

@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { ProductImage } from '@/components/product/ProductImage';
 import type { Product } from '@/entities/product/model';
 
-const AUTOPLAY_DELAY_MS = 3200;
+const AUTOPLAY_DELAY_MS = 2400;
 
 export function CategoryProductCarousel({
   products,
@@ -15,11 +16,17 @@ export function CategoryProductCarousel({
   groupLabels?: string[];
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [hasFocusWithin, setHasFocusWithin] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isDocumentVisible, setIsDocumentVisible] = useState(true);
   const activeProduct = products[activeIndex] ?? products[0];
+
+  const showPrevious = () => {
+    setActiveIndex((current) => (current - 1 + products.length) % products.length);
+  };
+
+  const showNext = () => {
+    setActiveIndex((current) => (current + 1) % products.length);
+  };
 
   useEffect(() => {
     const nextProduct = products[(activeIndex + 1) % products.length];
@@ -34,31 +41,24 @@ export function CategoryProductCarousel({
   }, [activeIndex, activeProduct?.slug, products]);
 
   useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const syncMotionPreference = () => setPrefersReducedMotion(media.matches);
     const syncDocumentVisibility = () => setIsDocumentVisible(!document.hidden);
-    syncMotionPreference();
     syncDocumentVisibility();
-    media.addEventListener('change', syncMotionPreference);
     document.addEventListener('visibilitychange', syncDocumentVisibility);
     return () => {
-      media.removeEventListener('change', syncMotionPreference);
       document.removeEventListener('visibilitychange', syncDocumentVisibility);
     };
   }, []);
 
   useEffect(() => {
     const shouldRun = products.length > 1
-      && !hasFocusWithin
       && !isHovered
-      && !prefersReducedMotion
       && isDocumentVisible;
     if (!shouldRun) return undefined;
     const timer = window.setTimeout(() => {
       setActiveIndex((current) => (current + 1) % products.length);
     }, AUTOPLAY_DELAY_MS);
     return () => window.clearTimeout(timer);
-  }, [activeIndex, hasFocusWithin, isDocumentVisible, isHovered, prefersReducedMotion, products.length]);
+  }, [activeIndex, isDocumentVisible, isHovered, products.length]);
 
   if (!activeProduct) return null;
 
@@ -71,13 +71,6 @@ export function CategoryProductCarousel({
       aria-roledescription="карусель"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onFocusCapture={() => setHasFocusWithin(true)}
-      onBlurCapture={(event) => {
-        const nextTarget = event.relatedTarget;
-        if (!(nextTarget instanceof Node) || !event.currentTarget.contains(nextTarget)) {
-          setHasFocusWithin(false);
-        }
-      }}
     >
       <div className="category-carousel-image" key={`${activeProduct.slug}-image`}>
         <ProductImage
@@ -92,7 +85,7 @@ export function CategoryProductCarousel({
       <div
         className="category-carousel-copy"
         key={`${activeProduct.slug}-copy`}
-        aria-live={hasFocusWithin ? 'polite' : 'off'}
+        aria-live="off"
       >
         <span className="category-carousel-counter">Рекомендуемые товары · {activeIndex + 1} из {products.length}</span>
         <h2>{activeProduct.name}</h2>
@@ -100,6 +93,14 @@ export function CategoryProductCarousel({
         <Link href={`/catalog/${activeProduct.categorySlug}/${activeProduct.slug}`}>Открыть товар</Link>
       </div>
       <div className="category-carousel-controls">
+        <button
+          className="category-carousel-arrow"
+          type="button"
+          onClick={showPrevious}
+          aria-label="Предыдущий товар"
+        >
+          <ArrowLeft aria-hidden="true" />
+        </button>
         <div className="category-carousel-dots" aria-label="Выбор товара">
           {products.map((product, index) => (
             <button
@@ -112,6 +113,14 @@ export function CategoryProductCarousel({
             />
           ))}
         </div>
+        <button
+          className="category-carousel-arrow"
+          type="button"
+          onClick={showNext}
+          aria-label="Следующий товар"
+        >
+          <ArrowRight aria-hidden="true" />
+        </button>
       </div>
     </section>
   );

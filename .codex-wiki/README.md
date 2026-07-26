@@ -27,9 +27,12 @@ controls, lightweight scroll reveals, a back-to-top control and a denser
 product-detail composition without the redundant photo explanation panel.
 The colleague-feedback pass keeps the light theme stable across navigation,
 reduces mobile collection render pressure to 24 products per page, advances
-category carousels every 3.2 seconds, adds search to the task-selection page,
-and turns footer phone, email and address into explicit actions with email copy
-feedback.
+category carousels every 2.4 seconds with visible previous/next controls, adds
+search to the task-selection page, and turns footer phone, email and address
+into explicit actions with email copy feedback. A later staging-only visual
+pass adds transparent theme-aware store logos, a clean alpha cutout for the
+reported CIMM tank, and lightweight Teplovik, Bak Hlopotun and alcohol-free
+Krestovich mascot placements. The whole header/footer logo surface links home.
 Browser/design QA passed after desktop/mobile, dark/light, catalog, search,
 product, image, carousel and interaction checks. Production deployment still
 requires separate owner approval.

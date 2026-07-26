@@ -167,6 +167,7 @@ const carouselImageOverrides: Record<string, string> = {
   'tim-bas0802s': '/images/carousel-products/tim-bas0802s.png',
   'tim-bas0260b-a': '/images/carousel-products/tim-bas0260ba.png',
   'tim-c-l50-02bk': '/images/carousel-products/tim-cl5002bk.png',
+  'cimm-cm-afesb-050': '/images/carousel-products/CM.AFESB.050_0-clean.webp',
 };
 
 const categoryFeaturedSubcategoryOrder: Record<string, string[]> = {

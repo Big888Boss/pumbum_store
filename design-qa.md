@@ -81,7 +81,8 @@ The four source/implementation pairs were opened as combined images and reviewed
 - catalog search for `ESPA` and result rendering;
 - product page, product image and contact CTA;
 - information tabs and SPA navigation;
-- all ten category carousels, three distinct products, `34px` touch controls and 3.2-second autoplay;
+- all ten category carousels, three distinct products, `34px` dot targets,
+  `40px` previous/next controls and 2.4-second autoplay;
 - browser console, page errors and same-origin request failures.
 
 No browser console errors, page errors or non-cancelled same-origin request failures remained.
@@ -112,6 +113,18 @@ No browser console errors, page errors or non-cancelled same-origin request fail
   - verified locally at `390 x 844`: category loaded in 361 ms and task page in 74 ms;
   - verified again through the protected Cloudflare staging route at `390 x 844`: category loaded in 990 ms, task page in 594 ms, light theme persisted across navigation, the carousel advanced from slide 1 to 2 in 3.4 seconds, the footer exposed `tel:`, `mailto:` and the exact Yandex Maps organization URL, and the visible email was not rewritten by Cloudflare;
   - inspected both colleague screenshot/render pairs in the same combined images; the requested search and contact affordances are visible and no new P0/P1/P2 finding remains.
+- Pass 5 — mascot, logo and product-cutout follow-up, passed locally:
+  - compared the generated Teplovik, Bak Hlopotun and Krestovich placements to
+    the supplied character sheets on desktop and mobile; poses read clearly,
+    remain subordinate to the buyer actions, and Krestovich has no alcohol;
+  - inspected the regenerated CIMM tank on the dark technical grid; the outer
+    alpha edge is clean and the former white matte is absent;
+  - verified autoplay changes the recommendation state after 2.4 seconds and
+    that direct dots plus the unique previous/next buttons select slides;
+  - verified three hit-test points across the mobile header logo all resolve to
+    `/`, and browser console/warning logs are empty.
+  - verified the limited server candidate with 9,276 products, 9,354 sitemap
+    URLs, 60 navigation routes, all 3,379 paginated products and enforced CSP.
 
 ## Findings
 
