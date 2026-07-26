@@ -252,3 +252,43 @@ approval.
   `final result: passed`.
 - The package-manager install step reported an aggregate `11 high severity` advisories for the current lock graph. Detailed advisory payload was not sent to an external audit service and no dependency upgrades were applied in this design-only task. This must be triaged before a production release.
 - Production deployment, image build, public routing and nginx work require a separate explicit approval.
+
+## Page mascot rollout — staging commit `2a42d76`
+
+The requested two-character composition is complete on every main top-level
+page: one context-specific hero character plus the shared footer Krestovich.
+The existing home Teplovik and catalog Bak Hlopotun remain; the added scenes are:
+
+- manufacturers — Teplovik presenting manufacturer catalogues;
+- search — Bak Hlopotun using a magnifying glass;
+- delivery — Teplovik carrying a parcel;
+- about — alcohol-free Krestovich in a new presenter pose;
+- contacts — Bak Hlopotun with a blue telephone;
+- task selection — alcohol-free Krestovich holding a technical plan;
+- privacy — Teplovik with a protective shield.
+
+The footer uses `krestovich-footer-seated.webp`, generated as a true seated pose
+and positioned so the seat touches the boundary while the legs hang into the
+footer. All new assets are transparent WebP files under
+`public/images/mascots/`; the visible alpha edges were inspected on the dark
+surface and showed no white or green matte.
+
+The isolated build ran under `MemoryMax=4G` and `CPUQuota=160%`. It succeeded
+with about `3.0 GiB` peak unit memory and zero unit swap. After activation the
+host had about `11 GiB` available RAM and memory PSI returned to zero. All five
+SalesGame E2E containers remained running with `restarts=0` and
+`OOMKilled=false`. The preview, share gate and tunnel metrics remain bound to
+`127.0.0.1`; only the tailnet proxy listens on `100.95.56.90:3027`.
+
+Acceptance evidence: health reports 9,276 products and 10 categories;
+isolation, analytics, taxonomy, complete 3,379-product pagination and enforced
+CSP checks pass; desktop and `390 x 844` mobile checks show no horizontal
+overflow and all hero/footer mascot images have non-zero natural dimensions.
+Anonymous public preview access still returns HTTP 401 with no-store, noindex,
+nonce CSP and frame denial. Contacts remain actionable through `tel:` and
+`mailto:` links; the external Yandex map may delay the browser `load` event but
+the document reaches `complete` and the application remains interactive.
+
+Pre-switch rollback build:
+`/home/administrator/backups/pumbum-redesign/.next-c660077-pre-2a42d76-20260726`.
+Production was not modified.

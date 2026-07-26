@@ -33,6 +33,12 @@ into explicit actions with email copy feedback. A later staging-only visual
 pass adds transparent theme-aware store logos, a clean alpha cutout for the
 reported CIMM tank, and lightweight Teplovik, Bak Hlopotun and alcohol-free
 Krestovich mascot placements. The whole header/footer logo surface links home.
+The follow-up page-mascot pass at staging commit `2a42d76` gives every main
+top-level page its own task-specific character scene while retaining a second,
+seated alcohol-free Krestovich at the footer seam. Manufacturers, search,
+delivery, about, contacts, task selection and privacy now have distinct poses;
+the existing home and catalog scenes remain unchanged. The footer figure is
+positioned with its seat on the section boundary instead of floating above it.
 Browser/design QA passed after desktop/mobile, dark/light, catalog, search,
 product, image, carousel and interaction checks. Production deployment still
 requires separate owner approval.

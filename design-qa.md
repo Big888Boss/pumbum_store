@@ -128,6 +128,18 @@ No browser console errors, page errors or non-cancelled same-origin request fail
   - repeated desktop dark/light, mobile home/category, carousel, catalog/about
     mascots, footer boundary, complete logo hitbox and console checks through
     the invitation-gated Cloudflare route after staging activation.
+- Pass 6 — two-mascot coverage and footer seating, passed on protected staging:
+  - added distinct hero scenes to manufacturers, search, delivery, about,
+    contacts, task selection and privacy while keeping the accepted home and
+    catalog scenes;
+  - replaced the footer pose with a true seated alcohol-free Krestovich and
+    aligned the seat to the section boundary on desktop and mobile;
+  - verified every main page at desktop and `390 x 844`: hero assets loaded,
+    lazy footer assets loaded after scrolling, and no horizontal overflow;
+  - verified manufacturer mobile heading fit, contact `tel:`/`mailto:` actions,
+    clean dark-background alpha edges and absence of alcohol props;
+  - repeated isolation, analytics, taxonomy, full pagination, CSP, health,
+    server-resource and SalesGame restart/OOM checks after staging activation.
 
 ## Findings
 
