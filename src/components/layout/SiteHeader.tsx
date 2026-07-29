@@ -44,7 +44,7 @@ export function SiteHeader({ phone }: SiteHeaderProps) {
     <header className="header">
       <div className="container header-row">
         <Link href="/" className="logo" aria-label="На главную Сантехникъ">
-          <StaticImage src="/brand-logos/santekhnik-logo.png" alt="Сантехникъ" width={264} height={52} priority />
+          <StaticImage src="/brand-logos/santekhnik-logo.webp" alt="Сантехникъ" width={264} height={52} priority />
         </Link>
 
         <HeaderNavigation className="nav nav-desktop" />

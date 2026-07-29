@@ -1,4 +1,5 @@
 import productImageManifest from '../../../content/generated/product-image-manifest.json';
+import transparentImageOverrides from '../../../content/generated/product-transparent-image-overrides.json';
 import type { Product } from '@/entities/product/model';
 
 type ProductImageStatus = 'ready' | 'family-image' | 'missing' | 'fallback' | 'source-error' | 'unsupported';
@@ -17,16 +18,17 @@ type ProductImageManifest = {
 };
 
 const manifest = productImageManifest as ProductImageManifest;
+const transparencyOverrides = transparentImageOverrides as Record<string, { card?: string; detail?: string }>;
 const usableStatuses = new Set<ProductImageStatus>(['ready', 'family-image']);
 const presentationImageOverrides: Record<string, string> = {
-  '/images/products/_normalized-v2/valtec/vti.900.304.1208-83e0e2cec79f7608-detail.webp': '/images/category-showcase/valtec-stainless-pipe-detail.png',
-  '/images/products/_normalized-v2/valtec/vti.900.304.1208-83e0e2cec79f7608-card.webp': '/images/category-showcase/valtec-stainless-pipe-card.png',
-  '/images/products/_normalized-v2/sinikon/km038.r-f50943302c94da60-detail.webp': '/images/category-showcase/sinikon-clamp-km038-detail.png',
-  '/images/products/_normalized-v2/sinikon/km038.r-f50943302c94da60-card.webp': '/images/category-showcase/sinikon-clamp-km038-card.png',
-  '/images/products/_normalized-v2/sinikon/km100d.r-0a8f9cacaaf7bc21-detail.webp': '/images/category-showcase/sinikon-clamp-km100d-detail.png',
-  '/images/products/_normalized-v2/sinikon/km100d.r-0a8f9cacaaf7bc21-card.webp': '/images/category-showcase/sinikon-clamp-km100d-card.png',
-  '/images/products/_normalized-v2/sinikon/20005-f1697def6bf3c71a-detail.webp': '/images/category-showcase/sinikon-sewer-pipe-detail.png',
-  '/images/products/_normalized-v2/sinikon/20005-f1697def6bf3c71a-card.webp': '/images/category-showcase/sinikon-sewer-pipe-card.png',
+  '/images/products/_normalized-v2/valtec/vti.900.304.1208-83e0e2cec79f7608-detail.webp': '/images/category-showcase/valtec-stainless-pipe-detail.webp',
+  '/images/products/_normalized-v2/valtec/vti.900.304.1208-83e0e2cec79f7608-card.webp': '/images/category-showcase/valtec-stainless-pipe-card.webp',
+  '/images/products/_normalized-v2/sinikon/km038.r-f50943302c94da60-detail.webp': '/images/category-showcase/sinikon-clamp-km038-detail.webp',
+  '/images/products/_normalized-v2/sinikon/km038.r-f50943302c94da60-card.webp': '/images/category-showcase/sinikon-clamp-km038-card.webp',
+  '/images/products/_normalized-v2/sinikon/km100d.r-0a8f9cacaaf7bc21-detail.webp': '/images/category-showcase/sinikon-clamp-km100d-detail.webp',
+  '/images/products/_normalized-v2/sinikon/km100d.r-0a8f9cacaaf7bc21-card.webp': '/images/category-showcase/sinikon-clamp-km100d-card.webp',
+  '/images/products/_normalized-v2/sinikon/20005-f1697def6bf3c71a-detail.webp': '/images/category-showcase/sinikon-sewer-pipe-detail.webp',
+  '/images/products/_normalized-v2/sinikon/20005-f1697def6bf3c71a-card.webp': '/images/category-showcase/sinikon-sewer-pipe-card.webp',
 };
 const sinikonLegacySources = new Set([
   'catalog/latunnye-aksialnye-fitingi.json',
@@ -111,7 +113,9 @@ export function getProductImage(product: Product, variant: 'card' | 'detail' = '
     .find((candidate) => candidate?.status && usableStatuses.has(candidate.status));
   if (!entry?.status || !usableStatuses.has(entry.status)) return toAsciiSafeImagePath(product.image);
   const selectedImage = entry.image?.[variant] || entry.image?.detail || entry.image?.card || product.image;
-  return toAsciiSafeImagePath(presentationImageOverrides[selectedImage] ?? selectedImage);
+  const presentedImage = presentationImageOverrides[selectedImage] ?? selectedImage;
+  const transparentImage = transparencyOverrides[presentedImage]?.[variant] ?? presentedImage;
+  return toAsciiSafeImagePath(transparentImage);
 }
 
 export function applyProductImageManifest(product: Product): Product {

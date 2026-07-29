@@ -173,17 +173,19 @@ p { color: var(--muted); line-height: 1.65; }
 .about-fact span { display: block; color: var(--brand); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; }
 .about-fact strong { display: block; margin: 6px 0 8px; color: #0f172a; font-size: 23px; line-height: 1.08; letter-spacing: 0; }
 .about-fact p { margin: 0; color: #64748b; line-height: 1.45; }
-.product-frame { position: relative; overflow: hidden; border-radius: 32px; background: linear-gradient(145deg, #fff 0%, #eef5fb 100%); border: 1px solid var(--line); box-shadow: 0 20px 54px rgba(15,23,42,.08); }
+.product-frame { position: relative; isolation: isolate; overflow: hidden; border-radius: 32px; background: linear-gradient(145deg, #fff 0%, #eef5fb 100%); border: 1px solid var(--line); box-shadow: 0 20px 54px rgba(15,23,42,.08); }
 .product-frame img.product-photo { aspect-ratio: 4/3; width: 100%; height: auto; object-fit: contain; padding: 28px; display: block; }
+.product-frame-has-logo img.product-photo { padding-top: 58px; padding-right: 112px; }
 .product-frame-compact { border-radius: 16px; box-shadow: none; background: #f8fafc; }
 .product-frame-compact img.product-photo { padding: 14px; }
+.product-frame-compact.product-frame-has-logo img.product-photo { padding-top: 40px; padding-right: 76px; }
 .product-frame-compact .logo-overlay { top: 8px; right: 8px; min-width: 74px; min-height: 32px; padding: 5px 8px; border-radius: 10px; }
 .product-frame-compact .logo-overlay img { max-width: 62px; max-height: 22px; }
 .product-fallback { aspect-ratio: 4/3; display: grid; place-items: center; gap: 14px; padding: 32px; background: #f8fafc; color: #64748b; text-align: center; font-weight: 850; }
 .product-fallback-logo { max-width: 180px; max-height: 72px; object-fit: contain; filter: grayscale(.1); }
 .product-fallback-logo-vivaldo { filter: brightness(0) saturate(1); opacity: .92; }
 .product-fallback-logo-tim { mix-blend-mode: multiply; }
-.logo-overlay { pointer-events: none; position: absolute; top: 14px; right: 14px; display: flex; align-items: center; justify-content: center; min-width: 112px; min-height: 48px; border-radius: 16px; background: rgba(255,255,255,.92); padding: 9px 13px; box-shadow: 0 10px 24px rgba(15,23,42,.12); border: 1px solid rgba(148,163,184,.45); }
+.logo-overlay { pointer-events: none; position: absolute; z-index: 5; top: 14px; right: 14px; display: flex; align-items: center; justify-content: center; min-width: 112px; min-height: 48px; border-radius: 16px; background: rgba(255,255,255,.92); padding: 9px 13px; box-shadow: 0 10px 24px rgba(15,23,42,.12); border: 1px solid rgba(148,163,184,.45); }
 .logo-overlay img { max-width: 96px; max-height: 32px; object-fit: contain; display: block; }
 .logo-overlay-vivaldo img { filter: brightness(0) saturate(1); opacity: .92; }
 .logo-overlay-tim img { mix-blend-mode: multiply; }
@@ -253,6 +255,7 @@ p { color: var(--muted); line-height: 1.65; }
   .section-head { align-items: flex-start; flex-direction: column; }
   .kpi-row { grid-template-columns: 1fr; }
   .product-frame img.product-photo { padding: 18px; }
+  .product-frame-has-logo img.product-photo { padding-top: 50px; padding-right: 82px; }
   .logo-overlay { top: 10px; right: 10px; min-width: 82px; min-height: 36px; padding: 6px 9px; border-radius: 12px; }
   .logo-overlay img { max-width: 70px; max-height: 24px; }
 }
