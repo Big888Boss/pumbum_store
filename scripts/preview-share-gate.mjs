@@ -40,6 +40,25 @@ function securityHeaders(extra = {}) {
   };
 }
 
+function cacheControlFor(pathname, contentType = '') {
+  if (pathname.startsWith('/_next/static/')) {
+    return 'public, max-age=31536000, immutable';
+  }
+  if (
+    pathname.startsWith('/images/')
+    || pathname.startsWith('/brand/')
+    || pathname.startsWith('/brand-logos/')
+    || pathname.startsWith('/fonts/')
+    || pathname.startsWith('/icons/')
+  ) {
+    return 'public, max-age=2592000, stale-while-revalidate=86400';
+  }
+  if (/^(?:image|font)\//i.test(contentType)) {
+    return 'public, max-age=2592000, stale-while-revalidate=86400';
+  }
+  return 'no-store, no-transform, max-age=0';
+}
+
 function parseCookies(header = '') {
   return new Map(
     header
@@ -141,6 +160,7 @@ async function readJson(request) {
 }
 
 function proxyRequest(request, response, scheme = 'https') {
+  const pathname = new URL(request.url ?? '/', 'http://preview.local').pathname;
   const forwardedFor = request.headers['x-forwarded-for'] ?? request.socket.remoteAddress ?? '';
   const proxy = http.request({
     protocol: upstream.protocol,
@@ -156,9 +176,10 @@ function proxyRequest(request, response, scheme = 'https') {
       'x-forwarded-proto': scheme,
     },
   }, (upstreamResponse) => {
+    const contentType = String(upstreamResponse.headers['content-type'] ?? '');
     const headers = {
       ...upstreamResponse.headers,
-      'cache-control': 'no-store, no-transform, max-age=0',
+      'cache-control': cacheControlFor(pathname, contentType),
       'referrer-policy': 'no-referrer',
       'x-robots-tag': 'noindex, nofollow, noarchive',
     };
@@ -187,6 +208,10 @@ const server = http.createServer(async (request, response) => {
   }
 
   if (publicReadOnly) {
+    if (request.url === '/api/csp-report' && request.method === 'POST') {
+      proxyRequest(request, response);
+      return;
+    }
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       response.writeHead(405, securityHeaders({
         'Allow': 'GET, HEAD',

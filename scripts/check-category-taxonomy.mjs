@@ -77,9 +77,9 @@ for (const group of ['Котлы', 'Коллекторы и коллекторн
 assert(heating.body.replaceAll('<!-- -->', '').includes('Рекомендуемые товары · 1 из 3'), 'heating carousel counter is missing');
 
 for (const [path, asset] of [
-  ['/catalog/kanalizaciya', '/images/category-showcase/sinikon-sewer-pipe-detail.png'],
-  ['/catalog/krepezh-dlya-montazha', '/images/category-showcase/sinikon-clamp-km038-detail.png'],
-  ['/catalog/truby-i-fitingi', '/images/category-showcase/valtec-stainless-pipe-detail.png'],
+  ['/catalog/kanalizaciya', '/images/category-showcase/sinikon-sewer-pipe-detail.webp'],
+  ['/catalog/krepezh-dlya-montazha', '/images/category-showcase/sinikon-clamp-km038-detail.webp'],
+  ['/catalog/truby-i-fitingi', '/images/category-showcase/valtec-stainless-pipe-detail.webp'],
 ]) {
   const page = await get(path);
   assert(page.body.includes(asset), `${path} does not use ${asset}`);

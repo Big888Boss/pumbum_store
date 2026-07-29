@@ -411,10 +411,6 @@ figure {
   flex: 1;
 }
 
-.main > * {
-  animation: content-enter 520ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
-}
-
 .hero {
   padding: clamp(58px, 7vw, 94px) 0 clamp(38px, 5vw, 68px);
 }
@@ -1457,9 +1453,7 @@ p {
   inset: 0;
   z-index: 1;
   background: linear-gradient(105deg, transparent 24%, color-mix(in srgb, var(--ink-strong) 8%, transparent) 42%, transparent 60%);
-  background-size: 220% 100%;
-  animation: product-image-shimmer 1.25s linear infinite;
-  opacity: 0.7;
+  opacity: 0.36;
   transition: opacity 180ms ease;
 }
 
@@ -1467,11 +1461,6 @@ p {
   opacity: 0;
   animation: none;
   pointer-events: none;
-}
-
-@keyframes product-image-shimmer {
-  from { background-position: 120% 0; }
-  to { background-position: -120% 0; }
 }
 
 .product-frame img.product-photo {

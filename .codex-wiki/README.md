@@ -10,6 +10,7 @@ The current production implementation notes are maintained in `docs/`.
 - Current carousel polish release: `docs/CAROUSEL_POLISH_RELEASE_2026-07-23.md`
 - Current catalog navigation release: `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md`
 - Isolated high-end redesign prototype (temporary protected preview, not deployed): `docs/HIGH_END_REDESIGN_PROTOTYPE_2026-07-25.md`
+- Current redesign performance release: `docs/REDESIGN_PERFORMANCE_RELEASE_2026-07-29.md`
 - Performance release: `docs/PERFORMANCE_RELEASE_2026-07-11.md`
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`
@@ -68,11 +69,24 @@ image safe zone, so the product cannot cover the badge. The active candidate is
 `pumbum-redesign-preview-image-recovery.service` on loopback port `3025`; the
 protected gate is `pumbum-redesign-share-gate-image-recovery.service`.
 For reviewers outside Tailscale, a separate public read-only proxy allows only
-`GET` and `HEAD`, adds `noindex/nofollow/noarchive`, disables caching and returns
-`405` for write requests. The active external transport is the bounded
+`GET` and `HEAD`, plus the CSP reporting endpoint, and adds
+`noindex/nofollow/noarchive`. HTML and APIs remain uncached, while hashed Next.js
+assets are immutable and public images/fonts use a bounded 30-day cache. Other
+write requests return `405`. The active external transport is the bounded
 `pumbum-redesign-cloudflared-public-readonly.service`; anonymous
 `localhost.run` was removed after it reassigned the hostname while the SSH
 process was still alive. It does not expose a preview credential in chat.
+
+The 2026-07-29 redesign performance release removes the entry animation from
+above-the-fold content, replaces the non-composited placeholder shimmer with a
+static low-cost state, and serves the selected carousel/category showcase images
+as deterministic WebP derivatives while retaining their PNG originals. The
+active build ID is `ntJzITqB6mFDEfk1uCyWy`; the previous `.next` build remains
+under `/home/administrator/backups/pumbum-redesign/performance-20260729` for
+rollback. The live loopback app remains on `3025`, the Tailnet gate remains on
+`3027`, and the public read-only gate remains on `3028`. Health reports all
+9,276 products and ten categories. Desktop/mobile browser QA, taxonomy, legacy
+redirect, carousel, CSP, dependency, load, and public/Tailnet checks passed.
 
 Current production storefront release: `plumbing_store_v2-v2:catalog-navigation-20260723-v1` on localhost port `3023`. The previous `carousel-polish-20260723-v1` container on port `3022` is stopped to conserve RAM/swap; its image and stopped container are retained for rollback. No build runs on production. See `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md` for acceptance evidence and rollback.
 
