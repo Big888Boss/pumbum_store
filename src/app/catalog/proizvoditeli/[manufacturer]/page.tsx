@@ -54,7 +54,7 @@ export default async function ManufacturerPage({ params, searchParams }: PagePro
           <ul className="badges">
             {manufacturer.sections.slice(0, 10).map((section) => (
               <li key={section}>
-                <Link className="badge badge-link" href={`${basePath}?group=${encodeURIComponent(section)}`}>{section}</Link>
+                <Link className="badge badge-link" href={`${basePath}?group=${encodeURIComponent(section)}#catalog-products`}>{section}</Link>
               </li>
             ))}
           </ul>

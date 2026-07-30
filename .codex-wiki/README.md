@@ -11,6 +11,7 @@ The current production implementation notes are maintained in `docs/`.
 - Current catalog navigation release: `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md`
 - Isolated high-end redesign prototype (temporary protected preview, not deployed): `docs/HIGH_END_REDESIGN_PROTOTYPE_2026-07-25.md`
 - Current redesign performance release: `docs/REDESIGN_PERFORMANCE_RELEASE_2026-07-29.md`
+- Current redesign UX and mascot release: `docs/REDESIGN_UX_MASCOTS_RELEASE_2026-07-30.md`
 - Performance release: `docs/PERFORMANCE_RELEASE_2026-07-11.md`
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`

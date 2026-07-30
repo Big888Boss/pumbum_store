@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { CategoryProductCarousel } from '@/components/catalog/CategoryProductCarousel';
+import { CategoryMascotRunner } from '@/components/catalog/CategoryMascotRunner';
+import { CatalogScrollRestorer } from '@/components/catalog/CatalogScrollRestorer';
+import { CallStoreButton } from '@/components/layout/CallStoreButton';
 import { ProductAvailabilityBadge, ProductAvailabilityText } from '@/components/product/ProductAvailability';
 import { ProductImage } from '@/components/product/ProductImage';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -101,8 +104,8 @@ function buildCategoryHref(
 function ViewSwitcher({ categorySlug, selected, viewMode, sort, page }: { categorySlug: string; selected: CatalogFilterSelection; viewMode: CatalogViewMode; sort: CatalogSortMode; page: number }) {
   return (
     <div className="catalog-view-switcher" aria-label="Вид каталога">
-      <Link className={viewMode === 'grid' ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, 'grid', sort, { page })}>Карточки с фото</Link>
-      <Link className={viewMode === 'list' ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, 'list', sort, { page })}>Список без фото</Link>
+      <Link className={viewMode === 'grid' ? 'is-active' : ''} href={`${buildCategoryHref(categorySlug, selected, 'grid', sort, { page })}#catalog-products`}>Карточки с фото</Link>
+      <Link className={viewMode === 'list' ? 'is-active' : ''} href={`${buildCategoryHref(categorySlug, selected, 'list', sort, { page })}#catalog-products`}>Список без фото</Link>
     </div>
   );
 }
@@ -116,7 +119,7 @@ function SortSwitcher({ categorySlug, selected, viewMode, sort }: { categorySlug
   return (
     <div className="catalog-view-switcher" aria-label="Сортировка товаров">
       {modes.map(([mode, label]) => (
-        <Link key={mode} className={sort === mode ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, viewMode, sort, { sort: mode })}>
+        <Link key={mode} className={sort === mode ? 'is-active' : ''} href={`${buildCategoryHref(categorySlug, selected, viewMode, sort, { sort: mode })}#catalog-products`}>
           {label}
         </Link>
       ))}
@@ -133,6 +136,9 @@ function CategoryExpertText({ category }: { category: Category }) {
           <p>{category.seoText}</p>
           <p>{category.buyingGuide}</p>
           <p className="meta">Товар можно забрать в магазине на Большой Горной, 290 в Саратове. Цену, срок поставки и совместимость комплекта подтвердит менеджер.</p>
+          <div className="actions info-card-actions">
+            <CallStoreButton location={`category_guide_${category.slug}`} />
+          </div>
         </article>
       </div>
     </section>
@@ -150,7 +156,7 @@ function FilterPanel({ categorySlug, products, selected, viewMode, sort }: { cat
       <summary className="btn btn-secondary filter-toggle">
         Фильтры{activeCount > 0 ? ` · ${activeCount}` : ''}
       </summary>
-      <form className="filter-panel" action={`/catalog/${categorySlug}`}>
+      <form className="filter-panel" action={`/catalog/${categorySlug}#catalog-products`}>
         {viewMode === 'list' ? <input type="hidden" name="view" value="list" /> : null}
         {sort !== 'default' ? <input type="hidden" name="sort" value={sort} /> : null}
         <div className="filter-grid">
@@ -170,7 +176,7 @@ function FilterPanel({ categorySlug, products, selected, viewMode, sort }: { cat
         </div>
         <div className="filter-actions">
           <button className="btn btn-primary" type="submit">Показать</button>
-          <Link className="btn btn-secondary" href={buildCategoryHref(categorySlug, {}, viewMode, sort)}>Сбросить</Link>
+          <Link className="btn btn-secondary" href={`${buildCategoryHref(categorySlug, {}, viewMode, sort)}#catalog-products`}>Сбросить</Link>
         </div>
       </form>
     </details>
@@ -211,6 +217,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
 
   return (
     <section className="section" id="catalog-products">
+      <CatalogScrollRestorer />
       <div className="container">
         <div className="section-head">
           <div>
@@ -223,6 +230,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
           </div>
           {products.length > 0 ? <p className="meta">Показаны позиции {visibleStart.toLocaleString('ru-RU')}–{visibleEnd.toLocaleString('ru-RU')} из {products.length.toLocaleString('ru-RU')}.</p> : null}
         </div>
+        <CategoryMascotRunner categorySlug={categorySlug} />
         {productGroups.length > 0 ? (
           <div className="catalog-groups" aria-label="Группы товаров раздела">
             {productGroups.map((group) => (
@@ -244,7 +252,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
         {activeCount > 0 ? (
           <div className="active-filters" aria-label="Выбранные фильтры">
             {Object.entries(selected).map(([key, value]) => value ? (
-              <Link key={key} href={buildCategoryHref(categorySlug, selected, viewMode, sort, { key: key as CatalogFilterKey, value })}>
+              <Link key={key} href={`${buildCategoryHref(categorySlug, selected, viewMode, sort, { key: key as CatalogFilterKey, value })}#catalog-products`}>
                 {key === 'price' ? priceRangeLabel(value) : value} ×
               </Link>
             ) : null)}
@@ -254,7 +262,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
           <div className="notice">
             <h2>По выбранным фильтрам товаров не найдено</h2>
             <p>Сбросьте часть параметров или используйте поиск по артикулу. В инженерных категориях часть характеристик приходит из разных файлов поставщиков.</p>
-            <Link className="btn btn-primary" href={`/catalog/${categorySlug}`}>Сбросить фильтры</Link>
+            <Link className="btn btn-primary" href={`/catalog/${categorySlug}#catalog-products`}>Сбросить фильтры</Link>
           </div>
         ) : null}
         {viewMode === 'list' ? (
@@ -375,6 +383,9 @@ function RadiatorsCategoryView({ category, product, products, related, viewMode,
             <ul className="check-grid">
               {(product.selectionHelp ?? []).map((item) => <li key={item}>{item}</li>)}
             </ul>
+            <div className="actions info-card-actions">
+              <CallStoreButton location="radiator_before_purchase" label="Позвонить менеджеру" />
+            </div>
           </aside>
         </div>
       </section>
@@ -489,6 +500,9 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
             <h2>Что уточнить перед покупкой</h2>
             <p>{categoryData.buyingGuide}</p>
             <p className="meta">Менеджер проверит параметры и совместимость конкретных артикулов до заказа.</p>
+            <div className="actions info-card-actions">
+              <CallStoreButton location={`category_before_purchase_${categoryData.slug}`} label="Позвонить менеджеру" />
+            </div>
           </aside>
         </div>
       </section>

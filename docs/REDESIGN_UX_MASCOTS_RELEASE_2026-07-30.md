@@ -1,0 +1,100 @@
+# Redesign UX and mascot release — 2026-07-30
+
+## Scope
+
+This is a staging-only release for the isolated high-end redesign. Production
+`477477.ru`, its catalog data, routes and runtime were not changed.
+
+The release keeps all 9,276 products and the existing category/manufacturer
+logic while changing only interaction, presentation and read-path performance:
+
+- category filters, sorting, view switching, active-filter removal and
+  pagination keep the resulting state and land on `#catalog-products`;
+- the redundant global search form was removed from `/catalog/po-zadache`;
+- category guidance and pre-purchase panels now contain a direct tracked
+  `tel:+78452477477` action;
+- ten category families have stable, semantic mascot ownership;
+- general pages receive lightweight decorative mascot companions, while
+  category listings add an IntersectionObserver-triggered runner;
+- manufacturer group data is materialized once per server process instead of
+  being repeatedly derived from the full product set on every request.
+
+## Category mascot mapping
+
+| Category | Mascot |
+| --- | --- |
+| Water supply | Bak Hlopotun |
+| Sewerage | Stykovich |
+| Filtration | Filtrych |
+| Pumps | Naporych |
+| Mixers and siphons | Smesevich |
+| Heating and boiler room | Teplovik |
+| Installation fasteners | Krepych |
+| Pipes and fittings | Trubych |
+| Valves and components | Armaturych |
+| Other equipment | Krestovich |
+
+The two remaining supplied characters, Kaplya and Skvazhinnik, are used on
+general-purpose pages. Existing hero and footer characters are retained. All
+new assets are transparent WebP files with bounded dimensions; no sprite sheet
+is shipped to the browser.
+
+## Motion and accessibility
+
+The runner starts only when its catalog track enters the viewport. Ambient
+figures use opacity/transform-only animation. Under
+`prefers-reduced-motion: reduce`, looping and travel animations are disabled and
+the runner is parked in a stable position. Decorative figures have empty alt
+text and do not enter the keyboard order.
+
+## Build and safety
+
+- Candidate source: `/home/administrator/agent-projects/pumbum-store-redesign-candidate-ux-mascots-20260730`
+- Build host: USA factory only
+- Build controls: `MemoryMax=4G`, `CPUQuota=160%`, Node heap 3 GiB
+- Runtime remains bound to loopback; Tailnet and public gates remain the only
+  access layers
+- Previous `.next` build is retained before activation for one-command rollback
+
+## Verification
+
+The release is not considered active until lint, TypeScript, production build,
+dependency audit, route/catalog/SEO/security checks, desktop/mobile browser QA,
+same-viewport visual comparison and post-switch health/resource checks pass.
+
+## Candidate acceptance evidence
+
+- Build ID: `ioTJXSOnOFtqczXlpHGzk`
+- Lint and TypeScript: passed
+- Production dependency audit: `0` vulnerabilities
+- Catalog: 9,276 products, ten categories, 9,354 sitemap URLs
+- Full pipes/fittings pagination: all 3,379 products across 141 pages
+- Legacy path coverage: 7,546 moved routes covered, zero missing/ambiguous
+- Browser QA: desktop `1280 x 847`, mobile `390 x 844`, dark/light,
+  filters, sorting, pagination, task-search removal, phone CTA, mascot coverage,
+  carousel autoplay, visible image loading and runtime errors all passed
+- Ten-category carousel QA: passed; distinct groups, two or three accepted
+  images per category, 32 px mobile targets, zero page errors
+- CSP: enforce mode, rotating nonces, no inline style attributes, report
+  endpoint `204`
+- Load check: 100/100 responses `200`, five-way concurrency, p50 37 ms,
+  p95 68 ms
+- Browser evidence: `/tmp/pumbum-redesign-browser-qa8-20260730`
+- Same-state comparison input:
+  `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/design-qa-comparison-20260730.png`
+
+Warm five-run medians on the same host:
+
+| Route | Previous staging | Candidate |
+| --- | ---: | ---: |
+| `/catalog/proizvoditeli` | 2.115 s | 0.060 s |
+| `/about` | 2.297 s | 0.035 s |
+| `/catalog/vodosnabzhenie` | 0.109 s | 0.080 s |
+| `/delivery` | 0.034 s | 0.034 s |
+
+The slow-page improvement comes from reusing precomputed manufacturer groups
+and supplier product sets inside the server process; it does not cache user
+state or change catalog content.
+
+Final staging switch evidence and the exact rollback build path are recorded
+after activation.

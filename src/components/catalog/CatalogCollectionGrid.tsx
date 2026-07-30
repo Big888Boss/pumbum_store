@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { ProductAvailabilityBadge, ProductAvailabilityText } from '@/components/product/ProductAvailability';
+import { CategoryMascotRunner } from '@/components/catalog/CategoryMascotRunner';
+import { CatalogScrollRestorer } from '@/components/catalog/CatalogScrollRestorer';
 import { ProductImage } from '@/components/product/ProductImage';
 import type { Product } from '@/entities/product/model';
 import type { CatalogFilterKey, CatalogFilterSelection } from '@/lib/catalog/filters';
@@ -106,6 +108,10 @@ function buildCollectionHref(
   return query ? `${basePath}?${query}` : basePath;
 }
 
+function withCatalogAnchor(href: string): string {
+  return `${href}#catalog-products`;
+}
+
 function FilterPanel({
   basePath,
   products,
@@ -128,7 +134,7 @@ function FilterPanel({
   return (
     <details className="filter-drawer" open={activeCount > 0}>
       <summary className="btn btn-secondary filter-toggle">Фильтры{activeCount > 0 ? ` · ${activeCount}` : ''}</summary>
-      <form className="filter-panel" action={basePath}>
+      <form className="filter-panel" action={`${basePath}#catalog-products`}>
         {search ? <input type="hidden" name="q" value={search} /> : null}
         {view === 'list' ? <input type="hidden" name="view" value="list" /> : null}
         {sort !== 'default' ? <input type="hidden" name="sort" value={sort} /> : null}
@@ -149,7 +155,7 @@ function FilterPanel({
         </div>
         <div className="filter-actions">
           <button className="btn btn-primary" type="submit">Показать</button>
-          <Link className="btn btn-secondary" href={buildCollectionHref(basePath, selected, search, view, sort, { clearFilters: true })}>Сбросить фильтры</Link>
+          <Link className="btn btn-secondary" href={withCatalogAnchor(buildCollectionHref(basePath, selected, search, view, sort, { clearFilters: true }))}>Сбросить фильтры</Link>
         </div>
       </form>
     </details>
@@ -191,9 +197,13 @@ export function CatalogCollectionGrid({
   }
   const groups = [...groupCounts.entries()].slice(0, 14);
   const activeCount = activeCatalogFilterCount(selected);
+  const collectionCategorySlug = products[0]?.categorySlug && products.every((product) => product.categorySlug === products[0]?.categorySlug)
+    ? products[0].categorySlug
+    : undefined;
 
   return (
     <section className="section" id="catalog-products">
+      <CatalogScrollRestorer />
       <div className="container">
         <div className="section-head">
           <div>
@@ -209,7 +219,9 @@ export function CatalogCollectionGrid({
           ) : null}
         </div>
 
-        <form className="collection-search" action={basePath} role="search">
+        {collectionCategorySlug ? <CategoryMascotRunner categorySlug={collectionCategorySlug} /> : null}
+
+        <form className="collection-search" action={`${basePath}#catalog-products`} role="search">
           {selected.group ? <input type="hidden" name="group" value={selected.group} /> : null}
           {view === 'list' ? <input type="hidden" name="view" value="list" /> : null}
           {sort !== 'default' ? <input type="hidden" name="sort" value={sort} /> : null}
@@ -218,19 +230,19 @@ export function CatalogCollectionGrid({
             <input name="q" type="search" defaultValue={search} placeholder="Название, бренд или артикул" />
           </label>
           <button className="btn btn-primary" type="submit">Найти</button>
-          {search ? <Link className="btn btn-secondary" href={buildCollectionHref(basePath, selected, '', view, sort, { search: '' })}>Очистить</Link> : null}
+          {search ? <Link className="btn btn-secondary" href={withCatalogAnchor(buildCollectionHref(basePath, selected, '', view, sort, { search: '' }))}>Очистить</Link> : null}
         </form>
 
         {groups.length > 0 ? (
           <div className="catalog-groups" aria-label="Группы товаров">
-            <Link className={!selected.group ? 'is-active' : ''} href={buildCollectionHref(basePath, selected, search, view, sort, { key: 'group', value: selected.group })}>
+            <Link className={!selected.group ? 'is-active' : ''} href={withCatalogAnchor(buildCollectionHref(basePath, selected, search, view, sort, { key: 'group', value: selected.group }))}>
               Все группы <strong>{products.length.toLocaleString('ru-RU')}</strong>
             </Link>
             {groups.map(([group, count]) => (
               <Link
                 key={group}
                 className={selected.group === group ? 'is-active' : ''}
-                href={buildCollectionHref(basePath, selected, search, view, sort, { key: 'group', value: group })}
+                href={withCatalogAnchor(buildCollectionHref(basePath, selected, search, view, sort, { key: 'group', value: group }))}
               >
                 {group} <strong>{count.toLocaleString('ru-RU')}</strong>
               </Link>
@@ -246,19 +258,19 @@ export function CatalogCollectionGrid({
               ['price_asc', 'Сначала дешевле'],
               ['price_desc', 'Сначала дороже'],
             ] as Array<[CollectionSortMode, string]>).map(([mode, label]) => (
-              <Link key={mode} className={sort === mode ? 'is-active' : ''} href={buildCollectionHref(basePath, selected, search, view, sort, { sort: mode })}>{label}</Link>
+              <Link key={mode} className={sort === mode ? 'is-active' : ''} href={withCatalogAnchor(buildCollectionHref(basePath, selected, search, view, sort, { sort: mode }))}>{label}</Link>
             ))}
           </div>
           <div className="catalog-view-switcher" aria-label="Вид каталога">
-            <Link className={view === 'grid' ? 'is-active' : ''} href={buildCollectionHref(basePath, selected, search, view, sort, { view: 'grid', page: currentPage })}>Карточки с фото</Link>
-            <Link className={view === 'list' ? 'is-active' : ''} href={buildCollectionHref(basePath, selected, search, view, sort, { view: 'list', page: currentPage })}>Список без фото</Link>
+            <Link className={view === 'grid' ? 'is-active' : ''} href={withCatalogAnchor(buildCollectionHref(basePath, selected, search, view, sort, { view: 'grid', page: currentPage }))}>Карточки с фото</Link>
+            <Link className={view === 'list' ? 'is-active' : ''} href={withCatalogAnchor(buildCollectionHref(basePath, selected, search, view, sort, { view: 'list', page: currentPage }))}>Список без фото</Link>
           </div>
         </div>
 
         {activeCount > 0 ? (
           <div className="active-filters" aria-label="Выбранные фильтры">
             {Object.entries(selected).map(([key, value]) => value ? (
-              <Link key={key} href={buildCollectionHref(basePath, selected, search, view, sort, { key: key as CatalogFilterKey, value })}>
+              <Link key={key} href={withCatalogAnchor(buildCollectionHref(basePath, selected, search, view, sort, { key: key as CatalogFilterKey, value }))}>
                 {key === 'price' ? priceRangeLabel(value) : value} ×
               </Link>
             ) : null)}
@@ -269,7 +281,7 @@ export function CatalogCollectionGrid({
           <div className="notice collection-empty">
             <h2>Ничего не найдено</h2>
             <p>Измените запрос или сбросьте часть параметров. Поиск проверяет название, бренд, артикул и группу товара.</p>
-            <Link className="btn btn-primary" href={basePath}>Сбросить поиск и фильтры</Link>
+            <Link className="btn btn-primary" href={`${basePath}#catalog-products`}>Сбросить поиск и фильтры</Link>
           </div>
         ) : view === 'list' ? (
           <div className="product-rows" role="list">

@@ -299,6 +299,33 @@ for (const products of productsByCategory.values()) {
   products.sort(compareCatalogDefaultOrder);
 }
 
+const productsBySupplier = new Map<SupplierSlug, Product[]>();
+for (const supplier of supplierSourceGroups) {
+  productsBySupplier.set(
+    supplier.slug,
+    sortProductsByCatalogPriority(allProducts.filter((product) => (
+      inferSupplierSlug(product) === supplier.slug
+      || productHasLegacySource(product, supplier.sources)
+    ))),
+  );
+}
+
+const manufacturerGroups = supplierSourceGroups.map((supplier) => {
+  const items = productsBySupplier.get(supplier.slug) ?? [];
+  const sections = [...new Set(items.map(getBuyerGroupLabel).filter(Boolean) as string[])]
+    .sort((a, b) => a.localeCompare(b, 'ru'));
+  const logo = items.find((product) => product.logo)?.logo || supplierLogoFallbacks[supplier.slug];
+  return {
+    slug: supplier.slug,
+    name: supplier.name,
+    logo,
+    productCount: items.length,
+    categoryCount: sections.length,
+    sections,
+    featuredProducts: items.slice(0, 3),
+  } satisfies ManufacturerGroup;
+}).filter((group) => group.productCount > 0);
+
 export function getCompanyProfile(): CompanyProfile {
   return companyProfile as CompanyProfile;
 }
@@ -316,24 +343,7 @@ export function getAllProducts(): Product[] {
 }
 
 export function getManufacturerGroups(): ManufacturerGroup[] {
-  return supplierSourceGroups.map((supplier) => {
-    const items = sortProductsByCatalogPriority(allProducts.filter((product) => (
-      inferSupplierSlug(product) === supplier.slug
-      || productHasLegacySource(product, supplier.sources)
-    )));
-    const sections = [...new Set(items.map(getBuyerGroupLabel).filter(Boolean) as string[])]
-      .sort((a, b) => a.localeCompare(b, 'ru'));
-    const logo = items.find((product) => product.logo)?.logo || supplierLogoFallbacks[supplier.slug];
-    return {
-      slug: supplier.slug,
-      name: supplier.name,
-      logo,
-      productCount: items.length,
-      categoryCount: sections.length,
-      sections,
-      featuredProducts: items.slice(0, 3),
-    };
-  }).filter((group) => group.productCount > 0);
+  return manufacturerGroups;
 }
 
 export function getManufacturerGroupBySlug(slug: string): ManufacturerGroup | undefined {
@@ -342,11 +352,7 @@ export function getManufacturerGroupBySlug(slug: string): ManufacturerGroup | un
 
 export function getProductsByManufacturer(slug: string): Product[] {
   const supplier = supplierSourceGroups.find((item) => item.slug === slug);
-  if (!supplier) return [];
-  return sortProductsByCatalogPriority(allProducts.filter((product) => (
-    inferSupplierSlug(product) === supplier.slug
-    || productHasLegacySource(product, supplier.sources)
-  )));
+  return supplier ? productsBySupplier.get(supplier.slug) ?? [] : [];
 }
 
 export function getProductsByCategory(categorySlug: string): Product[] {

@@ -749,6 +749,134 @@ p {
   transform: scale(1.06) translateY(2%);
 }
 
+.call-store-button {
+  gap: 9px;
+}
+
+.call-store-button svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.info-card-actions {
+  margin-top: 18px;
+}
+
+.mascot-trail {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mascot-companion {
+  position: absolute;
+  width: clamp(82px, 7vw, 118px);
+  aspect-ratio: 1;
+  opacity: 0.98;
+}
+
+.mascot-companion::after {
+  position: absolute;
+  z-index: -1;
+  right: 8%;
+  bottom: 3px;
+  left: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-border), transparent);
+  content: "";
+}
+
+.mascot-companion-1 {
+  top: 30%;
+  left: -24px;
+}
+
+.mascot-companion-2 {
+  top: 63%;
+  right: -22px;
+}
+
+.mascot-companion-3 {
+  top: 81%;
+  left: -18px;
+}
+
+.mascot-companion-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.28));
+  opacity: 0;
+  transform: translateY(18px) scale(0.94);
+  transition: opacity 420ms ease, transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.mascot-companion-image.is-loaded {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: mascot-companion-float 5.8s ease-in-out 520ms infinite;
+}
+
+.category-mascot-track {
+  position: relative;
+  height: 104px;
+  margin: 6px 0 20px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.category-mascot-track::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 20px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 8%, transparent), transparent);
+  content: "";
+}
+
+.category-mascot-runner {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: -120px;
+  width: 98px;
+  height: 98px;
+  transform: translate3d(0, 10px, 0) rotate(-3deg);
+}
+
+.category-mascot-runner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.26));
+}
+
+.category-mascot-track.is-active .category-mascot-runner {
+  animation: category-mascot-run 2.25s cubic-bezier(0.32, 0.72, 0.25, 1) forwards;
+  will-change: transform;
+}
+
+@keyframes mascot-companion-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -7px; }
+}
+
+@keyframes category-mascot-run {
+  0% { transform: translate3d(0, 10px, 0) rotate(-4deg); }
+  16% { transform: translate3d(calc(16vw + 40px), -4px, 0) rotate(3deg); }
+  32% { transform: translate3d(calc(32vw + 70px), 5px, 0) rotate(-2deg); }
+  50% { transform: translate3d(calc(50vw + 95px), -5px, 0) rotate(3deg); }
+  68% { transform: translate3d(calc(68vw + 120px), 4px, 0) rotate(-2deg); }
+  84% { transform: translate3d(calc(84vw + 150px), -4px, 0) rotate(2deg); }
+  100% { transform: translate3d(calc(100vw + 220px), 0, 0) rotate(0); }
+}
+
 .delivery-grid {
   display: grid;
   gap: 18px;
@@ -2912,6 +3040,31 @@ ul:not(.badges):not(.manufacturer-sections) {
     min-height: 330px;
   }
 
+  .mascot-companion {
+    width: 70px;
+    opacity: 0.94;
+  }
+
+  .mascot-companion-1,
+  .mascot-companion-3 {
+    left: -25px;
+  }
+
+  .mascot-companion-2 {
+    right: -25px;
+  }
+
+  .category-mascot-track {
+    height: 82px;
+    margin-bottom: 16px;
+  }
+
+  .category-mascot-runner {
+    left: -92px;
+    width: 76px;
+    height: 76px;
+  }
+
   .delivery-checklist ul {
     columns: 1;
   }
@@ -3045,10 +3198,22 @@ ul:not(.badges):not(.manufacturer-sections) {
   }
 
   .mascot-image,
+  .mascot-companion-image,
   .product-frame img.product-photo {
     opacity: 1;
     scale: 1;
     translate: 0 0;
+  }
+
+  .mascot-companion-image.is-loaded {
+    animation: none;
+  }
+
+  .category-mascot-track.is-active .category-mascot-runner {
+    right: 8px;
+    left: auto;
+    animation: none;
+    transform: none;
   }
 
   .product-frame::before {

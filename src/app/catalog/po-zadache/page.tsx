@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { MetrikaSearchForm } from '@/components/analytics/MetrikaEvents';
 import { PageMascot } from '@/components/layout/PageMascot';
 import { getBuyerTasks } from '@/lib/catalog/buyer-tasks';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -21,10 +20,6 @@ export default function BuyerTasksPage() {
             <div className="eyebrow">Подбор по задаче</div>
             <h1>Что нужно сделать</h1>
             <p className="lead">Выберите инженерную задачу — покажем основные группы оборудования без смешивания с каталогом поставщика.</p>
-            <MetrikaSearchForm className="search-panel search-panel-compact hero-search" action="/search" location="buyer_tasks">
-              <input name="q" type="search" placeholder="Опишите задачу, товар или параметр" aria-label="Поиск оборудования по задаче" />
-              <button className="btn btn-primary" type="submit">Найти решение</button>
-            </MetrikaSearchForm>
           </div>
           <PageMascot
             src="/images/mascots/krestovich-task-guide.webp"

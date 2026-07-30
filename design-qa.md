@@ -175,3 +175,32 @@ final result: passed
   missing-tunnel page did not appear. The public reviewer route is read-only
   (`GET`/`HEAD`), noindex and no-store; attempted `POST /api/leads` returns
   `405`.
+
+## Pass 8 — catalog interaction, full mascot set and slow-page release
+
+- Reviewed the supplied category feedback screenshot and the candidate at the
+  same `1280 x 847` content viewport in one combined comparison input:
+  `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/design-qa-comparison-20260730.png`.
+- The comparison used the same water-supply catalog state with the filter drawer
+  open. Header, typography, palette, product controls and card grid retain the
+  accepted visual language. The new 104 px mascot track is an intentional
+  addition requested by the owner and does not overlap controls or products.
+- Filters, sorting and pagination were verified in a real browser to preserve
+  their query state and align `#catalog-products` below the sticky header.
+- Verified ten stable category-to-mascot assignments, the category runner, two
+  additional companions on every general page, three companions on product
+  detail, and the existing seated footer character. Decorative art is
+  pointer-transparent and absent from the accessibility tree.
+- Generated a new pointing Kaplya pose from the supplied identity reference,
+  removed its uniform source matte, and inspected the transparent WebP on a
+  dark background. No checkerboard, rectangular matte or detached mask remains.
+- Manufacturer and about hero assets were explicitly awaited and captured;
+  they appear through the intended load-in transition rather than as broken or
+  missing images.
+- Repeated browser QA at desktop `1280 x 847` and mobile `390 x 844`: no
+  horizontal overflow, broken visible image, console error, page error or
+  same-origin request failure remained.
+
+No actionable P0, P1 or P2 visual finding remains.
+
+final result: passed

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import { ScrollEnhancements } from '@/components/layout/ScrollEnhancements';
+import { MascotTrail } from '@/components/layout/MascotTrail';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { StoreLogo } from '@/components/layout/StoreLogo';
 import { FooterContacts } from '@/components/layout/FooterContacts';
@@ -51,7 +52,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <div className="ambient ambient-left" aria-hidden="true" />
           <div className="ambient ambient-right" aria-hidden="true" />
           <SiteHeader phone={company.phone} />
-          <main className="main">{children}</main>
+          <main className="main">
+            {children}
+            <MascotTrail />
+          </main>
           <ScrollEnhancements />
           <footer className="footer">
             <div className="footer-mascot" aria-hidden="true">

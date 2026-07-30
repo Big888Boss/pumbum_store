@@ -60,7 +60,7 @@ const runtimeErrors = [];
 try {
   const desktop = await browser.newContext({
     locale: 'ru-RU',
-    viewport: { width: 1280, height: 720 },
+    viewport: { width: 1280, height: 847 },
     userAgent: 'Mozilla/5.0 pumbum-redesign-browser-check/1.0 Chrome/130 Safari/537.36',
   });
   const page = await desktop.newPage();
@@ -104,6 +104,7 @@ try {
   await page.goto(new URL(firstProductHref, baseUrl).href, { waitUntil: 'domcontentloaded' });
   await waitForImages(page);
   await assertVisibleImagesLoaded(page, 'desktop product');
+  assert((await page.locator('.mascot-companion').count()) === 3, 'desktop product: expected three ambient category mascots');
   assert((await page.locator('a[href^="/contacts?"]').count()) >= 1, 'desktop product: contact CTA is missing');
   await page.screenshot({ path: join(outputDir, 'product-desktop-dark.png') });
 
@@ -118,6 +119,42 @@ try {
   await page.screenshot({ path: join(outputDir, 'contacts-desktop-dark.png') });
 
   await page.goto(`${baseUrl}/catalog/vodosnabzhenie`, { waitUntil: 'domcontentloaded' });
+  assert((await page.locator('a[href^="tel:+78452477477"]').count()) >= 2, 'desktop category: expert call CTAs are missing');
+  const sortCheap = page.getByRole('link', { name: 'Сначала дешевле', exact: true }).first();
+  assert((await sortCheap.getAttribute('href'))?.endsWith('#catalog-products'), 'desktop sorting: target anchor is missing');
+  await sortCheap.click();
+  await page.waitForURL((url) => url.searchParams.get('sort') === 'price_asc' && url.hash === '#catalog-products');
+  await page.waitForFunction(() => {
+    const section = document.querySelector('#catalog-products');
+    if (!section) return false;
+    const top = section.getBoundingClientRect().top;
+    return top >= 70 && top <= 130;
+  });
+  const filterDrawer = page.locator('details.filter-drawer');
+  if (!(await filterDrawer.evaluate((element) => element.open))) {
+    await filterDrawer.locator('summary').click();
+  }
+  const filterForm = filterDrawer.locator('form.filter-panel');
+  assert((await filterForm.getAttribute('action'))?.endsWith('#catalog-products'), 'desktop filter: target anchor is missing');
+  const firstFilter = filterForm.locator('select').first();
+  await firstFilter.selectOption({ index: 1 });
+  await filterForm.getByRole('button', { name: 'Показать', exact: true }).click();
+  await page.waitForURL((url) => url.hash === '#catalog-products' && [...url.searchParams.keys()].some((key) => key !== 'sort'));
+  await page.waitForFunction(() => {
+    const section = document.querySelector('#catalog-products');
+    if (!section) return false;
+    const top = section.getBoundingClientRect().top;
+    return top >= 70 && top <= 130;
+  });
+  await page.goto(`${baseUrl}/catalog/vodosnabzhenie`, { waitUntil: 'domcontentloaded' });
+  await page.locator('.category-mascot-track').scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => document.querySelector('.category-mascot-track')?.classList.contains('is-active'));
+  assert((await page.locator('.mascot-companion').count()) === 2, 'desktop category: expected two ambient mascots plus the category runner');
+  const comparisonFilterDrawer = page.locator('details.filter-drawer');
+  if (!(await comparisonFilterDrawer.evaluate((element) => element.open))) {
+    await comparisonFilterDrawer.locator('summary').click();
+  }
+  await page.screenshot({ path: join(outputDir, 'category-desktop-dark.png') });
   const pageTwo = page.locator('.catalog-pagination a', { hasText: /^2$/ }).first();
   const pageTwoHref = await pageTwo.getAttribute('href');
   assert(pageTwoHref?.endsWith('#catalog-products'), 'desktop pagination: page two link must target the product section');
@@ -130,6 +167,24 @@ try {
     return top >= 70 && top <= 130;
   });
   assert((await page.locator('.product-list-card').count()) === 24, 'desktop pagination: expected 24 cards on page two');
+
+  await page.goto(`${baseUrl}/catalog/po-zadache`, { waitUntil: 'domcontentloaded' });
+  assert((await page.locator('main form[action="/search"]').count()) === 0, 'desktop tasks: redundant global search form is still present');
+
+  for (const route of ['/catalog', '/catalog/proizvoditeli', '/catalog/po-zadache', '/search', '/delivery', '/about', '/contacts', '/privacy']) {
+    await page.goto(`${baseUrl}${route}`, { waitUntil: 'domcontentloaded' });
+    await waitForImages(page);
+    await inspectPage(page, `desktop mascot coverage ${route}`);
+    assert((await page.locator('.mascot-companion').count()) === 2, `${route}: expected two ambient mascots in addition to the page scene`);
+    await page.waitForFunction(() => document.querySelector('.mascot-image')?.classList.contains('is-loaded'));
+    await assertVisibleImagesLoaded(page, `desktop mascot coverage ${route}`);
+    if (route === '/catalog/proizvoditeli') {
+      await page.screenshot({ path: join(outputDir, 'manufacturers-desktop-dark.png') });
+    }
+    if (route === '/about') {
+      await page.screenshot({ path: join(outputDir, 'about-desktop-dark.png') });
+    }
+  }
   await desktop.close();
 
   const mobile = await browser.newContext({
@@ -185,7 +240,7 @@ try {
   console.log(JSON.stringify({
     baseUrl,
     viewports: {
-      desktop: { width: 1280, height: 720, deviceScaleFactor: 1 },
+      desktop: { width: 1280, height: 847, deviceScaleFactor: 1 },
       mobile: { width: 390, height: 844, deviceScaleFactor: 1 },
     },
     checked: [
@@ -196,6 +251,11 @@ try {
       'product image and contact CTA',
       'information tabs',
       'scroll reveal and mascot load-in states',
+      'category mascot runner and ambient mascot count',
+      'ambient mascot coverage across all general pages and product detail',
+      'direct phone CTAs in category guidance',
+      'filter and sorting anchors',
+      'task page redundant search removal',
       'pagination anchor and second-page product count',
       'carousel controls and five-second autoplay',
       'browser console, page errors and same-origin request failures',
