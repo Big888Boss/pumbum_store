@@ -198,3 +198,21 @@ performance and mobile reveal fixes from the same development period.
 Activation is staging-only and requires a separately retained copy of the
 currently active `.next` build for exact rollback. Production `477477.ru`
 remains outside this change.
+
+### Activated rollback build
+
+- Active staging commit: `1ec79e0`
+- Active build ID: `oGVITNX3iPc27gSte3MyV`
+- Tailnet endpoint: `http://100.95.56.90:3027/`
+- Loopback app: `127.0.0.1:3025`; public read-only gate: `127.0.0.1:3028`
+- Post-switch desktop/mobile browser QA passed with `runtimeErrors: []`
+- Health and Tailnet gate return `200`; the public gate remains noindex,
+  no-store and rejects `POST /api/leads` with `405`
+- Runtime is active with zero restarts and approximately 462 MiB peak RSS;
+  host memory pressure was zero during final checks
+- SalesGame web, API, Postgres, Redis and Mailpit remained running; stateful
+  containers remained healthy
+- Exact rollback build:
+  `/home/administrator/backups/pumbum-redesign/mascot-layer-rollback-20260730/.next-aan2vpoPFXuxQezetsdd_`
+
+Production `477477.ru` was not connected to, restarted or modified.

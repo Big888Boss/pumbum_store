@@ -132,3 +132,11 @@ pagination, CTA, performance and mobile reveal behavior are unchanged. The
 candidate passed desktop/mobile browser QA, full taxonomy and pagination,
 CSP, dependency and bounded load checks before staging activation. Production
 `477477.ru` is not part of this rollback.
+
+The rollback is active on staging at commit `1ec79e0` and build ID
+`oGVITNX3iPc27gSte3MyV`. The Tailnet endpoint remains
+`http://100.95.56.90:3027/`; loopback listeners and access gates did not
+change. Post-switch desktop/mobile browser QA passed without runtime errors,
+and the rejected companion/runner layers are absent. The exact previously
+active build is retained at
+`/home/administrator/backups/pumbum-redesign/mascot-layer-rollback-20260730/.next-aan2vpoPFXuxQezetsdd_`.

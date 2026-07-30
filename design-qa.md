@@ -188,6 +188,27 @@ No actionable P0, P1 or P2 visual finding remains.
 
 final result: passed
 
+## Pass 10 — owner-directed rollback of the two latest mascot layers
+
+- The owner rejected both the page-edge companion trail from Pass 8 and the
+  card-integrated/category-runner presentation from Pass 9.
+- Removed only those two layers and their dedicated twelve WebP assets.
+- Retained the earlier accepted hero/page characters and seated footer
+  Krestovich from Passes 5 and 6.
+- Restored category, manufacturer, task and product cards to their composition
+  before the two rejected layers; no mascot now shifts, overlaps or reserves
+  space inside those cards.
+- Preserved catalog anchors, direct phone CTAs, manufacturer-group caching and
+  the mobile tall-container reveal fix.
+- Verified the candidate and activated staging build at desktop `1280 x 847`
+  and mobile `390 x 844`: rejected selectors are absent, retained page scenes
+  load, there is no horizontal overflow, and `runtimeErrors` is empty.
+- Repeated taxonomy, full pagination, CSP, dependency and bounded load checks.
+
+No actionable P0, P1 or P2 visual finding remains after the requested rollback.
+
+final result: passed
+
 ## Pass 7 — source recovery, alpha-edge review and supplier safe zone
 
 - Audited all 343 unique rows from the quality and transparency review sets.
