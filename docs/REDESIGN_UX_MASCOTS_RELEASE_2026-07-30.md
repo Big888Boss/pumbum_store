@@ -170,3 +170,31 @@ Production `477477.ru` remains outside this staging-only release.
 
 Production `477477.ru` was not connected to, restarted or modified during this
 staging release.
+
+## Owner-directed mascot rollback
+
+On 2026-07-30 the owner rejected the two newest mascot presentation layers.
+The rollback removes only the page-wide companion trail introduced in
+`a239cc3` and the card-integrated/category-runner layer introduced in
+`92bde2b`. It deliberately retains the previously accepted hero/page scenes
+and the seated footer Krestovich, as well as the catalog-anchor, CTA,
+performance and mobile reveal fixes from the same development period.
+
+- Candidate source:
+  `/home/administrator/agent-projects/pumbum-store-redesign-candidate-card-mascots-20260730`
+- Candidate build ID: `oGVITNX3iPc27gSte3MyV`
+- Removed: `MascotTrail`, `CategoryMascotRunner`, card companion placement and
+  the twelve assets used only by those two rejected layers
+- Retained: the original Teplovik, Bak Hlopotun and page-specific mascot scenes,
+  the seated footer Krestovich and their existing transparent WebP assets
+- Catalog contract: 9,276 products, ten categories and 9,354 sitemap URLs
+- Browser QA: desktop `1280 x 847` and mobile `390 x 844`; rejected layers
+  absent, retained page scenes loaded, no horizontal overflow or runtime errors
+- Full pagination: all 3,379 pipe/fitting products across 141 pages
+- CSP: enforce mode with rotating nonce and no inline style attributes
+- Load check: 100/100 health responses returned `200`, p50 32 ms, p95 61 ms
+- Production dependency audit: zero vulnerabilities
+
+Activation is staging-only and requires a separately retained copy of the
+currently active `.next` build for exact rollback. Production `477477.ru`
+remains outside this change.

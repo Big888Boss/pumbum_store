@@ -123,3 +123,12 @@ with the Tailnet gate on `100.95.56.90:3027` and the public read-only gate on
 `3028`. Post-switch browser QA passed at desktop `1280 x 847` and mobile
 `390 x 844` with no runtime errors. The exact previous build is retained at
 `/home/administrator/backups/pumbum-redesign/card-mascots-v2-20260730/.next-ioTJXSOnOFtqczXlpHGzk`.
+
+The owner-directed rollback candidate `oGVITNX3iPc27gSte3MyV` removes the two
+newest mascot layers only: the page-edge companion trail and the later
+card-integrated/category-runner figures. Previously accepted hero/page scenes
+and the seated footer Krestovich remain. Catalog, search, filter, sorting,
+pagination, CTA, performance and mobile reveal behavior are unchanged. The
+candidate passed desktop/mobile browser QA, full taxonomy and pagination,
+CSP, dependency and bounded load checks before staging activation. Production
+`477477.ru` is not part of this rollback.

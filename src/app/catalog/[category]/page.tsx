@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { CategoryProductCarousel } from '@/components/catalog/CategoryProductCarousel';
-import { CategoryMascotRunner } from '@/components/catalog/CategoryMascotRunner';
 import { CatalogScrollRestorer } from '@/components/catalog/CatalogScrollRestorer';
 import { CallStoreButton } from '@/components/layout/CallStoreButton';
 import { ProductAvailabilityBadge, ProductAvailabilityText } from '@/components/product/ProductAvailability';
@@ -230,7 +229,6 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
           </div>
           {products.length > 0 ? <p className="meta">Показаны позиции {visibleStart.toLocaleString('ru-RU')}–{visibleEnd.toLocaleString('ru-RU')} из {products.length.toLocaleString('ru-RU')}.</p> : null}
         </div>
-        <CategoryMascotRunner categorySlug={categorySlug} />
         {productGroups.length > 0 ? (
           <div className="catalog-groups" aria-label="Группы товаров раздела">
             {productGroups.map((group) => (

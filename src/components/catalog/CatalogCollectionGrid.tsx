@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { ProductAvailabilityBadge, ProductAvailabilityText } from '@/components/product/ProductAvailability';
-import { CategoryMascotRunner } from '@/components/catalog/CategoryMascotRunner';
 import { CatalogScrollRestorer } from '@/components/catalog/CatalogScrollRestorer';
 import { ProductImage } from '@/components/product/ProductImage';
 import type { Product } from '@/entities/product/model';
@@ -197,9 +196,6 @@ export function CatalogCollectionGrid({
   }
   const groups = [...groupCounts.entries()].slice(0, 14);
   const activeCount = activeCatalogFilterCount(selected);
-  const collectionCategorySlug = products[0]?.categorySlug && products.every((product) => product.categorySlug === products[0]?.categorySlug)
-    ? products[0].categorySlug
-    : undefined;
 
   return (
     <section className="section" id="catalog-products">
@@ -218,8 +214,6 @@ export function CatalogCollectionGrid({
             <p className="meta">Показаны позиции {visibleStart.toLocaleString('ru-RU')}–{visibleEnd.toLocaleString('ru-RU')} из {visibleCollection.length.toLocaleString('ru-RU')}.</p>
           ) : null}
         </div>
-
-        {collectionCategorySlug ? <CategoryMascotRunner categorySlug={collectionCategorySlug} /> : null}
 
         <form className="collection-search" action={`${basePath}#catalog-products`} role="search">
           {selected.group ? <input type="hidden" name="group" value={selected.group} /> : null}

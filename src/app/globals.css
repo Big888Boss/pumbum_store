@@ -763,172 +763,6 @@ p {
   margin-top: 18px;
 }
 
-.mascot-trail {
-  display: contents;
-}
-
-.mascot-card-host,
-.category-mascot-host {
-  position: relative !important;
-  isolation: isolate;
-  overflow: visible !important;
-}
-
-.mascot-companion,
-.category-mascot-runner {
-  position: absolute;
-  z-index: 4;
-  width: clamp(226px, 20vw, 310px);
-  aspect-ratio: 1;
-  pointer-events: none;
-}
-
-.mascot-companion::after {
-  position: absolute;
-  z-index: -1;
-  right: 12%;
-  bottom: 4px;
-  left: 12%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-border), transparent);
-  content: "";
-}
-
-.mascot-companion-inside {
-  right: clamp(10px, 2vw, 28px);
-  bottom: -8px;
-}
-
-.mascot-companion-ledge {
-  top: -8px;
-  right: clamp(8px, 2.4vw, 32px);
-}
-
-.mascot-companion-peek {
-  bottom: -14px;
-  left: -24px;
-}
-
-.mascot-companion-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center bottom;
-  filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.28));
-  opacity: 0;
-  transform: translateY(18px) scale(0.94);
-  transition: opacity 420ms ease, transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-.mascot-companion-image.is-loaded {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  animation: mascot-companion-breathe 6.4s ease-in-out 520ms infinite;
-}
-
-.mascot-card-host-inside:not(.product-list-card):not(.pdp-visual-card):not(.map-card) {
-  min-height: 362px;
-  padding-top: clamp(232px, 21vw, 276px);
-}
-
-.mascot-card-host-ledge:not(.product-list-card):not(.pdp-visual-card):not(.map-card) {
-  min-height: 362px;
-  padding-top: clamp(232px, 21vw, 276px);
-}
-
-.mascot-card-host-peek:not(.product-list-card):not(.pdp-visual-card):not(.map-card) {
-  min-height: 362px;
-  padding-top: clamp(232px, 21vw, 276px);
-}
-
-.mascot-card-host-inside:not(.product-list-card):not(.pdp-visual-card):not(.map-card) > .mascot-companion-inside {
-  top: 0;
-  right: clamp(12px, 3vw, 38px);
-  bottom: auto;
-}
-
-.mascot-card-host-peek:not(.product-list-card):not(.pdp-visual-card):not(.map-card) > .mascot-companion-peek {
-  top: -8px;
-  bottom: auto;
-  left: clamp(8px, 2vw, 28px);
-}
-
-.product-list-card .mascot-companion,
-.pdp-visual-card .mascot-companion {
-  width: clamp(224px, 19vw, 286px);
-}
-
-.product-list-card .mascot-companion-inside,
-.product-list-card .mascot-companion-ledge,
-.product-list-card .mascot-companion-peek {
-  top: 38px;
-  right: auto;
-  bottom: auto;
-  left: 8px;
-}
-
-.pdp-visual-card .mascot-companion-inside,
-.pdp-visual-card .mascot-companion-ledge,
-.pdp-visual-card .mascot-companion-peek {
-  top: clamp(186px, 21vw, 266px);
-  right: auto;
-  bottom: auto;
-  left: -12px;
-}
-
-.map-card .mascot-companion {
-  bottom: -8px;
-  left: 22px;
-}
-
-.category-mascot-runner {
-  top: 34px;
-  left: 10px;
-  width: clamp(222px, 19vw, 286px);
-  opacity: 0;
-  transform: translate3d(-112%, 12px, 0) rotate(-7deg) scale(0.92);
-  transition: opacity 260ms ease;
-}
-
-.category-mascot-runner img,
-.mascot-companion img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center bottom;
-  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.26));
-}
-
-.category-mascot-runner.is-active {
-  opacity: 1;
-  animation: category-mascot-arrive 1.05s cubic-bezier(0.22, 0.74, 0.24, 1) forwards;
-  will-change: transform;
-}
-
-.category-mascot-host .product-frame img.product-photo {
-  transform: translateX(12%) scale(0.92);
-}
-
-.category-mascot-host:hover .product-frame img.product-photo {
-  transform: translateX(12%) scale(0.95);
-}
-
-.category-mascot-host .logo-overlay {
-  z-index: 7;
-}
-
-@keyframes mascot-companion-breathe {
-  0%, 100% { translate: 0 0; rotate: 0deg; }
-  50% { translate: 0 -5px; rotate: 0.6deg; }
-}
-
-@keyframes category-mascot-arrive {
-  0% { transform: translate3d(-112%, 12px, 0) rotate(-7deg) scale(0.92); }
-  62% { transform: translate3d(8%, -4px, 0) rotate(3deg) scale(1.02); }
-  82% { transform: translate3d(-3%, 2px, 0) rotate(-1deg) scale(0.99); }
-  100% { transform: translate3d(0, 0, 0) rotate(0) scale(1); }
-}
-
 .delivery-grid {
   display: grid;
   gap: 18px;
@@ -3092,45 +2926,6 @@ ul:not(.badges):not(.manufacturer-sections) {
     min-height: 330px;
   }
 
-  .mascot-companion {
-    width: clamp(168px, 50vw, 214px);
-    opacity: 1;
-  }
-
-  .mascot-card-host-inside:not(.product-list-card):not(.pdp-visual-card):not(.map-card),
-  .mascot-card-host-ledge:not(.product-list-card):not(.pdp-visual-card):not(.map-card),
-  .mascot-card-host-peek:not(.product-list-card):not(.pdp-visual-card):not(.map-card) {
-    min-height: 0;
-    padding-top: 184px;
-    padding-right: 22px;
-    padding-left: 22px;
-  }
-
-  .mascot-companion-inside,
-  .mascot-companion-ledge,
-  .mascot-companion-peek {
-    top: 4px;
-    right: 8px;
-    bottom: auto;
-    left: auto;
-  }
-
-  .product-list-card .mascot-companion,
-  .pdp-visual-card .mascot-companion {
-    width: clamp(172px, 48vw, 208px);
-  }
-
-  .category-mascot-runner {
-    top: 28px;
-    left: 4px;
-    width: clamp(176px, 49vw, 212px);
-  }
-
-  .category-mascot-host .product-frame img.product-photo,
-  .category-mascot-host:hover .product-frame img.product-photo {
-    transform: translateX(16%) scale(0.88);
-  }
-
   .delivery-checklist ul {
     columns: 1;
   }
@@ -3264,21 +3059,10 @@ ul:not(.badges):not(.manufacturer-sections) {
   }
 
   .mascot-image,
-  .mascot-companion-image,
   .product-frame img.product-photo {
     opacity: 1;
     scale: 1;
     translate: 0 0;
-  }
-
-  .mascot-companion-image.is-loaded {
-    animation: none;
-  }
-
-  .category-mascot-runner.is-active {
-    opacity: 1;
-    animation: none;
-    transform: none;
   }
 
   .product-frame::before {
