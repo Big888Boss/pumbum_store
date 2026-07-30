@@ -113,6 +113,13 @@ product-media layer. A browser-QA-discovered mobile issue where a very tall
 catalog container could remain transparent was fixed by revealing oversized
 containers immediately and lowering the fallback observer threshold. No
 catalog, route, price, search, filter, sorting or pagination contract changed.
-Candidate build `aan2vpoPFXuxQezetsdd` passed desktop/mobile visual QA, lint,
+Candidate build `aan2vpoPFXuxQezetsdd_` passed desktop/mobile visual QA, lint,
 isolation, taxonomy, full pagination, CSP, load and dependency checks before
 staging activation. Production `477477.ru` was not changed.
+
+The card-integrated mascot build is now active on staging at commit `92bde2b`
+and build ID `aan2vpoPFXuxQezetsdd_`. The app remains loopback-only on `3025`,
+with the Tailnet gate on `100.95.56.90:3027` and the public read-only gate on
+`3028`. Post-switch browser QA passed at desktop `1280 x 847` and mobile
+`390 x 844` with no runtime errors. The exact previous build is retained at
+`/home/administrator/backups/pumbum-redesign/card-mascots-v2-20260730/.next-ioTJXSOnOFtqczXlpHGzk`.

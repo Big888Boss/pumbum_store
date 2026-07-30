@@ -127,7 +127,7 @@ changed.
 
 - Candidate source:
   `/home/administrator/agent-projects/pumbum-store-redesign-candidate-card-mascots-20260730`
-- Candidate build ID: `aan2vpoPFXuxQezetsdd`
+- Candidate build ID: `aan2vpoPFXuxQezetsdd_`
 - Desktop size ranges: 226–310 px for general card companions and 224–286 px
   for product/detail companions
 - Mobile size ranges: 168–214 px and 172–208 px respectively
@@ -150,3 +150,23 @@ Final candidate acceptance:
   `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/design-qa-card-mascots-comparison-20260730.png`.
 
 Production `477477.ru` remains outside this staging-only release.
+
+## Activated card-integrated staging build
+
+- Active staging commit: `92bde2b`
+- Active build ID: `aan2vpoPFXuxQezetsdd_`
+- Tailnet endpoint: `http://100.95.56.90:3027/`
+- Loopback app: `127.0.0.1:3025`; public read-only gate: `127.0.0.1:3028`
+- Post-switch browser QA passed at desktop `1280 x 847` and mobile
+  `390 x 844`; `runtimeErrors` remained empty
+- Health, Tailnet gate and public read-only gate return `200`; public writes
+  remain rejected with `405`
+- Runtime is active with zero restarts, about 448 MiB peak RSS, and zero host
+  memory pressure during the final checks
+- SalesGame API, web, Postgres, Redis and Mailpit containers remained running;
+  the stateful containers remained healthy
+- Exact rollback build:
+  `/home/administrator/backups/pumbum-redesign/card-mascots-v2-20260730/.next-ioTJXSOnOFtqczXlpHGzk`
+
+Production `477477.ru` was not connected to, restarted or modified during this
+staging release.
