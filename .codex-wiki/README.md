@@ -103,3 +103,16 @@ contact point. Availability checks `/api/health` every 30 seconds, buyer pages
 every 2 minutes and the 1.8 MiB sitemap every 30 minutes. Alerts wait for a
 sustained failure and use concise Russian messages. Telegram credentials live
 only in mode-0600 files on the monitoring host, never in this repository.
+
+The 2026-07-30 staging-only card-mascot follow-up removes the small page-edge
+companion strip and reuses the same character count inside real category,
+manufacturer, task, product and information cards. Desktop figures are roughly
+224–310 px high and mobile figures 168–214 px, with dedicated card ledges,
+peeking and pointing placements. The supplier badge remains in the highest
+product-media layer. A browser-QA-discovered mobile issue where a very tall
+catalog container could remain transparent was fixed by revealing oversized
+containers immediately and lowering the fallback observer threshold. No
+catalog, route, price, search, filter, sorting or pagination contract changed.
+Candidate build `aan2vpoPFXuxQezetsdd` passed desktop/mobile visual QA, lint,
+isolation, taxonomy, full pagination, CSP, load and dependency checks before
+staging activation. Production `477477.ru` was not changed.

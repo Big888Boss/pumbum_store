@@ -152,6 +152,42 @@ No actionable P0, P1 or P2 design findings remain.
 
 final result: passed
 
+## Pass 9 — large card-integrated mascots
+
+- Source truth:
+  - `/var/folders/dp/hhvd9lhd7f7bjlflll7zfwvh0000gn/T/codex-clipboard-a69ed2a7-f27a-4860-8ac2-67f19fd4b464.jpg` — Bak Hlopotun identity sheet;
+  - `/var/folders/dp/hhvd9lhd7f7bjlflll7zfwvh0000gn/T/codex-clipboard-5c58cec3-1d65-4705-9044-6bb18543e4c6.jpg` — Kaplya identity sheet.
+- Implementation evidence:
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/card-mascots-browser-qa-final7-20260730/category-desktop-dark.png`;
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/card-mascots-browser-qa-final7-20260730/category-mobile-products-dark.png`;
+  - `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/card-mascots-browser-qa-final7-20260730/product-desktop-dark.png`.
+- Combined source/implementation comparison:
+  `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/design-qa-card-mascots-comparison-20260730.png`.
+- Viewports: desktop `1280 x 847`, mobile `390 x 844`, device scale factor 1.
+- The original page-edge companions were a P1 composition failure: they were
+  too small to read as branded characters and appeared detached from the
+  catalog. They were replaced by large figures attached to real category,
+  manufacturer, task, product and information cards.
+- Desktop generic companions render at 226–310 px; product/detail companions
+  at 224–286 px. Mobile companions remain 168–214 px instead of collapsing
+  into edge badges. The category mascot uses its own 222–286 px desktop and
+  176–212 px mobile range.
+- Characters now stand on card ledges, peek from the card surface or point at
+  the adjacent product/content. Product media and the mascot share one composed
+  scene while the supplier badge remains in the protected top layer.
+- A P0 mobile regression was caught during QA: a very tall catalog container
+  could never reach the old IntersectionObserver ratio and remained transparent.
+  Tall containers are now revealed immediately and the fallback observer uses a
+  0.01 threshold. The final mobile product grid and mascots are fully visible.
+- Final browser QA covered desktop/mobile, dark/light, home, catalog,
+  manufacturers, search, delivery, about, contacts, tasks, category, product,
+  filters, sorting, pagination, carousel, phone actions, overflow and runtime
+  errors. `runtimeErrors` is empty.
+
+No actionable P0, P1 or P2 visual finding remains.
+
+final result: passed
+
 ## Pass 7 — source recovery, alpha-edge review and supplier safe zone
 
 - Audited all 343 unique rows from the quality and transparency review sets.

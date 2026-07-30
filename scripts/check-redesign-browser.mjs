@@ -20,6 +20,18 @@ async function inspectPage(page, label) {
   return state;
 }
 
+async function assertCardMascots(page, expected, label, minimumWidth = 170) {
+  const mascots = page.locator('.mascot-companion');
+  await mascots.first().waitFor();
+  assert((await mascots.count()) === expected, `${label}: expected ${expected} card-integrated mascots`);
+  for (let index = 0; index < expected; index += 1) {
+    const mascot = mascots.nth(index);
+    const box = await mascot.boundingBox();
+    assert(box && box.width >= minimumWidth, `${label}: mascot ${index + 1} is still too small`);
+    assert(await mascot.evaluate((element) => element.parentElement?.classList.contains('mascot-card-host')), `${label}: mascot ${index + 1} is not attached to a content card`);
+  }
+}
+
 function collectRuntimeErrors(page, target) {
   page.on('pageerror', (error) => target.push(`pageerror: ${error.message}`));
   page.on('console', (message) => {
@@ -104,7 +116,7 @@ try {
   await page.goto(new URL(firstProductHref, baseUrl).href, { waitUntil: 'domcontentloaded' });
   await waitForImages(page);
   await assertVisibleImagesLoaded(page, 'desktop product');
-  assert((await page.locator('.mascot-companion').count()) === 3, 'desktop product: expected three ambient category mascots');
+  await assertCardMascots(page, 3, 'desktop product');
   assert((await page.locator('a[href^="/contacts?"]').count()) >= 1, 'desktop product: contact CTA is missing');
   await page.screenshot({ path: join(outputDir, 'product-desktop-dark.png') });
 
@@ -147,9 +159,12 @@ try {
     return top >= 70 && top <= 130;
   });
   await page.goto(`${baseUrl}/catalog/vodosnabzhenie`, { waitUntil: 'domcontentloaded' });
-  await page.locator('.category-mascot-track').scrollIntoViewIfNeeded();
-  await page.waitForFunction(() => document.querySelector('.category-mascot-track')?.classList.contains('is-active'));
-  assert((await page.locator('.mascot-companion').count()) === 2, 'desktop category: expected two ambient mascots plus the category runner');
+  await page.locator('.category-mascot-host').scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => document.querySelector('.category-mascot-runner')?.classList.contains('is-active'));
+  await assertCardMascots(page, 2, 'desktop category');
+  const runnerBox = await page.locator('.category-mascot-runner').boundingBox();
+  assert(runnerBox && runnerBox.width >= 188, 'desktop category: category mascot is still too small');
+  assert(await page.locator('.category-mascot-runner').evaluate((element) => element.parentElement?.classList.contains('category-mascot-host')), 'desktop category: category mascot is not attached to a product card');
   const comparisonFilterDrawer = page.locator('details.filter-drawer');
   if (!(await comparisonFilterDrawer.evaluate((element) => element.open))) {
     await comparisonFilterDrawer.locator('summary').click();
@@ -175,7 +190,7 @@ try {
     await page.goto(`${baseUrl}${route}`, { waitUntil: 'domcontentloaded' });
     await waitForImages(page);
     await inspectPage(page, `desktop mascot coverage ${route}`);
-    assert((await page.locator('.mascot-companion').count()) === 2, `${route}: expected two ambient mascots in addition to the page scene`);
+    await assertCardMascots(page, 2, `desktop mascot coverage ${route}`);
     await page.waitForFunction(() => document.querySelector('.mascot-image')?.classList.contains('is-loaded'));
     await assertVisibleImagesLoaded(page, `desktop mascot coverage ${route}`);
     if (route === '/catalog/proizvoditeli') {
@@ -228,6 +243,22 @@ try {
   const nextTitle = await carousel.locator('h2').innerText();
   assert(initialTitle !== nextTitle, 'mobile carousel: autoplay did not advance after five seconds');
   await mobilePage.screenshot({ path: join(outputDir, 'category-mobile-dark.png') });
+  await mobilePage.locator('.category-mascot-host').scrollIntoViewIfNeeded();
+  await mobilePage.waitForFunction(() => document.querySelector('.category-mascot-runner')?.classList.contains('is-active'));
+  await mobilePage.waitForFunction(() => {
+    const element = document.querySelector('.category-mascot-host');
+    if (!element) return false;
+    let current = element;
+    while (current) {
+      if (Number.parseFloat(getComputedStyle(current).opacity) < 0.95) return false;
+      current = current.parentElement;
+    }
+    return true;
+  }, null, { timeout: 4_000 });
+  await assertCardMascots(mobilePage, 2, 'mobile category', 140);
+  const mobileRunnerBox = await mobilePage.locator('.category-mascot-runner').boundingBox();
+  assert(mobileRunnerBox && mobileRunnerBox.width >= 148, 'mobile category: category mascot is still too small');
+  await mobilePage.screenshot({ path: join(outputDir, 'category-mobile-products-dark.png') });
 
   await mobilePage.goto(`${baseUrl}/`, { waitUntil: 'domcontentloaded' });
   await mobilePage.getByRole('button', { name: 'Переключить цветовую тему' }).click();
@@ -251,8 +282,8 @@ try {
       'product image and contact CTA',
       'information tabs',
       'scroll reveal and mascot load-in states',
-      'category mascot runner and ambient mascot count',
-      'ambient mascot coverage across all general pages and product detail',
+      'large category mascot arrival attached to a product card',
+      'large card-integrated mascot coverage across all general pages and product detail',
       'direct phone CTAs in category guidance',
       'filter and sorting anchors',
       'task page redundant search removal',

@@ -47,7 +47,7 @@ export function ScrollEnhancements() {
       });
     }, {
       rootMargin: '0px 0px -6% 0px',
-      threshold: 0.08,
+      threshold: 0.01,
     });
 
     const registered = new WeakSet<HTMLElement>();
@@ -59,6 +59,13 @@ export function ScrollEnhancements() {
       if (element.matches(revealCardSelector)) element.classList.add('scroll-reveal-card');
       element.classList.add(`scroll-reveal-delay-${Math.min(revealIndex % 5, 4)}`);
       revealIndex += 1;
+      // A tall catalog container may never reach the observer threshold
+      // on a mobile viewport. Keep the container visible and animate its cards
+      // individually instead of hiding the whole product list indefinitely.
+      if (element.getBoundingClientRect().height > window.innerHeight * 1.5) {
+        element.classList.add('is-revealed');
+        return;
+      }
       observer.observe(element);
     };
     const registerTree = (root: ParentNode | HTMLElement) => {

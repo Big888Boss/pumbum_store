@@ -115,3 +115,38 @@ state or change catalog content.
 
 The staging service had one controlled restart during the build switch.
 Production `477477.ru` was not restarted or modified.
+
+## Card-integrated mascot follow-up
+
+The 2026-07-30 follow-up replaces the small page-edge companion strip with the
+same number of large mascots integrated into actual content. The figures are
+mounted inside category, manufacturer, task, product and information cards;
+they sit on card ledges, peek from the card surface or point to nearby content.
+No catalog data, route, filter, sorting, pagination, price or product logic was
+changed.
+
+- Candidate source:
+  `/home/administrator/agent-projects/pumbum-store-redesign-candidate-card-mascots-20260730`
+- Candidate build ID: `aan2vpoPFXuxQezetsdd`
+- Desktop size ranges: 226–310 px for general card companions and 224–286 px
+  for product/detail companions
+- Mobile size ranges: 168–214 px and 172–208 px respectively
+- Category mascot: 222–286 px desktop and 176–212 px mobile
+- Supplier badges remain above product media and mascot layers
+- Motion remains opacity/transform-only and respects reduced motion
+
+Final candidate acceptance:
+
+- browser QA passed at `1280 x 847` and `390 x 844`; `runtimeErrors: []`;
+- the mobile long-catalog reveal regression found during QA is fixed;
+- lint, isolation, 9,276-product/10-category taxonomy, 9,354 sitemap URLs,
+  all 3,379 paginated pipe/fitting products, enforced CSP and 100-request load
+  check passed;
+- dependency audit reports zero production vulnerabilities;
+- candidate warm route timings remain equal to or faster than the previously
+  active staging build on the measured home, catalog, manufacturer, about and
+  category routes;
+- combined visual comparison:
+  `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/design-qa-card-mascots-comparison-20260730.png`.
+
+Production `477477.ru` remains outside this staging-only release.
