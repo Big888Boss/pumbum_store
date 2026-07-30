@@ -96,5 +96,22 @@ The slow-page improvement comes from reusing precomputed manufacturer groups
 and supplier product sets inside the server process; it does not cache user
 state or change catalog content.
 
-Final staging switch evidence and the exact rollback build path are recorded
-after activation.
+## Activated staging evidence
+
+- Active staging commit: `a239cc3`
+- Active build ID: `ioTJXSOnOFtqczXlpHGzk`
+- Tailnet endpoint: `http://100.95.56.90:3027/`
+- Application listener: `127.0.0.1:3025`; public read-only gate:
+  `127.0.0.1:3028`
+- Post-switch health: `ok`, 9,276 published products, ten categories
+- Post-switch browser QA: passed at desktop `1280 x 847` and mobile
+  `390 x 844`; no console, page or same-origin request errors
+- Runtime after QA: active, zero restarts, approximately 465 MiB peak RSS;
+  host memory pressure remained zero
+- Read-only public gate: `X-Robots-Tag: noindex, nofollow, noarchive`, CSP
+  enforced, `POST /api/leads` rejected with `405`
+- Exact rollback build:
+  `/home/administrator/backups/pumbum-redesign/ux-mascots-20260730/.next-ntJzITqB6mFDEfk1uCyWy`
+
+The staging service had one controlled restart during the build switch.
+Production `477477.ru` was not restarted or modified.
