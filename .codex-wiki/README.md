@@ -12,6 +12,7 @@ The current production implementation notes are maintained in `docs/`.
 - Isolated high-end redesign prototype (temporary protected preview, not deployed): `docs/HIGH_END_REDESIGN_PROTOTYPE_2026-07-25.md`
 - Current redesign performance release: `docs/REDESIGN_PERFORMANCE_RELEASE_2026-07-29.md`
 - Current redesign UX and mascot release: `docs/REDESIGN_UX_MASCOTS_RELEASE_2026-07-30.md`
+- Current presentation-directed mascot release: `docs/REDESIGN_PRESENTATION_MASCOTS_RELEASE_2026-07-31.md`
 - Performance release: `docs/PERFORMANCE_RELEASE_2026-07-11.md`
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`
@@ -140,3 +141,16 @@ change. Post-switch desktop/mobile browser QA passed without runtime errors,
 and the rejected companion/runner layers are absent. The exact previously
 active build is retained at
 `/home/administrator/backups/pumbum-redesign/mascot-layer-rollback-20260730/.next-aan2vpoPFXuxQezetsdd_`.
+
+The 2026-07-31 presentation-directed staging release restores only the
+character assets required by the colleague's marked composition, without
+restoring the rejected global companion or runner layers. Each of the ten
+categories now uses its semantic mascot at the carousel edge, below the
+pre-purchase card and at the related-category seam. Manufacturers use three
+different figures between their first cards, and About uses one figure in the
+marked lower-right content area. Active build `MJEkSbnNCMhBroeYvLIpb` passed
+desktop/mobile comparison QA, all ten mappings, lint, isolation, taxonomy,
+full pagination, carousel, CSP and bounded load checks. The previous build
+`oGVITNX3iPc27gSte3MyV` remains available under
+`/home/administrator/backups/pumbum-redesign/presentation-mascots-20260731`
+for exact rollback. Production `477477.ru` was not changed.
