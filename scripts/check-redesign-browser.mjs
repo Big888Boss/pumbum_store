@@ -231,7 +231,7 @@ try {
       await page.screenshot({ path: join(outputDir, 'manufacturers-desktop-dark.png') });
     }
     if (route === '/about') {
-      assert((await page.locator('.mascot-figure-about[data-mascot="Капля"]').count()) === 1, 'desktop about: content mascot is missing');
+      assert((await page.locator('.mascot-figure-about[data-mascot="Крепыч"]').count()) === 1, 'desktop about: content mascot is missing');
       await revealForScreenshot(page, page.locator('.about-layout'));
       await page.locator('.about-layout').screenshot({ path: join(outputDir, 'about-layout-desktop-dark.png') });
       await page.screenshot({ path: join(outputDir, 'about-desktop-dark.png') });
@@ -310,7 +310,7 @@ try {
   await mobilePage.locator('.manufacturer-grid').screenshot({ path: join(outputDir, 'manufacturers-grid-mobile-dark.png') });
 
   await mobilePage.goto(`${baseUrl}/about`, { waitUntil: 'domcontentloaded' });
-  assert((await mobilePage.locator('.mascot-figure-about[data-mascot="Капля"]').count()) === 1, 'mobile about: content mascot is missing');
+  assert((await mobilePage.locator('.mascot-figure-about[data-mascot="Крепыч"]').count()) === 1, 'mobile about: content mascot is missing');
   await revealForScreenshot(mobilePage, mobilePage.locator('.about-layout'));
   await mobilePage.locator('.about-layout').screenshot({ path: join(outputDir, 'about-layout-mobile-dark.png') });
 

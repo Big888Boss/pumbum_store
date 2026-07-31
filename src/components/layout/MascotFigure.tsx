@@ -1,7 +1,7 @@
 import { StaticImage } from '@/components/media/StaticImage';
 import type { MascotAsset } from '@/lib/mascots';
 
-type MascotPlacement = 'peek' | 'thoughtful' | 'eureka' | 'manufacturer' | 'about';
+type MascotPlacement = 'peek' | 'thoughtful' | 'seated' | 'manufacturer' | 'about';
 
 type MascotFigureProps = {
   mascot: MascotAsset;

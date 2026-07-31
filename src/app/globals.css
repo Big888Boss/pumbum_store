@@ -751,10 +751,11 @@ p {
 
 .mascot-figure {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   display: block;
   pointer-events: none;
   user-select: none;
+  animation: mascot-pose-arrive 420ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 .mascot-figure img {
@@ -767,7 +768,6 @@ p {
 
 .category-hero-media {
   position: relative;
-  z-index: 0;
   min-width: 0;
   isolation: isolate;
 }
@@ -778,95 +778,90 @@ p {
 }
 
 .mascot-figure-peek {
-  top: 38%;
-  bottom: auto;
-  left: clamp(-154px, -10vw, -106px);
-  z-index: 1;
-  width: clamp(232px, 20vw, 304px);
-  height: clamp(266px, 23vw, 342px);
-  overflow: hidden;
-  transform: translateY(-50%);
-}
-
-.mascot-figure-peek img {
-  position: absolute;
-  bottom: -20px;
+  top: clamp(52px, 6vw, 82px);
+  right: calc(100% - 18px);
+  width: clamp(158px, 13vw, 202px);
+  height: clamp(202px, 17vw, 264px);
+  z-index: 3;
 }
 
 .category-advice-card {
   position: relative;
-  min-height: 292px;
   overflow: visible;
-}
-
-.category-advice-card > :not(.mascot-figure) {
-  position: relative;
-  z-index: 2;
+  isolation: isolate;
 }
 
 .mascot-figure-thoughtful {
-  right: 18px;
+  right: clamp(8px, 2vw, 28px);
   bottom: clamp(-202px, -15vw, -166px);
   z-index: 4;
-  width: clamp(232px, 20vw, 292px);
-  height: clamp(276px, 23vw, 346px);
+  width: clamp(150px, 13vw, 196px);
+  height: clamp(196px, 17vw, 256px);
 }
 
 .category-related-head {
   position: relative;
-  min-height: 206px;
-  padding-right: clamp(286px, 24vw, 348px);
+  isolation: isolate;
 }
 
-.mascot-figure-eureka {
-  right: 26px;
-  bottom: -48px;
-  width: clamp(256px, 22vw, 326px);
-  height: clamp(234px, 21vw, 302px);
-  overflow: hidden;
-}
-
-.mascot-figure-eureka img {
-  position: absolute;
-  bottom: -58px;
-  transform: scaleX(-1);
+.mascot-figure-seated {
+  right: clamp(2px, 2vw, 30px);
+  bottom: clamp(-102px, -7vw, -78px);
+  width: clamp(152px, 14vw, 204px);
+  height: clamp(188px, 18vw, 258px);
+  z-index: 4;
 }
 
 .manufacturer-card-mascot-host {
   position: relative;
-  margin-bottom: 112px;
   overflow: visible;
+  isolation: isolate;
 }
 
 .mascot-figure-manufacturer {
-  right: 8%;
-  bottom: -126px;
+  right: clamp(36px, 11vw, 168px);
+  bottom: clamp(-76px, -5.5vw, -58px);
   z-index: 4;
-  width: clamp(208px, 18vw, 266px);
-  height: clamp(222px, 20vw, 286px);
+  width: clamp(136px, 12vw, 176px);
+  height: clamp(166px, 15vw, 218px);
 }
 
 .manufacturer-mascot-2 {
-  right: 14%;
+  right: clamp(118px, 20vw, 310px);
 }
 
 .manufacturer-mascot-3 {
-  right: 5%;
+  right: clamp(24px, 8vw, 124px);
 }
 
 .about-copy-mascot-host {
   position: relative;
-  min-height: 690px;
   overflow: hidden;
-  padding-right: clamp(250px, 24vw, 330px);
-  padding-bottom: 86px;
+  isolation: isolate;
+}
+
+.about-copy-mascot-host > :not(.mascot-figure) {
+  position: relative;
+  z-index: 2;
 }
 
 .mascot-figure-about {
-  right: 22px;
-  bottom: -20px;
-  width: clamp(220px, 21vw, 292px);
-  height: clamp(258px, 24vw, 338px);
+  top: 48%;
+  right: clamp(14px, 2.5vw, 34px);
+  width: clamp(166px, 15vw, 214px);
+  height: clamp(208px, 19vw, 268px);
+  z-index: 1;
+}
+
+@keyframes mascot-pose-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .call-store-button {
@@ -2855,34 +2850,19 @@ ul:not(.badges):not(.manufacturer-sections) {
     justify-self: center;
   }
 
-  .category-hero-media {
-    margin-top: 74px;
-  }
-
   .mascot-figure-peek {
-    top: -82px;
-    bottom: auto;
-    left: 16px;
-    width: 160px;
-    height: 178px;
+    top: 10px;
+    right: auto;
+    left: -6px;
+    width: 122px;
+    height: 160px;
   }
 
-  .mascot-figure-peek img {
-    bottom: -30px;
-  }
-
-  .category-advice-card {
-    min-height: 300px;
-  }
-
-  .category-related-head {
-    min-height: 190px;
-    padding-right: 250px;
-  }
-
-  .about-copy-mascot-host {
-    min-height: 0;
-    padding-right: 238px;
+  .mascot-figure-thoughtful,
+  .mascot-figure-seated,
+  .mascot-figure-manufacturer,
+  .mascot-figure-about {
+    display: none;
   }
 
   .delivery-checklist {
@@ -3076,81 +3056,11 @@ ul:not(.badges):not(.manufacturer-sections) {
     min-height: 330px;
   }
 
-  .category-hero-media {
-    margin-top: 64px;
-  }
-
   .mascot-figure-peek {
-    top: -72px;
-    left: 8px;
-    width: 138px;
-    height: 154px;
-  }
-
-  .category-advice-card {
-    min-height: 0;
-    padding-right: 19px;
-    padding-bottom: 204px;
-    overflow: hidden;
-  }
-
-  .category-advice-card .info-card-actions {
-    max-width: calc(100% - 118px);
-  }
-
-  .category-advice-card .info-card-actions .call-store-button {
-    width: 100%;
-  }
-
-  .mascot-figure-thoughtful {
-    right: -4px;
-    bottom: -28px;
-    width: 176px;
-    height: 206px;
-  }
-
-  .category-related-head {
-    min-height: 0;
-    padding-right: 0;
-    padding-bottom: 174px;
-  }
-
-  .mascot-figure-eureka {
-    right: 2px;
-    bottom: -22px;
-    width: 194px;
-    height: 180px;
-  }
-
-  .mascot-figure-eureka img {
-    bottom: -42px;
-  }
-
-  .manufacturer-card-mascot-host {
-    margin-bottom: 94px;
-  }
-
-  .mascot-figure-manufacturer {
-    right: 5%;
-    bottom: -102px;
-    width: 170px;
-    height: 186px;
-  }
-
-  .manufacturer-mascot-2 {
-    right: 18%;
-  }
-
-  .about-copy-mascot-host {
-    padding-right: 19px;
-    padding-bottom: 214px;
-  }
-
-  .mascot-figure-about {
-    right: 4px;
-    bottom: -12px;
-    width: 184px;
-    height: 214px;
+    top: 8px;
+    left: -4px;
+    width: 102px;
+    height: 136px;
   }
 
   .delivery-checklist ul {

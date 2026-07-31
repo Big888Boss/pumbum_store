@@ -21,7 +21,7 @@ import { buildMetadata } from '@/lib/seo/metadata';
 import { getCspNonce } from '@/lib/security/nonce';
 import { getLegacyCatalogRedirect } from '@/lib/seo/legacy-redirects';
 import { getProductCardDescription, getProductVisibleDescription } from '@/lib/seo/product';
-import { getCategoryMascot } from '@/lib/mascots';
+import { getCategoryMascot, getCategoryMascotPose } from '@/lib/mascots';
 
 type PageProps = {
   params: Promise<{ category: string }>;
@@ -484,7 +484,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
             </div>
           </div>
           <div className="category-hero-media">
-            {categoryMascot ? <MascotFigure mascot={categoryMascot} placement="peek" className="mascot-figure-category" priority /> : null}
+            {categoryMascot ? <MascotFigure mascot={getCategoryMascotPose(categoryMascot, 'peek')} placement="peek" className="mascot-figure-category" priority /> : null}
             <CategoryProductCarousel products={featuredProducts} groupLabels={featuredGroupLabels} />
           </div>
         </div>
@@ -507,7 +507,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
             <div className="actions info-card-actions">
               <CallStoreButton location={`category_before_purchase_${categoryData.slug}`} label="Позвонить менеджеру" />
             </div>
-            {categoryMascot ? <MascotFigure mascot={categoryMascot} placement="thoughtful" className="mascot-figure-category" /> : null}
+            {categoryMascot ? <MascotFigure mascot={getCategoryMascotPose(categoryMascot, 'thoughtful')} placement="thoughtful" className="mascot-figure-category" /> : null}
           </aside>
         </div>
       </section>
@@ -519,7 +519,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
           <div className="section-head category-related-head">
             <h2>Связанные категории</h2>
             <p>Комплектующие, которые часто нужны для одной инженерной системы.</p>
-            {categoryMascot ? <MascotFigure mascot={categoryMascot} placement="eureka" className="mascot-figure-category" /> : null}
+            {categoryMascot ? <MascotFigure mascot={getCategoryMascotPose(categoryMascot, 'seated')} placement="seated" className="mascot-figure-category" /> : null}
           </div>
           <div className="grid grid-3">
             {related.map((item) => (
