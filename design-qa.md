@@ -50,6 +50,11 @@ implementation on the right.
    manufacturer or About content.
 4. Reference and implementation screenshots were combined for each marked
    composition before the activation decision.
+5. The owner follow-up moved the hero crop inward, lowered the seated figure
+   onto the card seam and moved it to the left edge of the third card. The
+   pre-purchase card was rebalanced without changing either surrounding grid
+   or card dimensions. New reference/implementation comparisons are stored in
+   `work/pumbum-mascot-tuning-qa-20260731-v2/comparisons/`.
 
 ## Final result
 
@@ -66,3 +71,7 @@ Passed.
   layers are absent.
 - Browser console, page and same-origin request error collections are empty in
   both the isolated candidate and the post-activation run.
+- The follow-up browser check also asserts placement geometry numerically:
+  the hero figure overlaps the carousel by `40px`, the seated figure's anchor
+  stays on the left seam of the third card and the phone action uses the
+  intended lower inset.

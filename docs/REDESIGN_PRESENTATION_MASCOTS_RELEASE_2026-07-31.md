@@ -87,3 +87,50 @@ mascots remain.
   containers remained healthy
 
 Visual comparison and iteration evidence is recorded in `design-qa.md`.
+
+## Category seam tuning follow-up
+
+The owner-approved follow-up keeps the same thirty category pose assets and
+changes only their composition geometry plus the internal layout of the
+pre-purchase advice card.
+
+- Peeking figures overlap the carousel boundary by a measured `40px`, so the
+  straight crop follows the product-media seam on desktop; the mobile offset
+  was moved inward by the same visual direction.
+- Seated figures are `12-14px` lower and anchored to the left edge of the third
+  related-category card. The card remains above the decorative layer, while a
+  leg can hang visibly into the inter-card gap.
+- The pre-purchase card keeps its original copy and phone action, but now uses
+  its height deliberately: the buying guidance occupies the center and the
+  manager note plus full-width phone button form one aligned lower row.
+- Thoughtful figures, About, manufacturers, card geometry, catalog content and
+  all existing routes were not changed. Manufacturer figures were deliberately
+  left in their current cards pending an owner choice.
+
+### Active staging release
+
+- Implementation commit: `38d8c9c`
+- Active build ID: `KoqQfjCznzqwU-erirpnY`
+- Active unit: `pumbum-redesign-preview-mascot-tuning-20260731.service`
+- Listener: `127.0.0.1:3025`
+- Tailnet and public read-only routes: unchanged
+- Exact previous-build rollback:
+  `/home/administrator/backups/pumbum-redesign/mascot-tuning-20260731/.next-JKCl7iHZyZoerzEGWZ7YM`
+
+### Follow-up verification
+
+- lint, TypeScript, production build, isolation and dependency audit: passed;
+- browser QA before and after activation: desktop `1280 x 847`, mobile
+  `390 x 844`, dark/light, zero runtime errors and zero horizontal overflow;
+- explicit geometry assertions: `40px` hero overlap, seated anchor within the
+  third-card seam and call action aligned to the card's lower inset;
+- taxonomy: `9276` products, ten categories, `9354` sitemap URLs and 60
+  navigation routes;
+- full `3379`-product pipes/fittings pagination and all ten carousels: passed;
+- CSP enforcement and 100-request health load: passed; load p50 `38ms`, p95
+  `70ms`, all responses `200`;
+- public preview remains `noindex`, read-only `POST /api/leads` remains `405`;
+- preview restart count is zero; host memory PSI is zero and approximately
+  `11 GiB` remains available; SalesGame and funding services remained running.
+
+Production `477477.ru` was not connected to, restarted or modified.

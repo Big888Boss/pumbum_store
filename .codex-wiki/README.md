@@ -157,3 +157,13 @@ isolation, taxonomy, full pagination, carousel and CSP checks. The previous
 build `oGVITNX3iPc27gSte3MyV` remains available under
 `/home/administrator/backups/pumbum-redesign/presentation-mascots-corrective-20260731`
 for exact rollback. Production `477477.ru` was not changed.
+
+The later 2026-07-31 seam-tuning follow-up is active at commit `38d8c9c` and
+build `KoqQfjCznzqwU-erirpnY`. It moves every category hero peek to the exact
+carousel seam, seats every related-category figure lower on the left edge of
+the third card, and rebalances the pre-purchase phone card without moving the
+surrounding grids. Manufacturers and About were intentionally left unchanged.
+The previous build is retained at
+`/home/administrator/backups/pumbum-redesign/mascot-tuning-20260731/.next-JKCl7iHZyZoerzEGWZ7YM`.
+Desktop/mobile browser QA, catalog/taxonomy/pagination/carousel, CSP, dependency
+and bounded load checks passed; production `477477.ru` was not touched.
