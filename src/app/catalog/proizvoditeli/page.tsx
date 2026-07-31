@@ -28,9 +28,9 @@ function formatSections(count: number): string {
 }
 
 const MANUFACTURER_MASCOT_PLACEMENTS: Record<string, { mascotIndex: number; className: string }> = {
-  sinikon: { mascotIndex: 1, className: 'manufacturer-mascot-2' },
+  sinikon: { mascotIndex: 1, className: 'manufacturer-mascot-sinikon' },
   gidrokontrakt: { mascotIndex: 2, className: 'manufacturer-mascot-3' },
-  zota: { mascotIndex: 0, className: 'manufacturer-mascot-2' },
+  zota: { mascotIndex: 0, className: 'manufacturer-mascot-zota' },
 };
 
 export default function ManufacturersPage() {

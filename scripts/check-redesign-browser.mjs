@@ -256,6 +256,21 @@ try {
         await page.locator(`#${manufacturerSlug}`).screenshot({ path: join(outputDir, `manufacturer-${manufacturerSlug}-desktop-dark.png`) });
       }
       assert((await page.locator('#valtec .mascot-figure-manufacturer').count()) === 0, 'desktop manufacturers: VALTEC must not host a mascot');
+      const sinikonCardBox = await page.locator('#sinikon').boundingBox();
+      const sinikonMascotBox = await page.locator('#sinikon .manufacturer-mascot-sinikon').boundingBox();
+      assert(sinikonCardBox && sinikonMascotBox, 'desktop manufacturers: SINIKON geometry is unavailable');
+      assert(sinikonMascotBox.x <= sinikonCardBox.x + 8, 'desktop manufacturers: Стыкович must straddle the left edge of SINIKON');
+      assert(sinikonMascotBox.x >= sinikonCardBox.x - 24, 'desktop manufacturers: Стыкович extends too far beyond SINIKON');
+      assert(sinikonMascotBox.y < sinikonCardBox.y - 110, 'desktop manufacturers: Стыкович must sit above the SINIKON top border');
+      assert(sinikonMascotBox.y + sinikonMascotBox.height <= sinikonCardBox.y + 96, 'desktop manufacturers: Стыкович hangs too far into SINIKON');
+      const zotaMascotBox = await page.locator('#zota .manufacturer-mascot-zota').boundingBox();
+      assert(zotaMascotBox, 'desktop manufacturers: ZOTA mascot geometry is unavailable');
+      assert(Math.abs((zotaMascotBox.x + zotaMascotBox.width / 2) - 640) <= 48, 'desktop manufacturers: Тепловик must sit near the page center');
+      await page.locator('#sinikon').evaluate((element) => {
+        const top = element.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: Math.max(0, top - 190), behavior: 'instant' });
+      });
+      await page.screenshot({ path: join(outputDir, 'manufacturer-sinikon-context-desktop-dark.png') });
       await revealForScreenshot(page, page.locator('.manufacturer-grid'));
       await page.locator('.manufacturer-grid').screenshot({ path: join(outputDir, 'manufacturers-grid-desktop-dark.png') });
       await page.screenshot({ path: join(outputDir, 'manufacturers-desktop-dark.png') });

@@ -864,6 +864,17 @@ p {
   right: clamp(24px, 8vw, 124px);
 }
 
+.manufacturer-mascot-sinikon {
+  top: clamp(-142px, -10vw, -126px);
+  right: auto;
+  bottom: auto;
+  left: -20px;
+}
+
+.manufacturer-mascot-zota {
+  right: clamp(360px, 43vw, 560px);
+}
+
 .about-copy-mascot-host {
   position: relative;
   overflow: hidden;

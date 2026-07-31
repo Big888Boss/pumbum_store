@@ -60,6 +60,12 @@ implementation on the right.
    Стыкович to `SINIKON`, Фильтрыч retained on `Гидроконтракт`, and Тепловик
    to `ZOTA` with the already accepted leftward offset. `VALTEC` no longer
    hosts a figure.
+7. The owner clarified the exact SINIKON target with
+   `/var/folders/dp/hhvd9lhd7f7bjlflll7zfwvh0000gn/T/codex-clipboard-cf90a978-b8fd-45a2-9dfb-2edc11a167fe.png`
+   (`280 × 246`): the rounded upper-left card corner, not the lower card seam.
+   Стыкович now straddles that upper border with his legs hanging inside the
+   card; Тепловик is centered farther left on the ZOTA card. Фильтрыч remains
+   unchanged.
 
 ## Manufacturer reassignment evidence
 
@@ -104,6 +110,27 @@ No P0, P1 or P2 mismatch remains. The semantic browser assertions verify the
 three requested manufacturer/mascot pairs and the absence of a figure on
 `VALTEC`; the desktop and mobile runs report zero runtime errors and zero
 horizontal overflow.
+
+### Upper-left SINIKON correction
+
+- Target crop:
+  `/var/folders/dp/hhvd9lhd7f7bjlflll7zfwvh0000gn/T/codex-clipboard-cf90a978-b8fd-45a2-9dfb-2edc11a167fe.png`
+  (`280 × 246`).
+- Candidate context:
+  `work/pumbum-manufacturer-corner-qa-20260731-candidate-v2/manufacturer-sinikon-context-desktop-dark.png`
+  (`1280 × 847`, CSS viewport `1280 × 847`, density `1`).
+- Same-input focused comparison:
+  `work/pumbum-manufacturer-corner-qa-20260731-candidate-v2/sinikon-corner-reference-comparison.png`
+  (`800 × 300`). The target is on the left and the implementation crop is on
+  the right.
+- Geometry assertions require the SINIKON figure to cross only the card's left
+  edge, remain above the top border, and hang no more than `96px` into the
+  card. The ZOTA figure center must remain within `48px` of the `1280px`
+  viewport center.
+- Visual result: the seated body is above the marked rounded corner, both legs
+  hang inside the SINIKON card, the logo and all text remain clear, and the
+  ZOTA figure is centered without covering its sparse content. Typography,
+  colors, image assets, copy, card dimensions and mobile layout are unchanged.
 
 ## Final result
 
