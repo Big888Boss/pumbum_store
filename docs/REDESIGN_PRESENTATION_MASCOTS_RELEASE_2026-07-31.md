@@ -135,6 +135,46 @@ pre-purchase advice card.
 
 Production `477477.ru` was not connected to, restarted or modified.
 
+## Exact SINIKON upper-corner correction
+
+The owner supplied an exact crop of the intended upper-left SINIKON corner.
+This correction replaces the earlier lower-seam interpretation without changing
+the card grid or any manufacturer content.
+
+- Стыкович now straddles the rounded upper-left SINIKON border; his body stays
+  above the card and both legs hang inside it.
+- Тепловик remains attached to ZOTA but is centered farther left, near the
+  geometric center of the desktop page.
+- Фильтрыч remains unchanged on `Гидроконтракт`.
+- Manufacturer figures remain hidden at the existing mobile breakpoint.
+
+### Active staging release
+
+- Implementation commit: `7f8ee9f`
+- Active build ID: `7amE_klJPTk9sNkUGIEkJ`
+- Active unit: `pumbum-redesign-preview-manufacturer-corner-20260731.service`
+- Listener: `127.0.0.1:3025`
+- Tailnet and public read-only routes: unchanged
+- Exact previous-build rollback:
+  `/home/administrator/backups/pumbum-redesign/manufacturer-corner-20260731/.next-sh4maH1zXLMXPQW744aKf`
+
+### Verification
+
+- the owner crop and implementation were placed in one focused comparison;
+- browser geometry asserts the SINIKON top/left anchor and the centered ZOTA
+  figure;
+- candidate and post-activation desktop/mobile QA passed with zero runtime
+  errors and zero horizontal overflow;
+- lint, TypeScript, build, isolation, taxonomy, CSP and dependency audit passed;
+- taxonomy remains `9276` products, ten categories, nine manufacturers and
+  `9354` sitemap URLs;
+- active preview and both access gates have zero restarts; direct gate checks
+  return `200`, the public write boundary remains `405`, memory PSI is zero and
+  approximately `11 GiB` remains available;
+- SalesGame and funding services remained running.
+
+Production `477477.ru` was not connected to, restarted or modified.
+
 ## Manufacturer semantic placement follow-up
 
 The owner-approved follow-up changes only the three manufacturer-card anchors;

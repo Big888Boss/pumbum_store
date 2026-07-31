@@ -177,3 +177,14 @@ desktop/mobile QA, lint, TypeScript, isolation, taxonomy, CSP and dependency
 checks passed. The previous build is retained at
 `/home/administrator/backups/pumbum-redesign/manufacturer-placement-20260731/.next-KoqQfjCznzqwU-erirpnY`;
 production `477477.ru` was not touched.
+
+The exact-corner correction is active at commit `7f8ee9f` and build
+`7amE_klJPTk9sNkUGIEkJ`. It follows the owner's supplied crop: Стыкович now
+straddles the rounded upper-left SINIKON border with both legs hanging inside
+the card, while Тепловик is centered farther left on ZOTA. Фильтрыч, card
+geometry, manufacturer copy and the mobile breakpoint remain unchanged. The
+previous build is retained at
+`/home/administrator/backups/pumbum-redesign/manufacturer-corner-20260731/.next-sh4maH1zXLMXPQW744aKf`.
+Candidate and post-activation desktop/mobile QA, geometry assertions, lint,
+TypeScript, isolation, taxonomy, CSP and dependency checks passed; production
+`477477.ru` was not touched.
