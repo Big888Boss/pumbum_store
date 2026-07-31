@@ -23,39 +23,47 @@ manufacturer pages, search and SEO contracts.
 | Крепёж для монтажа | Крепыч |
 | Трубы и фитинги | Трубыч |
 | Арматура и комплектующие | Арматурыч |
-| Инструмент и расходные материалы | Крестович |
+| Прочее оборудование | Крестович |
 
 Every category uses its assigned mascot in three repeated presentation-directed
 positions:
 
 1. peeking from behind the hero carousel edge;
-2. standing in the whitespace below the pre-purchase card;
-3. integrated into the related-category heading/card seam.
+2. standing thoughtfully in the whitespace below the pre-purchase card;
+3. sitting on the related-category explanatory line/card seam.
 
-Manufacturers use Скважинник, Капля and Крепыч between the first manufacturer
-cards. About uses Капля in the marked lower-right area of the main content
-card. The previously rejected global companion and category-runner layers
-remain absent; previously accepted hero/page and footer mascots remain.
+Manufacturers use seated Тепловик, Стыкович and Фильтрыч figures between the
+first manufacturer cards. About uses a thoughtful Крепыч in the marked
+lower-right area of the main content card. These are separate transparent
+assets composed for their exact slots; the same full-body image is not reused
+for all three poses. The previously rejected global companion and
+category-runner layers remain absent; previously accepted hero/page and footer
+mascots remain.
 
 ## Build and activation
 
-- Implementation commit: `a872d1d`
-- Active staging build ID: `MJEkSbnNCMhBroeYvLIpb`
+- Implementation commit: `b76eba4`
+- Active staging build ID: `JKCl7iHZyZoerzEGWZ7YM`
 - Build host: USA factory
 - Build controls: `MemoryMax=4G`, `MemoryHigh=3500M`, `CPUQuota=160%`,
   `Nice=10`
 - App listener: `127.0.0.1:3025`
 - Tailnet gate: `http://100.95.56.90:3027/`
-- Public access remains behind the existing read-only outbound tunnel and
-  loopback gate on `127.0.0.1:3028`
+- Public read-only URL:
+  `https://giving-moves-winds-sig.trycloudflare.com/`
+- Public access remains behind the existing outbound tunnel and loopback gate
+  on `127.0.0.1:3028`
 - Exact rollback build:
-  `/home/administrator/backups/pumbum-redesign/presentation-mascots-20260731/.next-oGVITNX3iPc27gSte3MyV`
+  `/home/administrator/backups/pumbum-redesign/presentation-mascots-corrective-20260731/.next-oGVITNX3iPc27gSte3MyV`
+- Transparent PNG working sources:
+  `/home/administrator/backups/pumbum-redesign/presentation-mascots-corrective-20260731/pose-v2-png-sources/`
 
 ## Verification
 
 - Production build and TypeScript: passed
 - Lint and isolation: passed
-- Browser QA: desktop `1280 × 847`, mobile `390 × 844`, dark/light,
+- Browser QA before and after activation: desktop `1280 × 847`, mobile
+  `390 × 844`, dark/light,
   navigation, filters, sorting, pagination, carousel, scroll reveal and all
   presentation placements passed
 - All ten category mappings render exactly three figures
@@ -68,13 +76,12 @@ remain absent; previously accepted hero/page and footer mascots remain.
   controls, zero page errors
 - CSP: enforce mode, rotating nonce, no inline style attributes, report
   endpoint `204`
-- Bounded load check: 100/100 `200`, five-way concurrency, p50 35 ms,
-  p95 66 ms
 - Tailnet gate: `200`
-- Public read-only gate: `200`, `noindex/nofollow/noarchive`, `no-store`;
-  `POST /api/leads` returns `405`
-- Active preview and all three access services: active, zero restarts
-- Preview peak RSS after switch: approximately 489 MiB
+- Public URL and read-only gate: `200`; public health reports 9,276 products
+  and ten categories
+- Active preview and access gates: active, zero preview restarts
+- Isolated build peak: 332.6 MiB, zero swap
+- Active preview RSS after switch: approximately 390 MiB
 - Host memory pressure after switch: zero; approximately 11 GiB available
 - SalesGame web, API, Postgres, Redis and Mailpit remained running; stateful
   containers remained healthy

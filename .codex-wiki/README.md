@@ -142,15 +142,18 @@ and the rejected companion/runner layers are absent. The exact previously
 active build is retained at
 `/home/administrator/backups/pumbum-redesign/mascot-layer-rollback-20260730/.next-aan2vpoPFXuxQezetsdd_`.
 
-The 2026-07-31 presentation-directed staging release restores only the
-character assets required by the colleague's marked composition, without
+The corrected 2026-07-31 presentation-directed staging release restores only
+the character assets required by the colleague's marked composition, without
 restoring the rejected global companion or runner layers. Each of the ten
-categories now uses its semantic mascot at the carousel edge, below the
-pre-purchase card and at the related-category seam. Manufacturers use three
-different figures between their first cards, and About uses one figure in the
-marked lower-right content area. Active build `MJEkSbnNCMhBroeYvLIpb` passed
-desktop/mobile comparison QA, all ten mappings, lint, isolation, taxonomy,
-full pagination, carousel, CSP and bounded load checks. The previous build
-`oGVITNX3iPc27gSte3MyV` remains available under
-`/home/administrator/backups/pumbum-redesign/presentation-mascots-20260731`
+categories uses its semantic mascot in three separately generated poses:
+peeking with a hand on the carousel edge, standing thoughtfully below the
+pre-purchase card, and sitting on the related-category explanatory line.
+Manufacturers use seated Тепловик, Стыкович and Фильтрыч figures between the
+first cards; About uses a thoughtful Крепыч in the marked lower-right content
+area. The overlays do not change card, grid or text geometry. Active commit
+`b76eba4` and build `JKCl7iHZyZoerzEGWZ7YM` passed candidate and
+post-activation desktop/mobile browser QA, all ten mappings, lint, TypeScript,
+isolation, taxonomy, full pagination, carousel and CSP checks. The previous
+build `oGVITNX3iPc27gSte3MyV` remains available under
+`/home/administrator/backups/pumbum-redesign/presentation-mascots-corrective-20260731`
 for exact rollback. Production `477477.ru` was not changed.

@@ -10,9 +10,10 @@
 
 ## Required composition
 
-- Every category uses one semantic mascot in three repeated placements:
-  peeking from the hero carousel edge, standing below the pre-purchase card,
-  and appearing at the related-category heading/card seam.
+- Every category uses one semantic mascot in three independently generated
+  placements: peeking with a hand on the hero carousel edge, standing
+  thoughtfully below the pre-purchase card, and sitting on the
+  related-category explanatory line/card seam.
 - Manufacturers use three different figures between the first manufacturer
   cards.
 - About uses one figure in the marked lower-right area of the main content
@@ -28,25 +29,27 @@
 
 ## Comparison inputs
 
-- `work/mascot-presentation/comparisons/category-hero.png`
-- `work/mascot-presentation/comparisons/category-advice.png`
-- `work/mascot-presentation/comparisons/category-related.png`
-- `work/mascot-presentation/comparisons/manufacturers.png`
-- `work/mascot-presentation/comparisons/about.png`
+- `work/pumbum-mascot-qa-20260731/comparisons/hero-comparison.jpg`
+- `work/pumbum-mascot-qa-20260731/comparisons/advice-comparison.jpg`
+- `work/pumbum-mascot-qa-20260731/comparisons/related-comparison.jpg`
+- `work/pumbum-mascot-qa-20260731/comparisons/manufacturers-comparison.jpg`
+- `work/pumbum-mascot-qa-20260731/comparisons/about-comparison.jpg`
 
 Each file places the marked presentation source on the left and the candidate
 implementation on the right.
 
 ## Iteration history
 
-1. The first candidate put the desktop hero figure too low and kept the
-   pre-purchase figure inside the card.
-2. The second candidate moved the hero figure behind the carousel edge,
-   positioned the pre-purchase figure in the intended whitespace below the
-   card, enlarged the related/manufacturer figures and reserved a non-overlap
-   zone for the mobile call button.
-3. The final pass added context screenshots and verified the full composition,
-   rather than judging clipped element-only screenshots.
+1. The rejected source pass reused generic full-body images and changed layout
+   spacing. It was not activated.
+2. Thirty slot-specific assets were generated: ten category owners multiplied
+   by peek, thoughtful and seated poses. Alpha edges were cleaned and WebP
+   runtime derivatives were kept below 120 KiB each.
+3. The corrective CSS uses absolute overlays only. It does not add margins,
+   padding, minimum heights or grid changes to product, category,
+   manufacturer or About content.
+4. Reference and implementation screenshots were combined for each marked
+   composition before the activation decision.
 
 ## Final result
 
@@ -55,8 +58,11 @@ Passed.
 - All ten category-to-mascot mappings render exactly three figures.
 - The figures follow the marked content seams without shifting product,
   manufacturer or category cards.
+- Supplier/product content and all text remain above or outside decorative
+  overlays; no mascot covers a CTA or product title.
 - Desktop and mobile have no horizontal overflow.
 - The call button remains clickable and unobstructed.
 - Existing accepted hero/footer mascots remain; rejected companion/runner
   layers are absent.
-- Browser console, page and same-origin request error collections are empty.
+- Browser console, page and same-origin request error collections are empty in
+  both the isolated candidate and the post-activation run.
