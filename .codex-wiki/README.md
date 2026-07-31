@@ -167,3 +167,13 @@ The previous build is retained at
 `/home/administrator/backups/pumbum-redesign/mascot-tuning-20260731/.next-JKCl7iHZyZoerzEGWZ7YM`.
 Desktop/mobile browser QA, catalog/taxonomy/pagination/carousel, CSP, dependency
 and bounded load checks passed; production `477477.ru` was not touched.
+
+The manufacturer-only semantic follow-up is active at commit `4139f46` and
+build `sh4maH1zXLMXPQW744aKf`. Стыкович now sits on `SINIKON`, Фильтрыч remains
+on `Гидроконтракт`, and Тепловик sits on `ZOTA` with the accepted leftward
+offset; `VALTEC` no longer hosts a figure. Pose assets, scale, vertical seam,
+card geometry and mobile behavior are unchanged. Candidate and post-activation
+desktop/mobile QA, lint, TypeScript, isolation, taxonomy, CSP and dependency
+checks passed. The previous build is retained at
+`/home/administrator/backups/pumbum-redesign/manufacturer-placement-20260731/.next-KoqQfjCznzqwU-erirpnY`;
+production `477477.ru` was not touched.

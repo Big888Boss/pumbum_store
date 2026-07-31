@@ -134,3 +134,43 @@ pre-purchase advice card.
   `11 GiB` remains available; SalesGame and funding services remained running.
 
 Production `477477.ru` was not connected to, restarted or modified.
+
+## Manufacturer semantic placement follow-up
+
+The owner-approved follow-up changes only the three manufacturer-card anchors;
+the accepted transparent seated assets, scale, vertical seam, card geometry and
+mobile behavior remain unchanged.
+
+- `SINIKON`: Стыкович, using the accepted leftward seated offset;
+- `Гидроконтракт`: Фильтрыч, unchanged from the previous placement;
+- `ZOTA`: Тепловик, using the same leftward seated offset so the sparse card
+  remains unobstructed;
+- `VALTEC`: no manufacturer-card figure.
+
+### Active staging release
+
+- Implementation commit: `4139f46`
+- Active build ID: `sh4maH1zXLMXPQW744aKf`
+- Active unit: `pumbum-redesign-preview-manufacturer-placement-20260731.service`
+- Listener: `127.0.0.1:3025`
+- Tailnet and public read-only routes: unchanged
+- Exact previous-build rollback:
+  `/home/administrator/backups/pumbum-redesign/manufacturer-placement-20260731/.next-KoqQfjCznzqwU-erirpnY`
+
+### Verification
+
+- lint, TypeScript, production build, isolation, taxonomy, CSP and production
+  dependency audit: passed;
+- desktop/mobile browser QA passed before and after activation with semantic
+  assertions for all three manufacturer pairs, no figure on `VALTEC`, zero
+  runtime errors and zero horizontal overflow;
+- focused visual comparison confirms unchanged card geometry and unobstructed
+  manufacturer names, groups and links;
+- taxonomy remains `9276` products, ten categories, nine manufacturers and
+  `9354` sitemap URLs;
+- public preview remains `noindex`; `POST /api/leads` remains `405`;
+- active preview and both access gates report zero restarts; factory memory PSI
+  is zero with approximately `11 GiB` available, while SalesGame and funding
+  services remain running.
+
+Production `477477.ru` was not connected to, restarted or modified.
