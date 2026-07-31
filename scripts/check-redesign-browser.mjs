@@ -4,6 +4,18 @@ import { chromium } from 'playwright';
 
 const baseUrl = (process.env.REDESIGN_TEST_BASE_URL ?? 'http://127.0.0.1:3010').replace(/\/$/, '');
 const outputDir = process.env.REDESIGN_TEST_OUTPUT_DIR ?? '/tmp/pumbum-redesign-browser';
+const categoryMascots = {
+  vodosnabzhenie: 'Тепловик',
+  kanalizaciya: 'Стыкович',
+  filtraciya: 'Фильтрыч',
+  nasosy: 'Напорыч',
+  'smesiteli-i-sifony': 'Смесевич',
+  'otoplenie-i-kotelnaya': 'Бак Хлопотун',
+  'krepezh-dlya-montazha': 'Крепыч',
+  'truby-i-fitingi': 'Трубыч',
+  'armatura-i-komplektuyuschie': 'Арматурыч',
+  'prochee-oborudovanie': 'Крестович',
+};
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -50,6 +62,21 @@ async function assertVisibleImagesLoaded(page, label) {
     .filter((image) => image.complete && image.naturalWidth === 0)
     .map((image) => image.getAttribute('src') ?? 'unknown'));
   assert(broken.length === 0, `${label}: broken visible images: ${broken.join(', ')}`);
+}
+
+async function revealForScreenshot(page, locator) {
+  await locator.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+  const handle = await locator.elementHandle();
+  assert(handle, 'screenshot target is missing');
+  await page.waitForFunction((element) => {
+    let current = element;
+    while (current) {
+      if (Number.parseFloat(getComputedStyle(current).opacity) < 0.95) return false;
+      current = current.parentElement;
+    }
+    return true;
+  }, handle, { timeout: 4_000 });
+  await waitForImages(page);
 }
 
 await mkdir(outputDir, { recursive: true });
@@ -147,7 +174,20 @@ try {
     return top >= 70 && top <= 130;
   });
   await page.goto(`${baseUrl}/catalog/vodosnabzhenie`, { waitUntil: 'domcontentloaded' });
+  await waitForImages(page);
   assert((await page.locator('.mascot-companion, .category-mascot-runner').count()) === 0, 'desktop category: removed mascot layers are still present');
+  assert((await page.locator('.mascot-figure[data-mascot="Тепловик"]').count()) === 3, 'desktop category: expected three Teplovik placements');
+  await assertVisibleImagesLoaded(page, 'desktop category hero');
+  await page.locator('.hero .container').screenshot({ path: join(outputDir, 'category-hero-desktop-dark.png') });
+  const adviceCard = page.locator('.category-advice-card');
+  await revealForScreenshot(page, adviceCard);
+  await adviceCard.screenshot({ path: join(outputDir, 'category-advice-desktop-dark.png') });
+  await page.screenshot({ path: join(outputDir, 'category-advice-context-desktop-dark.png') });
+  const relatedHead = page.locator('.category-related-head');
+  await revealForScreenshot(page, relatedHead);
+  await relatedHead.screenshot({ path: join(outputDir, 'category-related-desktop-dark.png') });
+  await page.screenshot({ path: join(outputDir, 'category-related-context-desktop-dark.png') });
+  await page.locator('#catalog-products').scrollIntoViewIfNeeded();
   const comparisonFilterDrawer = page.locator('details.filter-drawer');
   if (!(await comparisonFilterDrawer.evaluate((element) => element.open))) {
     await comparisonFilterDrawer.locator('summary').click();
@@ -166,6 +206,14 @@ try {
   });
   assert((await page.locator('.product-list-card').count()) === 24, 'desktop pagination: expected 24 cards on page two');
 
+  for (const [categorySlug, mascotName] of Object.entries(categoryMascots)) {
+    await page.goto(`${baseUrl}/catalog/${categorySlug}`, { waitUntil: 'domcontentloaded' });
+    const figures = page.locator(`.mascot-figure[data-mascot="${mascotName}"]`);
+    assert((await figures.count()) === 3, `desktop ${categorySlug}: expected three ${mascotName} placements`);
+    assert((await page.locator('.mascot-figure-category').count()) === 3, `desktop ${categorySlug}: category figure class count is wrong`);
+    await inspectPage(page, `desktop category mascot ${categorySlug}`);
+  }
+
   await page.goto(`${baseUrl}/catalog/po-zadache`, { waitUntil: 'domcontentloaded' });
   assert((await page.locator('main form[action="/search"]').count()) === 0, 'desktop tasks: redundant global search form is still present');
 
@@ -177,9 +225,15 @@ try {
     await page.waitForFunction(() => document.querySelector('.mascot-image')?.classList.contains('is-loaded'));
     await assertVisibleImagesLoaded(page, `desktop retained page scene ${route}`);
     if (route === '/catalog/proizvoditeli') {
+      assert((await page.locator('.mascot-figure-manufacturer').count()) === 3, 'desktop manufacturers: expected three figures between cards');
+      await revealForScreenshot(page, page.locator('.manufacturer-grid'));
+      await page.locator('.manufacturer-grid').screenshot({ path: join(outputDir, 'manufacturers-grid-desktop-dark.png') });
       await page.screenshot({ path: join(outputDir, 'manufacturers-desktop-dark.png') });
     }
     if (route === '/about') {
+      assert((await page.locator('.mascot-figure-about[data-mascot="Капля"]').count()) === 1, 'desktop about: content mascot is missing');
+      await revealForScreenshot(page, page.locator('.about-layout'));
+      await page.locator('.about-layout').screenshot({ path: join(outputDir, 'about-layout-desktop-dark.png') });
       await page.screenshot({ path: join(outputDir, 'about-desktop-dark.png') });
     }
   }
@@ -214,6 +268,7 @@ try {
   await mobilePage.screenshot({ path: join(outputDir, 'catalog-mobile-dark.png') });
 
   await mobilePage.goto(`${baseUrl}/catalog/vodosnabzhenie`, { waitUntil: 'domcontentloaded' });
+  assert((await mobilePage.locator('.mascot-figure[data-mascot="Тепловик"]').count()) === 3, 'mobile category: expected three Teplovik placements');
   const carousel = mobilePage.locator('.category-product-carousel');
   await carousel.waitFor();
   const dots = carousel.locator('.category-carousel-dot');
@@ -226,6 +281,14 @@ try {
   const nextTitle = await carousel.locator('h2').innerText();
   assert(initialTitle !== nextTitle, 'mobile carousel: autoplay did not advance after five seconds');
   await mobilePage.screenshot({ path: join(outputDir, 'category-mobile-dark.png') });
+  const mobileAdviceCard = mobilePage.locator('.category-advice-card');
+  await revealForScreenshot(mobilePage, mobileAdviceCard);
+  await mobileAdviceCard.screenshot({ path: join(outputDir, 'category-advice-mobile-dark.png') });
+  await mobilePage.screenshot({ path: join(outputDir, 'category-advice-context-mobile-dark.png') });
+  const mobileRelatedHead = mobilePage.locator('.category-related-head');
+  await revealForScreenshot(mobilePage, mobileRelatedHead);
+  await mobileRelatedHead.screenshot({ path: join(outputDir, 'category-related-mobile-dark.png') });
+  await mobilePage.screenshot({ path: join(outputDir, 'category-related-context-mobile-dark.png') });
   const firstMobileProduct = mobilePage.locator('.product-list-card').first();
   await firstMobileProduct.scrollIntoViewIfNeeded();
   await mobilePage.waitForFunction(() => {
@@ -240,6 +303,16 @@ try {
   }, null, { timeout: 4_000 });
   assert((await mobilePage.locator('.mascot-companion, .category-mascot-runner').count()) === 0, 'mobile category: removed mascot layers are still present');
   await mobilePage.screenshot({ path: join(outputDir, 'category-mobile-products-dark.png') });
+
+  await mobilePage.goto(`${baseUrl}/catalog/proizvoditeli`, { waitUntil: 'domcontentloaded' });
+  assert((await mobilePage.locator('.mascot-figure-manufacturer').count()) === 3, 'mobile manufacturers: expected three figures between cards');
+  await revealForScreenshot(mobilePage, mobilePage.locator('.manufacturer-grid'));
+  await mobilePage.locator('.manufacturer-grid').screenshot({ path: join(outputDir, 'manufacturers-grid-mobile-dark.png') });
+
+  await mobilePage.goto(`${baseUrl}/about`, { waitUntil: 'domcontentloaded' });
+  assert((await mobilePage.locator('.mascot-figure-about[data-mascot="Капля"]').count()) === 1, 'mobile about: content mascot is missing');
+  await revealForScreenshot(mobilePage, mobilePage.locator('.about-layout'));
+  await mobilePage.locator('.about-layout').screenshot({ path: join(outputDir, 'about-layout-mobile-dark.png') });
 
   await mobilePage.goto(`${baseUrl}/`, { waitUntil: 'domcontentloaded' });
   await mobilePage.getByRole('button', { name: 'Переключить цветовую тему' }).click();
@@ -264,7 +337,10 @@ try {
       'information tabs',
       'scroll reveal and mascot load-in states',
       'previous accepted page mascots retained',
-      'last two added mascot layers absent',
+      'rejected companion and runner layers absent',
+      'three presentation-directed placements on every category',
+      'three manufacturer-card seam mascots',
+      'about content mascot',
       'mobile tall-catalog reveal remains visible',
       'direct phone CTAs in category guidance',
       'filter and sorting anchors',

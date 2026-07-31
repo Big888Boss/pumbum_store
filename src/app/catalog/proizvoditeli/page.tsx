@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { StaticImage } from '@/components/media/StaticImage';
 import Link from 'next/link';
+import { MascotFigure } from '@/components/layout/MascotFigure';
 import { PageMascot } from '@/components/layout/PageMascot';
 import { getManufacturerGroups } from '@/lib/catalog/loaders';
+import { MANUFACTURER_MASCOTS } from '@/lib/mascots';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
@@ -53,30 +55,45 @@ export default function ManufacturersPage() {
 
       <section className="section">
         <div className="container manufacturer-grid">
-          {manufacturers.map((manufacturer) => (
-            <article key={manufacturer.name} id={manufacturer.slug} className="manufacturer-card">
-              <div className={manufacturer.logo ? `manufacturer-logo manufacturer-logo-${manufacturer.slug}` : 'manufacturer-logo manufacturer-logo-fallback'}>
-                {manufacturer.logo ? (
-                  <StaticImage src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={170} height={70} />
-                ) : (
-                  <span>{manufacturer.name.slice(0, 2).toUpperCase()}</span>
-                )}
-              </div>
-              <div>
-                <h2><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>{manufacturer.name}</Link></h2>
-                <p>{formatPositions(manufacturer.productCount)} · {formatSections(manufacturer.categoryCount)}</p>
-                <ul className="manufacturer-sections">
-                  {manufacturer.sections.slice(0, 6).map((section) => (
-                    <li key={section}>
-                      <Link href={`/catalog/proizvoditeli/${manufacturer.slug}?group=${encodeURIComponent(section)}`}>{section}</Link>
-                    </li>
-                  ))}
-                  {manufacturer.sections.length > 6 ? <li><span>+{manufacturer.sections.length - 6} разделов</span></li> : null}
-                </ul>
-                <p className="manufacturer-section-more"><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>Все товары производителя</Link></p>
-              </div>
-            </article>
-          ))}
+          {manufacturers.map((manufacturer, index) => {
+            const mascotIndex = index >= 0 && index <= 2 ? index : -1;
+            const mascot = mascotIndex >= 0 ? MANUFACTURER_MASCOTS[mascotIndex] : undefined;
+            return (
+              <article
+                key={manufacturer.name}
+                id={manufacturer.slug}
+                className={`manufacturer-card${mascot ? ' manufacturer-card-mascot-host' : ''}`}
+              >
+                <div className={manufacturer.logo ? `manufacturer-logo manufacturer-logo-${manufacturer.slug}` : 'manufacturer-logo manufacturer-logo-fallback'}>
+                  {manufacturer.logo ? (
+                    <StaticImage src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={170} height={70} />
+                  ) : (
+                    <span>{manufacturer.name.slice(0, 2).toUpperCase()}</span>
+                  )}
+                </div>
+                <div>
+                  <h2><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>{manufacturer.name}</Link></h2>
+                  <p>{formatPositions(manufacturer.productCount)} · {formatSections(manufacturer.categoryCount)}</p>
+                  <ul className="manufacturer-sections">
+                    {manufacturer.sections.slice(0, 6).map((section) => (
+                      <li key={section}>
+                        <Link href={`/catalog/proizvoditeli/${manufacturer.slug}?group=${encodeURIComponent(section)}`}>{section}</Link>
+                      </li>
+                    ))}
+                    {manufacturer.sections.length > 6 ? <li><span>+{manufacturer.sections.length - 6} разделов</span></li> : null}
+                  </ul>
+                  <p className="manufacturer-section-more"><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>Все товары производителя</Link></p>
+                </div>
+                {mascot ? (
+                  <MascotFigure
+                    mascot={mascot}
+                    placement="manufacturer"
+                    className={`manufacturer-mascot-${mascotIndex + 1}`}
+                  />
+                ) : null}
+              </article>
+            );
+          })}
         </div>
       </section>
     </>

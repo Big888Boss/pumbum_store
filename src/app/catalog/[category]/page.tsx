@@ -4,6 +4,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { CategoryProductCarousel } from '@/components/catalog/CategoryProductCarousel';
 import { CatalogScrollRestorer } from '@/components/catalog/CatalogScrollRestorer';
 import { CallStoreButton } from '@/components/layout/CallStoreButton';
+import { MascotFigure } from '@/components/layout/MascotFigure';
 import { ProductAvailabilityBadge, ProductAvailabilityText } from '@/components/product/ProductAvailability';
 import { ProductImage } from '@/components/product/ProductImage';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -20,6 +21,7 @@ import { buildMetadata } from '@/lib/seo/metadata';
 import { getCspNonce } from '@/lib/security/nonce';
 import { getLegacyCatalogRedirect } from '@/lib/seo/legacy-redirects';
 import { getProductCardDescription, getProductVisibleDescription } from '@/lib/seo/product';
+import { getCategoryMascot } from '@/lib/mascots';
 
 type PageProps = {
   params: Promise<{ category: string }>;
@@ -452,6 +454,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     if (legacyDestination) permanentRedirect(legacyDestination);
     notFound();
   }
+  const categoryMascot = getCategoryMascot(categoryData.slug);
   const related = getRelatedProducts(product.categorySlug);
   const featuredGroupLabels = featuredProducts.map((item) => getProductGroupLabel(item) ?? item.purpose);
 
@@ -480,7 +483,10 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
               <Link className="btn btn-secondary" href="/contacts">Связаться с магазином</Link>
             </div>
           </div>
-          <CategoryProductCarousel products={featuredProducts} groupLabels={featuredGroupLabels} />
+          <div className="category-hero-media">
+            {categoryMascot ? <MascotFigure mascot={categoryMascot} placement="peek" className="mascot-figure-category" priority /> : null}
+            <CategoryProductCarousel products={featuredProducts} groupLabels={featuredGroupLabels} />
+          </div>
         </div>
       </section>
 
@@ -494,13 +500,14 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
               {featuredGroupLabels.map((label) => <li className="badge" key={label}>{label}</li>)}
             </ul>
           </article>
-          <aside className="card">
+          <aside className="card category-advice-card">
             <h2>Что уточнить перед покупкой</h2>
             <p>{categoryData.buyingGuide}</p>
             <p className="meta">Менеджер проверит параметры и совместимость конкретных артикулов до заказа.</p>
             <div className="actions info-card-actions">
               <CallStoreButton location={`category_before_purchase_${categoryData.slug}`} label="Позвонить менеджеру" />
             </div>
+            {categoryMascot ? <MascotFigure mascot={categoryMascot} placement="thoughtful" className="mascot-figure-category" /> : null}
           </aside>
         </div>
       </section>
@@ -509,7 +516,11 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
       <section className="section">
         <div className="container">
-          <div className="section-head"><h2>Связанные категории</h2><p>Комплектующие, которые часто нужны для одной инженерной системы.</p></div>
+          <div className="section-head category-related-head">
+            <h2>Связанные категории</h2>
+            <p>Комплектующие, которые часто нужны для одной инженерной системы.</p>
+            {categoryMascot ? <MascotFigure mascot={categoryMascot} placement="eureka" className="mascot-figure-category" /> : null}
+          </div>
           <div className="grid grid-3">
             {related.map((item) => (
               <Link key={item.categorySlug} className="card" href={`/catalog/${item.categorySlug}`}>
