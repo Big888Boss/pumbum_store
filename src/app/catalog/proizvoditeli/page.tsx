@@ -27,6 +27,12 @@ function formatSections(count: number): string {
   return `${count.toLocaleString('ru-RU')} ${word}`;
 }
 
+const MANUFACTURER_MASCOT_PLACEMENTS: Record<string, { mascotIndex: number; className: string }> = {
+  sinikon: { mascotIndex: 1, className: 'manufacturer-mascot-2' },
+  gidrokontrakt: { mascotIndex: 2, className: 'manufacturer-mascot-3' },
+  zota: { mascotIndex: 0, className: 'manufacturer-mascot-2' },
+};
+
 export default function ManufacturersPage() {
   const manufacturers = getManufacturerGroups();
 
@@ -55,9 +61,9 @@ export default function ManufacturersPage() {
 
       <section className="section">
         <div className="container manufacturer-grid">
-          {manufacturers.map((manufacturer, index) => {
-            const mascotIndex = index >= 0 && index <= 2 ? index : -1;
-            const mascot = mascotIndex >= 0 ? MANUFACTURER_MASCOTS[mascotIndex] : undefined;
+          {manufacturers.map((manufacturer) => {
+            const placement = MANUFACTURER_MASCOT_PLACEMENTS[manufacturer.slug];
+            const mascot = placement ? MANUFACTURER_MASCOTS[placement.mascotIndex] : undefined;
             return (
               <article
                 key={manufacturer.name}
@@ -88,7 +94,7 @@ export default function ManufacturersPage() {
                   <MascotFigure
                     mascot={mascot}
                     placement="manufacturer"
-                    className={`manufacturer-mascot-${mascotIndex + 1}`}
+                    className={placement.className}
                   />
                 ) : null}
               </article>

@@ -55,10 +55,59 @@ implementation on the right.
    pre-purchase card was rebalanced without changing either surrounding grid
    or card dimensions. New reference/implementation comparisons are stored in
    `work/pumbum-mascot-tuning-qa-20260731-v2/comparisons/`.
+6. The manufacturer-only reassignment preserves the accepted seated assets,
+   size and vertical seam geometry while changing their semantic anchors:
+   Стыкович to `SINIKON`, Фильтрыч retained on `Гидроконтракт`, and Тепловик
+   to `ZOTA` with the already accepted leftward offset. `VALTEC` no longer
+   hosts a figure.
+
+## Manufacturer reassignment evidence
+
+- Source visual truth:
+  `work/pumbum-mascot-tuning-qa-20260731-v2/manufacturers-grid-desktop-dark.png`
+  (`1232 × 2049`, CSS viewport `1280 × 847`, density `1`). This is the
+  previously accepted pose, scale and card-seam geometry.
+- Candidate implementation:
+  `work/pumbum-manufacturer-placement-qa-20260731-candidate-v2/manufacturers-grid-desktop-dark.png`
+  (`1232 × 2049`, same viewport and density).
+- Combined full/focused comparison:
+  `work/pumbum-manufacturer-placement-qa-20260731-candidate-v2/manufacturers-before-after-comparison.png`
+  (`2464 × 720`). The left side contains the prior accepted first-card
+  composition; the right side contains focused `SINIKON`, `Гидроконтракт`
+  and `ZOTA` candidate captures.
+- Focused candidate captures:
+  `manufacturer-sinikon-desktop-dark.png` (`1232 × 238`),
+  `manufacturer-gidrokontrakt-desktop-dark.png` (`1232 × 196`) and
+  `manufacturer-zota-desktop-dark.png` (`1232 × 195`). Focused views were
+  necessary because the full-grid capture makes the later `ZOTA` placement
+  too small to judge reliably.
+- Mobile implementation:
+  `manufacturers-grid-mobile-dark.png`, viewport `390 × 844`, density `1`.
+  Manufacturer figures remain intentionally hidden at this breakpoint, so
+  the semantic DOM anchors were asserted while the existing compact card
+  layout was checked for overflow.
+
+### Required fidelity surfaces
+
+- Fonts and typography: unchanged; family, weight, line height and wrapping
+  match the accepted manufacturer cards.
+- Spacing and layout rhythm: unchanged card height, padding, logo column and
+  inter-card gap. All three figures remain seated on the same lower seam.
+- Colors and visual tokens: unchanged dark/light tokens, borders and card
+  surfaces.
+- Image quality and asset fidelity: the same accepted transparent WebP poses
+  are reused without resampling, halo changes or new crops.
+- Copy and content: manufacturer names, counts, group links and CTAs are
+  unchanged and remain unobstructed.
+
+No P0, P1 or P2 mismatch remains. The semantic browser assertions verify the
+three requested manufacturer/mascot pairs and the absence of a figure on
+`VALTEC`; the desktop and mobile runs report zero runtime errors and zero
+horizontal overflow.
 
 ## Final result
 
-Passed.
+final result: passed
 
 - All ten category-to-mascot mappings render exactly three figures.
 - The figures follow the marked content seams without shifting product,

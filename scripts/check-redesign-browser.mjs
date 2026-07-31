@@ -243,6 +243,19 @@ try {
     await assertVisibleImagesLoaded(page, `desktop retained page scene ${route}`);
     if (route === '/catalog/proizvoditeli') {
       assert((await page.locator('.mascot-figure-manufacturer').count()) === 3, 'desktop manufacturers: expected three figures between cards');
+      for (const [manufacturerSlug, mascotName] of Object.entries({
+        sinikon: 'Стыкович',
+        gidrokontrakt: 'Фильтрыч',
+        zota: 'Тепловик',
+      })) {
+        assert(
+          (await page.locator(`#${manufacturerSlug} .mascot-figure-manufacturer[data-mascot="${mascotName}"]`).count()) === 1,
+          `desktop manufacturers: ${mascotName} must be seated on ${manufacturerSlug}`,
+        );
+        await revealForScreenshot(page, page.locator(`#${manufacturerSlug}`));
+        await page.locator(`#${manufacturerSlug}`).screenshot({ path: join(outputDir, `manufacturer-${manufacturerSlug}-desktop-dark.png`) });
+      }
+      assert((await page.locator('#valtec .mascot-figure-manufacturer').count()) === 0, 'desktop manufacturers: VALTEC must not host a mascot');
       await revealForScreenshot(page, page.locator('.manufacturer-grid'));
       await page.locator('.manufacturer-grid').screenshot({ path: join(outputDir, 'manufacturers-grid-desktop-dark.png') });
       await page.screenshot({ path: join(outputDir, 'manufacturers-desktop-dark.png') });
@@ -323,6 +336,17 @@ try {
 
   await mobilePage.goto(`${baseUrl}/catalog/proizvoditeli`, { waitUntil: 'domcontentloaded' });
   assert((await mobilePage.locator('.mascot-figure-manufacturer').count()) === 3, 'mobile manufacturers: expected three figures between cards');
+  for (const [manufacturerSlug, mascotName] of Object.entries({
+    sinikon: 'Стыкович',
+    gidrokontrakt: 'Фильтрыч',
+    zota: 'Тепловик',
+  })) {
+    assert(
+      (await mobilePage.locator(`#${manufacturerSlug} .mascot-figure-manufacturer[data-mascot="${mascotName}"]`).count()) === 1,
+      `mobile manufacturers: ${mascotName} must remain attached to ${manufacturerSlug}`,
+    );
+  }
+  assert((await mobilePage.locator('#valtec .mascot-figure-manufacturer').count()) === 0, 'mobile manufacturers: VALTEC must not host a mascot');
   await revealForScreenshot(mobilePage, mobilePage.locator('.manufacturer-grid'));
   await mobilePage.locator('.manufacturer-grid').screenshot({ path: join(outputDir, 'manufacturers-grid-mobile-dark.png') });
 
