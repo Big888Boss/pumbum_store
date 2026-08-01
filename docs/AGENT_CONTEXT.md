@@ -96,3 +96,23 @@
 - коммитить `.data/leads.jsonl` или другие файлы с заявками/PII;
 - переносить `server_data/admin/users.json`;
 - коммитить весь `public/images` без отдельного решения по asset strategy.
+
+## Active isolated redesign staging — 2026-08-01
+
+- Source commit: `5ae1fb8`
+- Build: `E4IO4uqeibUwYb9MjOG6P`
+- Unit: `pumbum-redesign-preview-mobile-responsive-20260801.service`
+- App listener: `127.0.0.1:3025`
+- Tailnet preview: `http://100.95.56.90:3027/`
+- Exact rollback:
+  `/home/administrator/backups/pumbum-redesign/mobile-responsive-20260801/.next-7amE_klJPTk9sNkUGIEkJ`
+- At `1120px` and below, category hero figures use the ten transparent
+  `public/images/mascots/pose-v3/*-top-peek-v3.webp` assets. Desktop keeps the
+  accepted side-peek pose.
+- Mobile/tablet manufacturer and About content figures are intentionally
+  visible in reserved seams. Do not restore the old blanket mobile
+  `display:none` rule.
+- Mobile menu close behavior is implemented in the client `SiteHeader` and is
+  covered by Escape, outside-pointer and navigation assertions.
+- Browser QA covers desktop, phone and tablet. Production `477477.ru` was not
+  changed by this release.

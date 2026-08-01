@@ -214,3 +214,47 @@ mobile behavior remain unchanged.
   services remain running.
 
 Production `477477.ru` was not connected to, restarted or modified.
+
+## Responsive top-peek and mobile content follow-up — 2026-08-01
+
+The narrow-layout pass keeps the accepted desktop composition and replaces the
+unsafe category side-peek only at `1120px` and below. Each category owner has a
+dedicated transparent top-peek WebP with both hands on the carousel upper
+border. The product image and supplier safe zone remain unobstructed.
+
+- mobile/tablet manufacturer figures are visible between their existing host
+  cards (`SINIKON`, `Гидроконтракт`, `ZOTA`);
+- the About content figure is visible below the copy card;
+- thoughtful and related-category figures remain visible in reserved seams;
+- the mobile menu now closes on Escape, an outside pointer action and route
+  navigation;
+- typography, catalog content, prices, sorting, filters and routes are
+  unchanged.
+
+### Active staging release
+
+- Implementation commit: `5ae1fb8`
+- Active build ID: `E4IO4uqeibUwYb9MjOG6P`
+- Active unit: `pumbum-redesign-preview-mobile-responsive-20260801.service`
+- Listener: `127.0.0.1:3025`
+- Tailnet gate: `100.95.56.90:3027`
+- Public read-only gate: `127.0.0.1:3028`
+- Exact previous-build rollback:
+  `/home/administrator/backups/pumbum-redesign/mobile-responsive-20260801/.next-7amE_klJPTk9sNkUGIEkJ`
+
+### Verification
+
+- candidate and post-activation browser QA passed at `1280x847`, `820x1180`
+  and `390x844`, with zero runtime errors and zero horizontal overflow;
+- all menu close paths, responsive pose switching, mobile manufacturer/About
+  visibility, carousel autoplay and supplier layering passed;
+- lint, TypeScript, isolated production build, isolation, taxonomy, full
+  pagination, CSP and production dependency audit passed;
+- taxonomy remains `9276` products, ten categories, nine manufacturers and
+  `9354` sitemap URLs;
+- active app and both access gates have zero restarts; Tailnet and public
+  read-only routes return `200`, while public `POST /api/leads` remains `405`;
+- build peak was `3.1 GiB` with zero swap; active app is approximately
+  `402 MiB`.
+
+Production `477477.ru` was not connected to, restarted or modified.

@@ -188,3 +188,16 @@ previous build is retained at
 Candidate and post-activation desktop/mobile QA, geometry assertions, lint,
 TypeScript, isolation, taxonomy, CSP and dependency checks passed; production
 `477477.ru` was not touched.
+
+The 2026-08-01 responsive follow-up is active on isolated staging at commit
+`5ae1fb8` and build `E4IO4uqeibUwYb9MjOG6P`. At widths up to `1120px`, all ten
+category owners switch from the desktop side-peek to dedicated transparent
+top-peek assets that grip the carousel upper edge without entering the product
+or supplier-logo safe zone. Manufacturer figures and the About content figure
+are now visible in reserved phone/tablet seams. The mobile menu closes on
+Escape, outside pointer input and route navigation. Candidate and active runs
+passed desktop `1280x847`, tablet `820x1180` and phone `390x844` browser QA,
+lint, TypeScript, isolation, taxonomy, full pagination, CSP and dependency
+checks. The exact rollback is
+`/home/administrator/backups/pumbum-redesign/mobile-responsive-20260801/.next-7amE_klJPTk9sNkUGIEkJ`;
+production `477477.ru` was not touched.
