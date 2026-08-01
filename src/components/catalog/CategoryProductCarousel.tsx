@@ -3,17 +3,21 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { MascotFigure } from '@/components/layout/MascotFigure';
 import { ProductImage } from '@/components/product/ProductImage';
 import type { Product } from '@/entities/product/model';
+import type { MascotAsset } from '@/lib/mascots';
 
 const AUTOPLAY_DELAY_MS = 2400;
 
 export function CategoryProductCarousel({
   products,
   groupLabels,
+  mascot,
 }: {
   products: Product[];
   groupLabels?: string[];
+  mascot?: MascotAsset;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -64,7 +68,7 @@ export function CategoryProductCarousel({
 
   return (
     <section
-      className="category-product-carousel"
+      className={`category-product-carousel${mascot ? ' category-product-carousel-has-mascot' : ''}`}
       aria-label="Рекомендуемые товары раздела"
       data-carousel-size={products.length}
       data-carousel-groups={groupLabels?.join('|')}
@@ -72,6 +76,7 @@ export function CategoryProductCarousel({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {mascot ? <MascotFigure mascot={mascot} placement="peek" className="mascot-figure-category" priority /> : null}
       <div className="category-carousel-image" key={`${activeProduct.slug}-image`}>
         <ProductImage
           src={activeProduct.image}

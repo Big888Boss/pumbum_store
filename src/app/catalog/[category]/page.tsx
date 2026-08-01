@@ -484,8 +484,11 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
             </div>
           </div>
           <div className="category-hero-media">
-            {categoryMascot ? <MascotFigure mascot={getCategoryMascotPose(categoryMascot, 'peek')} placement="peek" className="mascot-figure-category" priority /> : null}
-            <CategoryProductCarousel products={featuredProducts} groupLabels={featuredGroupLabels} />
+            <CategoryProductCarousel
+              products={featuredProducts}
+              groupLabels={featuredGroupLabels}
+              mascot={categoryMascot ? getCategoryMascotPose(categoryMascot, 'peek') : undefined}
+            />
           </div>
         </div>
       </section>

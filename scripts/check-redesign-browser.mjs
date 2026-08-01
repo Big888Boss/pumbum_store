@@ -79,6 +79,37 @@ async function revealForScreenshot(page, locator) {
   await waitForImages(page);
 }
 
+async function assertNarrowCategoryMascotGeometry(page, categorySlug, mascotName, label) {
+  await page.evaluate(() => document.fonts.ready);
+  const figures = page.locator(`.mascot-figure[data-mascot="${mascotName}"]`);
+  assert((await figures.count()) === 3, `${label}: expected three ${mascotName} placements`);
+
+  const peek = page.locator('.mascot-figure-peek');
+  const frame = page.locator('.category-product-carousel .product-frame').first();
+  const peekBox = await peek.boundingBox();
+  const frameBox = await frame.boundingBox();
+  assert(peekBox && frameBox, `${label}: top-peek geometry is unavailable`);
+  const frameOverlap = peekBox.y + peekBox.height - frameBox.y;
+  assert(frameOverlap >= 2 && frameOverlap <= 8, `${label}: top-peek frame overlap is ${Math.round(frameOverlap)}px`);
+
+  const adviceCard = page.locator('.category-advice-card');
+  await revealForScreenshot(page, adviceCard);
+  const callButton = adviceCard.locator('a[href^="tel:+78452477477"]').first();
+  const thoughtful = adviceCard.locator('.mascot-figure-thoughtful');
+  const adviceBox = await adviceCard.boundingBox();
+  const buttonBox = await callButton.boundingBox();
+  const thoughtfulBox = await thoughtful.boundingBox();
+  const productsHeadingBox = await page.locator('#catalog-products h2').first().boundingBox();
+  assert(adviceBox && buttonBox && thoughtfulBox && productsHeadingBox, `${label}: advice geometry is unavailable`);
+  const buttonClearance = thoughtfulBox.y - (buttonBox.y + buttonBox.height);
+  assert(buttonClearance >= 8, `${label}: thoughtful mascot overlaps the call button by ${Math.round(-buttonClearance)}px`);
+  const productsGap = productsHeadingBox.y - (adviceBox.y + adviceBox.height);
+  assert(productsGap >= 120 && productsGap <= 180, `${label}: advice-to-products gap is ${Math.round(productsGap)}px`);
+  assert(thoughtfulBox.y + thoughtfulBox.height <= productsHeadingBox.y - 6, `${label}: thoughtful mascot enters the products heading`);
+
+  return { categorySlug, frameOverlap, buttonClearance, productsGap };
+}
+
 await mkdir(outputDir, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
@@ -328,11 +359,7 @@ try {
   assert(!(await mobilePeekWide.isVisible()), 'mobile category: side-peek mascot pose must be hidden');
   const carousel = mobilePage.locator('.category-product-carousel');
   await carousel.waitFor();
-  const mobilePeekBox = await mobilePeek.boundingBox();
-  const mobileCarouselBox = await carousel.boundingBox();
-  assert(mobilePeekBox && mobileCarouselBox, 'mobile category: top-peek geometry is unavailable');
-  assert(mobilePeekBox.y + mobilePeekBox.height >= mobileCarouselBox.y - 18, 'mobile category: mascot does not grip the product-card top edge');
-  assert(mobilePeekBox.y + mobilePeekBox.height <= mobileCarouselBox.y + 26, 'mobile category: mascot overlaps too deeply into the product card');
+  await assertNarrowCategoryMascotGeometry(mobilePage, 'vodosnabzhenie', 'Тепловик', 'mobile category vodosnabzhenie');
   const dots = carousel.locator('.category-carousel-dot');
   const dotCount = await dots.count();
   assert(dotCount >= 2 && dotCount <= 3, 'mobile carousel: expected two or three quality-gated markers');
@@ -367,6 +394,19 @@ try {
   }, null, { timeout: 4_000 });
   assert((await mobilePage.locator('.mascot-companion, .category-mascot-runner').count()) === 0, 'mobile category: removed mascot layers are still present');
   await mobilePage.screenshot({ path: join(outputDir, 'category-mobile-products-dark.png') });
+
+  const mobileCategoryGeometry = [];
+  for (const [categorySlug, mascotName] of Object.entries(categoryMascots)) {
+    await mobilePage.goto(`${baseUrl}/catalog/${categorySlug}`, { waitUntil: 'domcontentloaded' });
+    await waitForImages(mobilePage);
+    mobileCategoryGeometry.push(await assertNarrowCategoryMascotGeometry(
+      mobilePage,
+      categorySlug,
+      mascotName,
+      `mobile category ${categorySlug}`,
+    ));
+    await inspectPage(mobilePage, `mobile category ${categorySlug}`);
+  }
 
   await mobilePage.goto(`${baseUrl}/catalog/proizvoditeli`, { waitUntil: 'domcontentloaded' });
   assert((await mobilePage.locator('.mascot-figure-manufacturer').count()) === 3, 'mobile manufacturers: expected three figures between cards');
@@ -413,6 +453,7 @@ try {
   await inspectPage(tabletPage, 'tablet category');
   assert(await tabletPage.locator('.mascot-figure-peek .mascot-pose-narrow').isVisible(), 'tablet category: top-peek mascot pose is not visible');
   assert(!(await tabletPage.locator('.mascot-figure-peek .mascot-pose-wide').isVisible()), 'tablet category: side-peek pose must be hidden');
+  await assertNarrowCategoryMascotGeometry(tabletPage, 'vodosnabzhenie', 'Тепловик', 'tablet category vodosnabzhenie');
   await tabletPage.screenshot({ path: join(outputDir, 'category-tablet-dark.png'), fullPage: true });
   await tabletPage.goto(`${baseUrl}/catalog/proizvoditeli`, { waitUntil: 'domcontentloaded' });
   await inspectPage(tabletPage, 'tablet manufacturers');

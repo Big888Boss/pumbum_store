@@ -2884,8 +2884,8 @@ ul:not(.badges):not(.manufacturer-sections) {
     background: var(--surface);
   }
 
-  .category-hero-media {
-    padding-top: clamp(106px, 11vw, 126px);
+  .category-product-carousel-has-mascot {
+    padding-top: clamp(114px, 14.6vw, 138px);
   }
 
   .mascot-figure-peek {
@@ -2895,6 +2895,11 @@ ul:not(.badges):not(.manufacturer-sections) {
     width: clamp(176px, 22vw, 224px);
     height: clamp(118px, 15vw, 142px);
     z-index: 4;
+  }
+
+  .category-product-carousel-has-mascot .category-carousel-image {
+    position: relative;
+    z-index: 2;
   }
 
   .mascot-figure-peek .mascot-pose-wide {
@@ -2941,10 +2946,15 @@ ul:not(.badges):not(.manufacturer-sections) {
     height: clamp(116px, 21vw, 138px);
   }
 
+  .category-product-carousel-has-mascot {
+    padding-top: clamp(112px, 20.4vw, 134px);
+  }
+
   .category-advice-card {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto;
     gap: 14px;
+    margin-bottom: 90px;
   }
 
   .category-advice-card > h2,
@@ -2963,16 +2973,13 @@ ul:not(.badges):not(.manufacturer-sections) {
     border-left: 0;
   }
 
-  .category-advice-card {
-    margin-bottom: 70px;
-  }
-
   .mascot-figure-thoughtful {
-    right: 12px;
-    bottom: -86px;
+    top: calc(100% + 10px);
+    right: 14px;
+    bottom: auto;
     display: block;
-    width: 112px;
-    height: 146px;
+    width: 100px;
+    height: 126px;
   }
 
   .category-related-head {
@@ -3221,8 +3228,8 @@ ul:not(.badges):not(.manufacturer-sections) {
     min-height: 330px;
   }
 
-  .category-hero-media {
-    padding-top: 104px;
+  .category-product-carousel-has-mascot {
+    padding-top: 112px;
   }
 
   .mascot-figure-peek {
