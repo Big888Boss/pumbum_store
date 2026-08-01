@@ -73,3 +73,54 @@ final result: passed
 - Catalog invariants remain `9276` products, ten categories, nine
   manufacturers and `9354` sitemap URLs.
 - CSP remains enforced with rotating nonce and no unsafe inline/eval policy.
+
+## Mobile category geometry corrective pass — 2026-08-01
+
+### Source visual truth
+
+- User captures: the five mobile category screenshots supplied with the
+  correction request.
+- Defects: top-peek figures floated above the technical-grid product frame;
+  thoughtful figures overlapped the call CTA; the following blank seam was
+  larger than needed.
+
+### Implementation and comparison evidence
+
+- The top-peek figure is now rendered inside `CategoryProductCarousel`, so its
+  geometry is relative to the actual product frame rather than the outer hero.
+- Ten pose-v4 assets remove only transparent bottom padding from the accepted
+  poses; character pixels and identities are unchanged.
+- Phone guidance cards use a `90px` reserved seam. The figure begins `10px`
+  below the card, after the CTA, and the resulting card-to-products gap is
+  approximately `142px` after fonts settle.
+- Candidate captures:
+  `/home/administrator/qa/pumbum-mobile-geometry-candidate-20260801c-rerun`.
+- Active captures:
+  `/home/administrator/qa/pumbum-mobile-geometry-active-final-20260801`.
+- Direct visual comparison was performed in one review input using the source
+  phone captures and the final phone top-peek/advice captures.
+
+### Automated geometry gates
+
+- All ten categories at `390x844`: three semantic mascots retained, top figure
+  overlaps the real product-frame border by only `2–8px`, CTA clearance is at
+  least `8px`, and the thoughtful figure does not enter the products heading.
+- Tablet `820x1180`: responsive pose and the same collision gates pass.
+- Desktop `1280x847`: accepted side-peek composition remains unchanged.
+- Fonts are awaited before measurements to prevent layout-race false passes.
+- Typography, copy, products, prices, supplier safe zone, sorting, filters,
+  pagination and routes are unchanged.
+
+### Final active staging release
+
+- Implementation commit: `05d1c50`
+- Build ID: `XMTbntr5PKZm4v3TAQ9X6`
+- Unit: `pumbum-redesign-preview-mobile-geometry-final-20260801.service`
+- Listener: `127.0.0.1:3025`
+- Exact rollback builds:
+  - `/home/administrator/backups/pumbum-redesign/mobile-geometry-20260801/.next-6wdXbM7NuzXGJKCS6BOyj`;
+  - `/home/administrator/backups/pumbum-redesign/mobile-geometry-20260801/.next-E4IO4uqeibUwYb9MjOG6P`.
+
+Final result: passed. Candidate and post-activation browser runs completed
+without runtime errors or horizontal overflow. Production `477477.ru` was not
+connected to, restarted or modified.

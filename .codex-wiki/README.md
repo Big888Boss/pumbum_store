@@ -178,6 +178,17 @@ checks passed. The previous build is retained at
 `/home/administrator/backups/pumbum-redesign/manufacturer-placement-20260731/.next-KoqQfjCznzqwU-erirpnY`;
 production `477477.ru` was not touched.
 
+The final 2026-08-01 mobile geometry correction is active at commit `05d1c50`
+and build `XMTbntr5PKZm4v3TAQ9X6`. On all ten category pages, the narrow
+top-peek figure is now positioned by the actual carousel/product frame and its
+accepted image has only empty alpha padding removed. The thoughtful figure
+starts below the phone CTA, while the gap before `Товары раздела` remains
+bounded and collision-free. Automated checks wait for fonts, measure all ten
+phone categories plus tablet, and retain the accepted desktop composition.
+Exact rollback builds are stored under
+`/home/administrator/backups/pumbum-redesign/mobile-geometry-20260801`.
+Production `477477.ru` was not touched.
+
 The exact-corner correction is active at commit `7f8ee9f` and build
 `7amE_klJPTk9sNkUGIEkJ`. It follows the owner's supplied crop: Стыкович now
 straddles the rounded upper-left SINIKON border with both legs hanging inside

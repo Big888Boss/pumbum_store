@@ -99,13 +99,13 @@
 
 ## Active isolated redesign staging — 2026-08-01
 
-- Source commit: `5ae1fb8`
-- Build: `E4IO4uqeibUwYb9MjOG6P`
-- Unit: `pumbum-redesign-preview-mobile-responsive-20260801.service`
+- Source commit: `05d1c50`
+- Build: `XMTbntr5PKZm4v3TAQ9X6`
+- Unit: `pumbum-redesign-preview-mobile-geometry-final-20260801.service`
 - App listener: `127.0.0.1:3025`
 - Tailnet preview: `http://100.95.56.90:3027/`
 - Exact rollback:
-  `/home/administrator/backups/pumbum-redesign/mobile-responsive-20260801/.next-7amE_klJPTk9sNkUGIEkJ`
+  `/home/administrator/backups/pumbum-redesign/mobile-geometry-20260801/.next-6wdXbM7NuzXGJKCS6BOyj`
 - At `1120px` and below, category hero figures use the ten transparent
   `public/images/mascots/pose-v3/*-top-peek-v3.webp` assets. Desktop keeps the
   accepted side-peek pose.
@@ -116,3 +116,8 @@
   covered by Escape, outside-pointer and navigation assertions.
 - Browser QA covers desktop, phone and tablet. Production `477477.ru` was not
   changed by this release.
+- Top-peek figures are hosted inside the carousel and use alpha-trimmed
+  `pose-v4` assets. Do not move them back to `.category-hero-media` or restore
+  transparent bottom padding.
+- Phone guidance cards reserve a stable post-CTA seam; geometry tests wait for
+  fonts and cover every category before activation.

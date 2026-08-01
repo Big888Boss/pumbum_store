@@ -135,6 +135,29 @@ pre-purchase advice card.
 
 Production `477477.ru` was not connected to, restarted or modified.
 
+## Mobile category edge and CTA correction — 2026-08-01
+
+The corrective pass fixes the two narrow-layout defects reported from real
+iPhone captures across all ten categories. Top-peek figures are hosted by the
+carousel itself and use alpha-trimmed pose-v4 assets, placing both hands on the
+actual technical-grid border instead of above it. Thoughtful figures begin
+below the call button and use a bounded reserved seam before `Товары раздела`.
+
+- implementation commit: `05d1c50`;
+- active build: `XMTbntr5PKZm4v3TAQ9X6`;
+- active unit: `pumbum-redesign-preview-mobile-geometry-final-20260801.service`;
+- phone, tablet and desktop browser QA: passed;
+- all ten phone category geometry gates: passed;
+- catalog invariants: `9276` products, ten categories, nine manufacturers and
+  `9354` sitemap URLs;
+- CSP remains enforced; production dependency audit reports zero
+  vulnerabilities;
+- active app and both access gates have zero restarts; memory PSI is zero.
+
+Exact rollbacks are retained under
+`/home/administrator/backups/pumbum-redesign/mobile-geometry-20260801`.
+Production `477477.ru` was not touched.
+
 ## Exact SINIKON upper-corner correction
 
 The owner supplied an exact crop of the intended upper-left SINIKON corner.
