@@ -1,153 +1,75 @@
-# Presentation mascot design QA — 2026-07-31
+# Responsive mascot design QA — 2026-08-01
 
-## Source
+## Scope
 
-- Colleague markup: `/Users/zilbertov/Downloads/Presentation.pdf`
-- Rendered source pages: `tmp/pdfs/presentation-review/page-04.png` through
-  `page-12.png`
-- Target: isolated high-end staging redesign only
-- Production `477477.ru`: outside the change
+- Target: isolated staging redesign only.
+- Production `477477.ru`: not connected to or modified.
+- Source issue: the side-peek category pose occupies the mobile product image,
+  mobile/tablet manufacturer and About content mascots are hidden, and the
+  native mobile menu remains open after the user leaves it.
 
 ## Required composition
 
-- Every category uses one semantic mascot in three independently generated
-  placements: peeking with a hand on the hero carousel edge, standing
-  thoughtfully below the pre-purchase card, and sitting on the
-  related-category explanatory line/card seam.
-- Manufacturers use three different figures between the first manufacturer
-  cards.
-- About uses one figure in the marked lower-right area of the main content
-  card.
-- Previously rejected global companion and runner layers remain absent.
+- Desktop above `1120px` retains the accepted side-peek category pose.
+- At `1120px` and below each of the ten category owners uses an independently
+  generated transparent top-peek pose: face above the technical-grid product
+  card, both hands gripping its upper border, product and supplier badge clear.
+- The three manufacturer mascots remain attached to SINIKON,
+  Гидроконтракт and ZOTA and are visible between cards on narrow layouts.
+- The About content mascot is visible below the copy card without covering
+  text.
+- Mobile menu closes on Escape, outside pointer input and route navigation.
 
 ## Viewports and states
 
-- Desktop: `1280 × 847`, dark theme
-- Mobile: `390 × 844`, dark theme
-- Additional retained checks: desktop/mobile light theme, menu, scroll reveal,
-  filters, sorting, pagination, carousel autoplay and route navigation
+- Desktop: `1280 × 847`, dark and light.
+- Phone: `390 × 844`, dark and light.
+- Tablet: `820 × 1180`, dark.
+- Runtime checks also cover scroll reveal, category pagination, carousel
+  autoplay, supplier badge layering, navigation and horizontal overflow.
 
-## Comparison inputs
+## Assets and edge QA
 
-- `work/pumbum-mascot-qa-20260731/comparisons/hero-comparison.jpg`
-- `work/pumbum-mascot-qa-20260731/comparisons/advice-comparison.jpg`
-- `work/pumbum-mascot-qa-20260731/comparisons/related-comparison.jpg`
-- `work/pumbum-mascot-qa-20260731/comparisons/manufacturers-comparison.jpg`
-- `work/pumbum-mascot-qa-20260731/comparisons/about-comparison.jpg`
+- Ten source-specific images were generated from the accepted category
+  identities and converted from a flat magenta key to transparent WebP.
+- Files: `public/images/mascots/pose-v3/*-top-peek-v3.webp`.
+- Contact sheet: `work/top-peek-contact-sheet.png`.
+- Runtime files are `55–126 KiB`; all have transparent corners and a contracted,
+  feathered matte with spill cleanup. No white halo is visible on the dark QA
+  background.
 
-Each file places the marked presentation source on the left and the candidate
-implementation on the right.
+## Comparison and implementation captures
 
-## Iteration history
+- Source/candidate phone comparison:
+  `work/mobile-category-before-after.png` (source left, candidate right).
+- Candidate phone:
+  `work/qa-candidate/category-mobile-dark.png`,
+  `work/qa-candidate/manufacturers-grid-mobile-dark.png`,
+  `work/qa-candidate/about-layout-mobile-dark.png`.
+- Candidate tablet:
+  `work/qa-candidate/category-tablet-dark.png`,
+  `work/qa-candidate/manufacturers-tablet-dark.png`,
+  `work/qa-candidate/about-tablet-dark.png`.
+- Full automated evidence on the factory:
+  `/home/administrator/qa/pumbum-mobile-responsive-candidate-20260801-rerun`.
 
-1. The rejected source pass reused generic full-body images and changed layout
-   spacing. It was not activated.
-2. Thirty slot-specific assets were generated: ten category owners multiplied
-   by peek, thoughtful and seated poses. Alpha edges were cleaned and WebP
-   runtime derivatives were kept below 120 KiB each.
-3. The corrective CSS uses absolute overlays only. It does not add margins,
-   padding, minimum heights or grid changes to product, category,
-   manufacturer or About content.
-4. Reference and implementation screenshots were combined for each marked
-   composition before the activation decision.
-5. The owner follow-up moved the hero crop inward, lowered the seated figure
-   onto the card seam and moved it to the left edge of the third card. The
-   pre-purchase card was rebalanced without changing either surrounding grid
-   or card dimensions. New reference/implementation comparisons are stored in
-   `work/pumbum-mascot-tuning-qa-20260731-v2/comparisons/`.
-6. The manufacturer-only reassignment preserves the accepted seated assets,
-   size and vertical seam geometry while changing their semantic anchors:
-   Стыкович to `SINIKON`, Фильтрыч retained on `Гидроконтракт`, and Тепловик
-   to `ZOTA` with the already accepted leftward offset. `VALTEC` no longer
-   hosts a figure.
-7. The owner clarified the exact SINIKON target with
-   `/var/folders/dp/hhvd9lhd7f7bjlflll7zfwvh0000gn/T/codex-clipboard-cf90a978-b8fd-45a2-9dfb-2edc11a167fe.png`
-   (`280 × 246`): the rounded upper-left card corner, not the lower card seam.
-   Стыкович now straddles that upper border with his legs hanging inside the
-   card; Тепловик is centered farther left on the ZOTA card. Фильтрыч remains
-   unchanged.
+## Findings
 
-## Manufacturer reassignment evidence
-
-- Source visual truth:
-  `work/pumbum-mascot-tuning-qa-20260731-v2/manufacturers-grid-desktop-dark.png`
-  (`1232 × 2049`, CSS viewport `1280 × 847`, density `1`). This is the
-  previously accepted pose, scale and card-seam geometry.
-- Candidate implementation:
-  `work/pumbum-manufacturer-placement-qa-20260731-candidate-v2/manufacturers-grid-desktop-dark.png`
-  (`1232 × 2049`, same viewport and density).
-- Combined full/focused comparison:
-  `work/pumbum-manufacturer-placement-qa-20260731-candidate-v2/manufacturers-before-after-comparison.png`
-  (`2464 × 720`). The left side contains the prior accepted first-card
-  composition; the right side contains focused `SINIKON`, `Гидроконтракт`
-  and `ZOTA` candidate captures.
-- Focused candidate captures:
-  `manufacturer-sinikon-desktop-dark.png` (`1232 × 238`),
-  `manufacturer-gidrokontrakt-desktop-dark.png` (`1232 × 196`) and
-  `manufacturer-zota-desktop-dark.png` (`1232 × 195`). Focused views were
-  necessary because the full-grid capture makes the later `ZOTA` placement
-  too small to judge reliably.
-- Mobile implementation:
-  `manufacturers-grid-mobile-dark.png`, viewport `390 × 844`, density `1`.
-  Manufacturer figures remain intentionally hidden at this breakpoint, so
-  the semantic DOM anchors were asserted while the existing compact card
-  layout was checked for overflow.
-
-### Required fidelity surfaces
-
-- Fonts and typography: unchanged; family, weight, line height and wrapping
-  match the accepted manufacturer cards.
-- Spacing and layout rhythm: unchanged card height, padding, logo column and
-  inter-card gap. All three figures remain seated on the same lower seam.
-- Colors and visual tokens: unchanged dark/light tokens, borders and card
-  surfaces.
-- Image quality and asset fidelity: the same accepted transparent WebP poses
-  are reused without resampling, halo changes or new crops.
-- Copy and content: manufacturer names, counts, group links and CTAs are
-  unchanged and remain unobstructed.
-
-No P0, P1 or P2 mismatch remains. The semantic browser assertions verify the
-three requested manufacturer/mascot pairs and the absence of a figure on
-`VALTEC`; the desktop and mobile runs report zero runtime errors and zero
-horizontal overflow.
-
-### Upper-left SINIKON correction
-
-- Target crop:
-  `/var/folders/dp/hhvd9lhd7f7bjlflll7zfwvh0000gn/T/codex-clipboard-cf90a978-b8fd-45a2-9dfb-2edc11a167fe.png`
-  (`280 × 246`).
-- Candidate context:
-  `work/pumbum-manufacturer-corner-qa-20260731-candidate-v2/manufacturer-sinikon-context-desktop-dark.png`
-  (`1280 × 847`, CSS viewport `1280 × 847`, density `1`).
-- Same-input focused comparison:
-  `work/pumbum-manufacturer-corner-qa-20260731-candidate-v2/sinikon-corner-reference-comparison.png`
-  (`800 × 300`). The target is on the left and the implementation crop is on
-  the right.
-- Geometry assertions require the SINIKON figure to cross only the card's left
-  edge, remain above the top border, and hang no more than `96px` into the
-  card. The ZOTA figure center must remain within `48px` of the `1280px`
-  viewport center.
-- Visual result: the seated body is above the marked rounded corner, both legs
-  hang inside the SINIKON card, the logo and all text remain clear, and the
-  ZOTA figure is centered without covering its sparse content. Typography,
-  colors, image assets, copy, card dimensions and mobile layout are unchanged.
+- Top-peek hands intersect only the carousel border band; the face does not
+  overlap the product or top-right supplier safe zone.
+- Manufacturer and About figures are visible on phone/tablet and occupy
+  reserved inter-card seams rather than text areas.
+- Typography, product content, pricing, catalog order, links and desktop
+  composition are unchanged.
+- No horizontal overflow, broken visible images, console errors, page errors
+  or failed same-origin requests were detected.
+- Menu close behavior passes all three interaction paths.
 
 ## Final result
 
 final result: passed
 
-- All ten category-to-mascot mappings render exactly three figures.
-- The figures follow the marked content seams without shifting product,
-  manufacturer or category cards.
-- Supplier/product content and all text remain above or outside decorative
-  overlays; no mascot covers a CTA or product title.
-- Desktop and mobile have no horizontal overflow.
-- The call button remains clickable and unobstructed.
-- Existing accepted hero/footer mascots remain; rejected companion/runner
-  layers are absent.
-- Browser console, page and same-origin request error collections are empty in
-  both the isolated candidate and the post-activation run.
-- The follow-up browser check also asserts placement geometry numerically:
-  the hero figure overlaps the carousel by `40px`, the seated figure's anchor
-  stays on the left seam of the third card and the phone action uses the
-  intended lower inset.
+- Candidate browser run exited `0` across all three viewports.
+- Catalog invariants remain `9276` products, ten categories, nine
+  manufacturers and `9354` sitemap URLs.
+- CSP remains enforced with rotating nonce and no unsafe inline/eval policy.

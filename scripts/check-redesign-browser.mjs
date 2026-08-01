@@ -307,15 +307,32 @@ try {
   const mobileCatalogLink = mobilePage.locator('.mobile-menu-nav a[href="/catalog"]');
   assert(await mobileCatalogLink.isVisible(), 'mobile menu: catalog link is not visible');
   await mobilePage.screenshot({ path: join(outputDir, 'home-mobile-menu-open.png') });
+  await mobilePage.keyboard.press('Escape');
+  assert(!(await mobilePage.locator('.mobile-menu').evaluate((element) => element.open)), 'mobile menu did not close on Escape');
+  await menuButton.click();
+  await mobilePage.locator('main h1').click({ position: { x: 2, y: 2 } });
+  assert(!(await mobilePage.locator('.mobile-menu').evaluate((element) => element.open)), 'mobile menu did not close after an outside click');
+  await menuButton.click();
   await mobileCatalogLink.click();
   await mobilePage.waitForURL(`${baseUrl}/catalog`);
+  assert(!(await mobilePage.locator('.mobile-menu').evaluate((element) => element.open)), 'mobile menu remained open after navigation');
   await inspectPage(mobilePage, 'mobile catalog');
   await mobilePage.screenshot({ path: join(outputDir, 'catalog-mobile-dark.png') });
 
   await mobilePage.goto(`${baseUrl}/catalog/vodosnabzhenie`, { waitUntil: 'domcontentloaded' });
   assert((await mobilePage.locator('.mascot-figure[data-mascot="Тепловик"]').count()) === 3, 'mobile category: expected three Teplovik placements');
+  const mobilePeek = mobilePage.locator('.mascot-figure-peek');
+  const mobilePeekNarrow = mobilePeek.locator('.mascot-pose-narrow');
+  const mobilePeekWide = mobilePeek.locator('.mascot-pose-wide');
+  assert(await mobilePeekNarrow.isVisible(), 'mobile category: top-peek mascot pose is not visible');
+  assert(!(await mobilePeekWide.isVisible()), 'mobile category: side-peek mascot pose must be hidden');
   const carousel = mobilePage.locator('.category-product-carousel');
   await carousel.waitFor();
+  const mobilePeekBox = await mobilePeek.boundingBox();
+  const mobileCarouselBox = await carousel.boundingBox();
+  assert(mobilePeekBox && mobileCarouselBox, 'mobile category: top-peek geometry is unavailable');
+  assert(mobilePeekBox.y + mobilePeekBox.height >= mobileCarouselBox.y - 18, 'mobile category: mascot does not grip the product-card top edge');
+  assert(mobilePeekBox.y + mobilePeekBox.height <= mobileCarouselBox.y + 26, 'mobile category: mascot overlaps too deeply into the product card');
   const dots = carousel.locator('.category-carousel-dot');
   const dotCount = await dots.count();
   assert(dotCount >= 2 && dotCount <= 3, 'mobile carousel: expected two or three quality-gated markers');
@@ -328,10 +345,12 @@ try {
   await mobilePage.screenshot({ path: join(outputDir, 'category-mobile-dark.png') });
   const mobileAdviceCard = mobilePage.locator('.category-advice-card');
   await revealForScreenshot(mobilePage, mobileAdviceCard);
+  assert(await mobileAdviceCard.locator('.mascot-figure-thoughtful').isVisible(), 'mobile category: thoughtful mascot is hidden');
   await mobileAdviceCard.screenshot({ path: join(outputDir, 'category-advice-mobile-dark.png') });
   await mobilePage.screenshot({ path: join(outputDir, 'category-advice-context-mobile-dark.png') });
   const mobileRelatedHead = mobilePage.locator('.category-related-head');
   await revealForScreenshot(mobilePage, mobileRelatedHead);
+  assert(await mobileRelatedHead.locator('.mascot-figure-seated').isVisible(), 'mobile category: seated mascot is hidden');
   await mobileRelatedHead.screenshot({ path: join(outputDir, 'category-related-mobile-dark.png') });
   await mobilePage.screenshot({ path: join(outputDir, 'category-related-context-mobile-dark.png') });
   const firstMobileProduct = mobilePage.locator('.product-list-card').first();
@@ -360,6 +379,10 @@ try {
       (await mobilePage.locator(`#${manufacturerSlug} .mascot-figure-manufacturer[data-mascot="${mascotName}"]`).count()) === 1,
       `mobile manufacturers: ${mascotName} must remain attached to ${manufacturerSlug}`,
     );
+    assert(
+      await mobilePage.locator(`#${manufacturerSlug} .mascot-figure-manufacturer[data-mascot="${mascotName}"]`).isVisible(),
+      `mobile manufacturers: ${mascotName} is hidden`,
+    );
   }
   assert((await mobilePage.locator('#valtec .mascot-figure-manufacturer').count()) === 0, 'mobile manufacturers: VALTEC must not host a mascot');
   await revealForScreenshot(mobilePage, mobilePage.locator('.manufacturer-grid'));
@@ -367,6 +390,7 @@ try {
 
   await mobilePage.goto(`${baseUrl}/about`, { waitUntil: 'domcontentloaded' });
   assert((await mobilePage.locator('.mascot-figure-about[data-mascot="Крепыч"]').count()) === 1, 'mobile about: content mascot is missing');
+  assert(await mobilePage.locator('.mascot-figure-about[data-mascot="Крепыч"]').isVisible(), 'mobile about: content mascot is hidden');
   await revealForScreenshot(mobilePage, mobilePage.locator('.about-layout'));
   await mobilePage.locator('.about-layout').screenshot({ path: join(outputDir, 'about-layout-mobile-dark.png') });
 
@@ -376,6 +400,30 @@ try {
   await mobilePage.screenshot({ path: join(outputDir, 'home-mobile-light.png') });
   await mobile.close();
 
+  const tablet = await browser.newContext({
+    locale: 'ru-RU',
+    viewport: { width: 820, height: 1180 },
+    deviceScaleFactor: 1,
+    userAgent: 'Mozilla/5.0 pumbum-redesign-tablet-check/1.0 Chrome/130 Safari/537.36',
+  });
+  const tabletPage = await tablet.newPage();
+  collectRuntimeErrors(tabletPage, runtimeErrors);
+  await tabletPage.goto(`${baseUrl}/catalog/vodosnabzhenie`, { waitUntil: 'domcontentloaded' });
+  await waitForImages(tabletPage);
+  await inspectPage(tabletPage, 'tablet category');
+  assert(await tabletPage.locator('.mascot-figure-peek .mascot-pose-narrow').isVisible(), 'tablet category: top-peek mascot pose is not visible');
+  assert(!(await tabletPage.locator('.mascot-figure-peek .mascot-pose-wide').isVisible()), 'tablet category: side-peek pose must be hidden');
+  await tabletPage.screenshot({ path: join(outputDir, 'category-tablet-dark.png'), fullPage: true });
+  await tabletPage.goto(`${baseUrl}/catalog/proizvoditeli`, { waitUntil: 'domcontentloaded' });
+  await inspectPage(tabletPage, 'tablet manufacturers');
+  assert((await tabletPage.locator('.mascot-figure-manufacturer:visible').count()) === 3, 'tablet manufacturers: figures are not visible between cards');
+  await tabletPage.screenshot({ path: join(outputDir, 'manufacturers-tablet-dark.png'), fullPage: true });
+  await tabletPage.goto(`${baseUrl}/about`, { waitUntil: 'domcontentloaded' });
+  await inspectPage(tabletPage, 'tablet about');
+  assert(await tabletPage.locator('.mascot-figure-about').isVisible(), 'tablet about: content mascot is hidden');
+  await tabletPage.screenshot({ path: join(outputDir, 'about-tablet-dark.png'), fullPage: true });
+  await tablet.close();
+
   assert(runtimeErrors.length === 0, `browser runtime errors: ${runtimeErrors.join(' | ')}`);
 
   console.log(JSON.stringify({
@@ -383,11 +431,12 @@ try {
     viewports: {
       desktop: { width: 1280, height: 847, deviceScaleFactor: 1 },
       mobile: { width: 390, height: 844, deviceScaleFactor: 1 },
+      tablet: { width: 820, height: 1180, deviceScaleFactor: 1 },
     },
     checked: [
       'dark/light theme and persistence',
       'desktop/mobile horizontal overflow',
-      'mobile menu',
+      'mobile menu closes on Escape, outside click, and navigation',
       'catalog and search',
       'product image and contact CTA',
       'information tabs',
@@ -397,6 +446,7 @@ try {
       'three presentation-directed placements on every category',
       'three manufacturer-card seam mascots',
       'about content mascot',
+      'responsive top-peek category mascots on mobile and tablet',
       'mobile tall-catalog reveal remains visible',
       'direct phone CTAs in category guidance',
       'filter and sorting anchors',

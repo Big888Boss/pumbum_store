@@ -17,13 +17,26 @@ export function MascotFigure({ mascot, placement, priority = false, className = 
       data-mascot={mascot.name}
       aria-hidden="true"
     >
-      <StaticImage
-        src={mascot.src}
-        alt=""
-        width={720}
-        height={720}
-        priority={priority}
-      />
+      <span className={mascot.narrowSrc ? 'mascot-pose-wide' : undefined}>
+        <StaticImage
+          src={mascot.src}
+          alt=""
+          width={720}
+          height={720}
+          priority={priority}
+        />
+      </span>
+      {mascot.narrowSrc ? (
+        <span className="mascot-pose-narrow">
+          <StaticImage
+            src={mascot.narrowSrc}
+            alt=""
+            width={720}
+            height={720}
+            priority={priority}
+          />
+        </span>
+      ) : null}
     </span>
   );
 }

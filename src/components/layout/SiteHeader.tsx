@@ -1,5 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import { Menu, Phone } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { useCallback, useEffect, useRef } from 'react';
 import { MetrikaGoalAnchor } from '@/components/analytics/MetrikaEvents';
 import { StoreLogo } from '@/components/layout/StoreLogo';
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
@@ -18,10 +22,10 @@ const navigation = [
   { href: '/contacts', label: 'Контакты' },
 ] as const;
 
-function HeaderNavigation({ className }: { className: string }) {
+function HeaderNavigation({ className, onNavigate }: { className: string; onNavigate?: () => void }) {
   return (
     <nav className={className} aria-label="Основная навигация">
-      {navigation.map((item) => <Link href={item.href} key={item.href}>{item.label}</Link>)}
+      {navigation.map((item) => <Link href={item.href} key={item.href} onClick={onNavigate}>{item.label}</Link>)}
     </nav>
   );
 }
@@ -42,6 +46,32 @@ function HeaderPhone({ phone, location, className }: { phone: string; location: 
 }
 
 export function SiteHeader({ phone }: SiteHeaderProps) {
+  const pathname = usePathname();
+  const menuRef = useRef<HTMLDetailsElement>(null);
+  const closeMenu = useCallback(() => {
+    if (menuRef.current) menuRef.current.open = false;
+  }, []);
+
+  useEffect(() => {
+    closeMenu();
+  }, [pathname, closeMenu]);
+
+  useEffect(() => {
+    const onPointerDown = (event: PointerEvent) => {
+      const menu = menuRef.current;
+      if (menu?.open && event.target instanceof Node && !menu.contains(event.target)) closeMenu();
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeMenu();
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [closeMenu]);
+
   return (
     <header className="header">
       <div className="container header-row">
@@ -53,10 +83,10 @@ export function SiteHeader({ phone }: SiteHeaderProps) {
         <div className="header-actions">
           <ThemeToggle />
           <HeaderPhone phone={phone} location="header" className="phone-link phone-link-desktop" />
-          <details className="mobile-menu">
+          <details className="mobile-menu" ref={menuRef}>
             <summary className="mobile-menu-toggle"><Menu aria-hidden="true" /><span>Меню</span></summary>
             <div className="mobile-menu-panel">
-              <HeaderNavigation className="mobile-menu-nav" />
+              <HeaderNavigation className="mobile-menu-nav" onNavigate={closeMenu} />
               <HeaderPhone phone={phone} location="mobile_menu" className="phone-link mobile-menu-phone" />
             </div>
           </details>

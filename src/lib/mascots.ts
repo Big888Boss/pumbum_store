@@ -1,11 +1,13 @@
 export type MascotAsset = {
   src: string;
+  narrowSrc?: string;
   name: string;
 };
 
 export type CategoryMascotAsset = {
   name: string;
   peekSrc: string;
+  topPeekSrc: string;
   thoughtfulSrc: string;
   seatedSrc: string;
 };
@@ -19,60 +21,70 @@ export const CATEGORY_MASCOTS: Record<string, CategoryMascotAsset> = {
   vodosnabzhenie: {
     name: 'Тепловик',
     peekSrc: '/images/mascots/pose-v2/teplovik-peek-v2.webp',
+    topPeekSrc: '/images/mascots/pose-v3/teplovik-top-peek-v3.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/teplovik-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/teplovik-seated-v2.webp',
   },
   kanalizaciya: {
     name: 'Стыкович',
     peekSrc: '/images/mascots/pose-v2/stykovich-peek-v2.webp',
+    topPeekSrc: '/images/mascots/pose-v3/stykovich-top-peek-v3.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/stykovich-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/stykovich-seated-v2.webp',
   },
   filtraciya: {
     name: 'Фильтрыч',
     peekSrc: '/images/mascots/pose-v2/filtrych-peek-v2.webp',
+    topPeekSrc: '/images/mascots/pose-v3/filtrych-top-peek-v3.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/filtrych-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/filtrych-seated-v2.webp',
   },
   nasosy: {
     name: 'Напорыч',
     peekSrc: '/images/mascots/pose-v2/naporych-peek-v2.webp',
+    topPeekSrc: '/images/mascots/pose-v3/naporych-top-peek-v3.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/naporych-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/naporych-seated-v2.webp',
   },
   'smesiteli-i-sifony': {
     name: 'Смесевич',
     peekSrc: '/images/mascots/pose-v2/smesevich-peek-v2.webp',
+    topPeekSrc: '/images/mascots/pose-v3/smesevich-top-peek-v3.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/smesevich-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/smesevich-seated-v2.webp',
   },
   'otoplenie-i-kotelnaya': {
     name: 'Бак Хлопотун',
     peekSrc: '/images/mascots/pose-v2/bak-hlopotun-peek-v2.webp',
+    topPeekSrc: '/images/mascots/pose-v3/bak-hlopotun-top-peek-v3.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/bak-hlopotun-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/bak-hlopotun-seated-v2.webp',
   },
   'krepezh-dlya-montazha': {
     name: 'Крепыч',
     peekSrc: '/images/mascots/pose-v2/krepych-peek-v2.webp',
+    topPeekSrc: '/images/mascots/pose-v3/krepych-top-peek-v3.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/krepych-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/krepych-seated-v2.webp',
   },
   'truby-i-fitingi': {
     name: 'Трубыч',
     peekSrc: '/images/mascots/pose-v2/trubych-peek-v2.webp',
+    topPeekSrc: '/images/mascots/pose-v3/trubych-top-peek-v3.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/trubych-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/trubych-seated-v2.webp',
   },
   'armatura-i-komplektuyuschie': {
     name: 'Арматурыч',
     peekSrc: '/images/mascots/pose-v2/armaturych-peek-v2.webp',
+    topPeekSrc: '/images/mascots/pose-v3/armaturych-top-peek-v3.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/armaturych-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/armaturych-seated-v2.webp',
   },
   'prochee-oborudovanie': {
     name: 'Крестович',
     peekSrc: '/images/mascots/pose-v2/krestovich-peek-v2.webp',
+    topPeekSrc: '/images/mascots/pose-v3/krestovich-top-peek-v3.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/krestovich-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/krestovich-seated-v2.webp',
   },
@@ -95,5 +107,9 @@ export function getCategoryMascotPose(
   pose: 'peek' | 'thoughtful' | 'seated',
 ): MascotAsset {
   const src = pose === 'peek' ? mascot.peekSrc : pose === 'thoughtful' ? mascot.thoughtfulSrc : mascot.seatedSrc;
-  return { src, name: mascot.name };
+  return {
+    src,
+    narrowSrc: pose === 'peek' ? mascot.topPeekSrc : undefined,
+    name: mascot.name,
+  };
 }

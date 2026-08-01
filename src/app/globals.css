@@ -766,6 +766,20 @@ p {
   filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.32));
 }
 
+.mascot-pose-wide,
+.mascot-pose-narrow {
+  width: 100%;
+  height: 100%;
+}
+
+.mascot-pose-wide {
+  display: block;
+}
+
+.mascot-pose-narrow {
+  display: none;
+}
+
 .category-hero-media {
   position: relative;
   min-width: 0;
@@ -2869,6 +2883,27 @@ ul:not(.badges):not(.manufacturer-sections) {
     border-radius: 7px;
     background: var(--surface);
   }
+
+  .category-hero-media {
+    padding-top: clamp(106px, 11vw, 126px);
+  }
+
+  .mascot-figure-peek {
+    top: 0;
+    right: auto;
+    left: clamp(20px, 5vw, 58px);
+    width: clamp(176px, 22vw, 224px);
+    height: clamp(118px, 15vw, 142px);
+    z-index: 4;
+  }
+
+  .mascot-figure-peek .mascot-pose-wide {
+    display: none;
+  }
+
+  .mascot-figure-peek .mascot-pose-narrow {
+    display: block;
+  }
 }
 
 @media (max-width: 900px) {
@@ -2899,11 +2934,11 @@ ul:not(.badges):not(.manufacturer-sections) {
   }
 
   .mascot-figure-peek {
-    top: 10px;
+    top: 0;
     right: auto;
-    left: 8px;
-    width: 122px;
-    height: 160px;
+    left: clamp(18px, 6vw, 42px);
+    width: clamp(166px, 30vw, 206px);
+    height: clamp(116px, 21vw, 138px);
   }
 
   .category-advice-card {
@@ -2928,11 +2963,71 @@ ul:not(.badges):not(.manufacturer-sections) {
     border-left: 0;
   }
 
-  .mascot-figure-thoughtful,
-  .mascot-figure-seated,
+  .category-advice-card {
+    margin-bottom: 70px;
+  }
+
+  .mascot-figure-thoughtful {
+    right: 12px;
+    bottom: -86px;
+    display: block;
+    width: 112px;
+    height: 146px;
+  }
+
+  .category-related-head {
+    min-height: 112px;
+    padding-right: 126px;
+  }
+
+  .mascot-figure-seated {
+    right: 8px;
+    bottom: -70px;
+    display: block;
+    width: 118px;
+    height: 150px;
+  }
+
+  .manufacturer-card-mascot-host {
+    margin-bottom: 72px;
+  }
+
   .mascot-figure-manufacturer,
+  .manufacturer-mascot-2,
+  .manufacturer-mascot-3,
+  .manufacturer-mascot-sinikon,
+  .manufacturer-mascot-zota {
+    top: auto;
+    right: 14px;
+    bottom: -82px;
+    left: auto;
+    display: block;
+    width: 118px;
+    height: 150px;
+  }
+
+  .manufacturer-mascot-sinikon {
+    right: auto;
+    left: 14px;
+  }
+
+  .manufacturer-mascot-zota {
+    right: calc(50% - 59px);
+  }
+
+  .about-copy-mascot-host {
+    margin-bottom: 82px;
+    overflow: visible;
+  }
+
   .mascot-figure-about {
-    display: none;
+    top: auto;
+    right: 14px;
+    bottom: -92px;
+    display: block;
+    width: 126px;
+    height: 164px;
+    z-index: 4;
   }
 
   .delivery-checklist {
@@ -3126,10 +3221,24 @@ ul:not(.badges):not(.manufacturer-sections) {
     min-height: 330px;
   }
 
+  .category-hero-media {
+    padding-top: 104px;
+  }
+
   .mascot-figure-peek {
-    top: 8px;
-    left: 6px;
-    width: 102px;
+    top: 0;
+    left: 18px;
+    width: 164px;
+    height: 116px;
+  }
+
+  .category-related-head {
+    min-height: 102px;
+    padding-right: 112px;
+  }
+
+  .mascot-figure-seated {
+    width: 104px;
     height: 136px;
   }
 
