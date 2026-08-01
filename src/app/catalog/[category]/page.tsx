@@ -217,7 +217,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
   const activeCount = activeCatalogFilterCount(selected);
 
   return (
-    <section className="section" id="catalog-products">
+    <section className="section category-products-section" id="catalog-products">
       <CatalogScrollRestorer />
       <div className="container">
         <div className="section-head">

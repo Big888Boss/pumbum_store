@@ -90,7 +90,7 @@ async function assertNarrowCategoryMascotGeometry(page, categorySlug, mascotName
   const frameBox = await frame.boundingBox();
   assert(peekBox && frameBox, `${label}: top-peek geometry is unavailable`);
   const frameOverlap = peekBox.y + peekBox.height - frameBox.y;
-  assert(frameOverlap >= 2 && frameOverlap <= 8, `${label}: top-peek frame overlap is ${Math.round(frameOverlap)}px`);
+  assert(frameOverlap >= 10 && frameOverlap <= 16, `${label}: top-peek frame overlap is ${Math.round(frameOverlap)}px`);
 
   const adviceCard = page.locator('.category-advice-card');
   await revealForScreenshot(page, adviceCard);
@@ -99,13 +99,23 @@ async function assertNarrowCategoryMascotGeometry(page, categorySlug, mascotName
   const adviceBox = await adviceCard.boundingBox();
   const buttonBox = await callButton.boundingBox();
   const thoughtfulBox = await thoughtful.boundingBox();
-  const productsHeadingBox = await page.locator('#catalog-products h2').first().boundingBox();
-  assert(adviceBox && buttonBox && thoughtfulBox && productsHeadingBox, `${label}: advice geometry is unavailable`);
+  const productsTitleBox = await page.locator('#catalog-products h2').first().boundingBox();
+  const productsCopyBox = await page.locator('#catalog-products .section-head > div > p').first().boundingBox();
+  assert(adviceBox && buttonBox && thoughtfulBox && productsTitleBox && productsCopyBox, `${label}: advice geometry is unavailable`);
   const buttonClearance = thoughtfulBox.y - (buttonBox.y + buttonBox.height);
   assert(buttonClearance >= 8, `${label}: thoughtful mascot overlaps the call button by ${Math.round(-buttonClearance)}px`);
-  const productsGap = productsHeadingBox.y - (adviceBox.y + adviceBox.height);
-  assert(productsGap >= 120 && productsGap <= 180, `${label}: advice-to-products gap is ${Math.round(productsGap)}px`);
-  assert(thoughtfulBox.y + thoughtfulBox.height <= productsHeadingBox.y - 6, `${label}: thoughtful mascot enters the products heading`);
+  const viewportWidth = page.viewportSize()?.width ?? 1280;
+  const productsGap = productsTitleBox.y - (adviceBox.y + adviceBox.height);
+  if (viewportWidth <= 640) {
+    const titleHorizontalClearance = thoughtfulBox.x - (productsTitleBox.x + productsTitleBox.width);
+    const copyClearance = productsCopyBox.y - (thoughtfulBox.y + thoughtfulBox.height);
+    assert(productsTitleBox.y >= thoughtfulBox.y + 32 && productsTitleBox.y <= thoughtfulBox.y + thoughtfulBox.height - 24, `${label}: products title is not vertically aligned beside the mascot`);
+    assert(titleHorizontalClearance >= 4, `${label}: products title overlaps the thoughtful mascot by ${Math.round(-titleHorizontalClearance)}px`);
+    assert(copyClearance >= 4 && copyClearance <= 14, `${label}: products copy clearance below mascot is ${Math.round(copyClearance)}px`);
+  } else {
+    assert(productsGap >= 120 && productsGap <= 180, `${label}: advice-to-products gap is ${Math.round(productsGap)}px`);
+    assert(thoughtfulBox.y + thoughtfulBox.height <= productsTitleBox.y - 6, `${label}: thoughtful mascot enters the products heading`);
+  }
 
   return { categorySlug, frameOverlap, buttonClearance, productsGap };
 }

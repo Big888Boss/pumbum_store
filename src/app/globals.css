@@ -2889,7 +2889,7 @@ ul:not(.badges):not(.manufacturer-sections) {
   }
 
   .mascot-figure-peek {
-    top: 0;
+    top: 8px;
     right: auto;
     left: clamp(20px, 5vw, 58px);
     width: clamp(176px, 22vw, 224px);
@@ -2939,7 +2939,7 @@ ul:not(.badges):not(.manufacturer-sections) {
   }
 
   .mascot-figure-peek {
-    top: 0;
+    top: 8px;
     right: auto;
     left: clamp(18px, 6vw, 42px);
     width: clamp(166px, 30vw, 206px);
@@ -3233,10 +3233,19 @@ ul:not(.badges):not(.manufacturer-sections) {
   }
 
   .mascot-figure-peek {
-    top: 0;
+    top: 8px;
     left: 18px;
     width: 164px;
     height: 116px;
+  }
+
+  .category-products-section .section-head {
+    margin-top: -104px;
+  }
+
+  .category-products-section .section-head h2 {
+    max-width: calc(100% - 122px);
+    min-height: 76px;
   }
 
   .category-related-head {
