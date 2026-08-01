@@ -2996,7 +2996,8 @@ ul:not(.badges):not(.manufacturer-sections) {
   }
 
   .manufacturer-card-mascot-host {
-    margin-bottom: 72px;
+    margin-bottom: 0;
+    z-index: 2;
   }
 
   .mascot-figure-manufacturer,
@@ -3005,8 +3006,8 @@ ul:not(.badges):not(.manufacturer-sections) {
   .manufacturer-mascot-sinikon,
   .manufacturer-mascot-zota {
     top: auto;
-    right: 14px;
-    bottom: -82px;
+    right: 4px;
+    bottom: -68px;
     left: auto;
     display: block;
     width: 118px;
@@ -3014,12 +3015,14 @@ ul:not(.badges):not(.manufacturer-sections) {
   }
 
   .manufacturer-mascot-sinikon {
+    top: -62px;
     right: auto;
-    left: 14px;
+    bottom: auto;
+    left: 10px;
   }
 
   .manufacturer-mascot-zota {
-    right: calc(50% - 59px);
+    right: 4px;
   }
 
   .about-copy-mascot-host {
@@ -3309,6 +3312,25 @@ ul:not(.badges):not(.manufacturer-sections) {
     grid-template-columns: 1fr;
     border-radius: 14px;
     padding: 16px;
+  }
+
+  .mascot-figure-manufacturer,
+  .manufacturer-mascot-2,
+  .manufacturer-mascot-3,
+  .manufacturer-mascot-zota {
+    right: -2px;
+    bottom: -60px;
+    width: 104px;
+    height: 132px;
+  }
+
+  .manufacturer-mascot-sinikon {
+    top: -88px;
+    right: auto;
+    bottom: auto;
+    left: 8px;
+    width: 104px;
+    height: 132px;
   }
 
   .manufacturer-logo {

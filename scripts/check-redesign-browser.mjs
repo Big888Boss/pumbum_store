@@ -120,6 +120,69 @@ async function assertNarrowCategoryMascotGeometry(page, categorySlug, mascotName
   return { categorySlug, frameOverlap, buttonClearance, productsGap };
 }
 
+function boxesIntersect(a, b, inset = 0) {
+  return a.x < b.x + b.width - inset
+    && a.x + a.width > b.x + inset
+    && a.y < b.y + b.height - inset
+    && a.y + a.height > b.y + inset;
+}
+
+async function assertResponsiveManufacturerMascotGeometry(page, label) {
+  await page.evaluate(() => document.fonts.ready);
+  const cards = page.locator('.manufacturer-card');
+  await cards.evaluateAll((elements) => elements.forEach((element) => element.classList.add('is-revealed')));
+  await page.waitForFunction(() => [...document.querySelectorAll('.manufacturer-card')].every((element) => {
+    const style = getComputedStyle(element);
+    return Number.parseFloat(style.opacity) > 0.99 && (style.transform === 'none' || style.transform === 'matrix(1, 0, 0, 1, 0, 0)');
+  }));
+  const cardBoxes = await cards.evaluateAll((elements) => elements.map((element) => {
+    const rect = element.getBoundingClientRect();
+    return { id: element.id, x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+  }));
+  assert(cardBoxes.length >= 8, `${label}: manufacturer card geometry is unavailable`);
+
+  const verticalGaps = cardBoxes.slice(0, -1).map((card, index) => (
+    cardBoxes[index + 1].y - (card.y + card.height)
+  ));
+  const referenceGap = verticalGaps.find((gap) => gap > 0) ?? 0;
+  for (const gap of verticalGaps) {
+    assert(Math.abs(gap - referenceGap) <= 2, `${label}: uneven manufacturer card gap ${Math.round(gap)}px vs ${Math.round(referenceGap)}px`);
+  }
+  assert(referenceGap >= 14 && referenceGap <= 18, `${label}: manufacturer card gap is ${Math.round(referenceGap)}px`);
+
+  const placements = [
+    { host: 'sinikon', selector: '.manufacturer-mascot-sinikon', edge: 'top-left' },
+    { host: 'gidrokontrakt', selector: '.manufacturer-mascot-3', edge: 'bottom-right' },
+    { host: 'zota', selector: '.manufacturer-mascot-zota', edge: 'bottom-right' },
+  ];
+
+  for (const placement of placements) {
+    const card = page.locator(`#${placement.host}`);
+    const mascot = card.locator(placement.selector);
+    const cardBox = await card.boundingBox();
+    const mascotBox = await mascot.boundingBox();
+    const allProductsBox = await card.locator('.manufacturer-section-more a').boundingBox();
+    assert(cardBox && mascotBox && allProductsBox, `${label}: ${placement.host} geometry is unavailable`);
+    assert(!boxesIntersect(mascotBox, allProductsBox, 2), `${label}: ${placement.host} mascot covers “Все товары производителя”`);
+
+    if (placement.edge === 'top-left') {
+      const leftOffset = mascotBox.x - cardBox.x;
+      const overlap = mascotBox.y + mascotBox.height - cardBox.y;
+      assert(leftOffset >= 0 && leftOffset <= 16, `${label}: Стыкович left offset is ${Math.round(leftOffset)}px`);
+      assert(mascotBox.y < cardBox.y, `${label}: Стыкович is not seated above SINIKON`);
+      assert(overlap >= 34 && overlap <= 90, `${label}: Стыкович overlap into SINIKON is ${Math.round(overlap)}px`);
+    } else {
+      const rightOffset = cardBox.x + cardBox.width - (mascotBox.x + mascotBox.width);
+      const seamOverlap = mascotBox.y + mascotBox.height - (cardBox.y + cardBox.height);
+      assert(rightOffset >= -4 && rightOffset <= 16, `${label}: ${placement.host} mascot right offset is ${Math.round(rightOffset)}px`);
+      assert(mascotBox.y < cardBox.y + cardBox.height, `${label}: ${placement.host} mascot does not sit on the lower border`);
+      assert(seamOverlap >= 48 && seamOverlap <= 74, `${label}: ${placement.host} seam overlap is ${Math.round(seamOverlap)}px`);
+    }
+  }
+
+  return { referenceGap, cardBoxes };
+}
+
 await mkdir(outputDir, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
@@ -435,6 +498,11 @@ try {
     );
   }
   assert((await mobilePage.locator('#valtec .mascot-figure-manufacturer').count()) === 0, 'mobile manufacturers: VALTEC must not host a mascot');
+  await assertResponsiveManufacturerMascotGeometry(mobilePage, 'mobile manufacturers');
+  for (const manufacturerSlug of ['sinikon', 'gidrokontrakt', 'zota']) {
+    await revealForScreenshot(mobilePage, mobilePage.locator(`#${manufacturerSlug}`));
+    await mobilePage.locator(`#${manufacturerSlug}`).screenshot({ path: join(outputDir, `manufacturer-${manufacturerSlug}-mobile-dark.png`) });
+  }
   await revealForScreenshot(mobilePage, mobilePage.locator('.manufacturer-grid'));
   await mobilePage.locator('.manufacturer-grid').screenshot({ path: join(outputDir, 'manufacturers-grid-mobile-dark.png') });
 
@@ -468,6 +536,11 @@ try {
   await tabletPage.goto(`${baseUrl}/catalog/proizvoditeli`, { waitUntil: 'domcontentloaded' });
   await inspectPage(tabletPage, 'tablet manufacturers');
   assert((await tabletPage.locator('.mascot-figure-manufacturer:visible').count()) === 3, 'tablet manufacturers: figures are not visible between cards');
+  await assertResponsiveManufacturerMascotGeometry(tabletPage, 'tablet manufacturers');
+  for (const manufacturerSlug of ['sinikon', 'gidrokontrakt', 'zota']) {
+    await revealForScreenshot(tabletPage, tabletPage.locator(`#${manufacturerSlug}`));
+    await tabletPage.locator(`#${manufacturerSlug}`).screenshot({ path: join(outputDir, `manufacturer-${manufacturerSlug}-tablet-dark.png`) });
+  }
   await tabletPage.screenshot({ path: join(outputDir, 'manufacturers-tablet-dark.png'), fullPage: true });
   await tabletPage.goto(`${baseUrl}/about`, { waitUntil: 'domcontentloaded' });
   await inspectPage(tabletPage, 'tablet about');
