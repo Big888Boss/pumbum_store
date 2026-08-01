@@ -99,15 +99,13 @@
 
 ## Active isolated redesign staging — 2026-08-01
 
-- Source commit: `65cb51d`
-- Build: `6ifPip-yNQOrJD9gbAXST`
-- Unit: `pumbum-redesign-preview-mobile-composition-final-20260801.service`
+- Implementation commit: `074a2f9`
+- Build: `QZnoOkwbi7rClrMSQP2nG`
+- Unit: `pumbum-redesign-preview-manufacturer-responsive-20260801.service`
 - App listener: `127.0.0.1:3025`
 - Tailnet preview: `http://100.95.56.90:3027/`
 - Exact previous-build rollback:
-  `/home/administrator/backups/pumbum-redesign/mobile-composition-20260801/.next-CkM2fMHxqyyBr5tPBja5R`
-- Pre-correction build retained at:
-  `/home/administrator/backups/pumbum-redesign/mobile-composition-20260801/.next-XMTbntr5PKZm4v3TAQ9X6`
+  `/home/administrator/backups/pumbum-redesign/manufacturer-responsive-20260801/.next-6ifPip-yNQOrJD9gbAXST`
 - At `1120px` and below, category hero figures use the ten transparent
   `public/images/mascots/pose-v3/*-top-peek-v3.webp` assets. Desktop keeps the
   accepted side-peek pose.
@@ -129,3 +127,13 @@
 - The `Товары раздела` title occupies the left safe zone beside the thoughtful
   figure; the following product-count copy starts `4-14px` below the figure's
   feet. The card, CTA and catalog content were not moved or changed.
+- Manufacturer mascot geometry is per character at responsive widths; do not
+  restore one generic offset or reserve extra flow height after mascot cards.
+- At phone and tablet widths, manufacturer-card gaps remain `16px`:
+  Стыкович attaches to the upper-left SINIKON corner, Фильтрыч to the lower-right
+  Гидроконтракт seam toward AQUARIO, and Тепловик to the lower-right ZOTA seam
+  toward TIM. Their layers must not cover supplier logos, copy or the
+  `Все товары производителя` links.
+- `scripts/check-manufacturer-responsive-browser.mjs` is the focused geometry
+  gate. The full `redesign:check-browser` suite also covers all three placements
+  at desktop, tablet and phone viewports.

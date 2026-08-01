@@ -13,6 +13,7 @@ The current production implementation notes are maintained in `docs/`.
 - Current redesign performance release: `docs/REDESIGN_PERFORMANCE_RELEASE_2026-07-29.md`
 - Current redesign UX and mascot release: `docs/REDESIGN_UX_MASCOTS_RELEASE_2026-07-30.md`
 - Current presentation-directed mascot release: `docs/REDESIGN_PRESENTATION_MASCOTS_RELEASE_2026-07-31.md`
+- Current responsive manufacturer mascot release: `docs/MANUFACTURER_RESPONSIVE_RELEASE_2026-08-01.md`
 - Performance release: `docs/PERFORMANCE_RELEASE_2026-07-11.md`
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`
@@ -223,3 +224,15 @@ phone browser QA, taxonomy, full pagination, CSP and carousel checks passed.
 The exact previous build is retained at
 `/home/administrator/backups/pumbum-redesign/mobile-composition-20260801/.next-CkM2fMHxqyyBr5tPBja5R`;
 production `477477.ru` was not changed.
+
+The 2026-08-01 manufacturer responsive seam correction is active at
+implementation commit `074a2f9` and build `QZnoOkwbi7rClrMSQP2nG`.
+Desktop placement remains unchanged. At tablet and phone widths, Стыкович is
+attached to the upper-left SINIKON corner, Фильтрыч sits on the lower
+Гидроконтракт seam toward AQUARIO, and Тепловик sits on the lower ZOTA seam
+toward TIM. All manufacturer-card gaps remain `16px`; figures do not cover
+logos, copy or the manufacturer links. Focused geometry and the full storefront
+browser suite passed at `1280x847`, `820x1180` and `390x844`. The exact prior
+build remains under
+`/home/administrator/backups/pumbum-redesign/manufacturer-responsive-20260801`.
+Production `477477.ru` was not changed.
