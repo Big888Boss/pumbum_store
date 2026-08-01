@@ -135,6 +135,51 @@ pre-purchase advice card.
 
 Production `477477.ru` was not connected to, restarted or modified.
 
+## Final phone composition alignment — 2026-08-01
+
+This follow-up applies the owner's two measured phone corrections to all ten
+category pages without changing products, prices, filters, routes, cards or
+desktop composition.
+
+- every narrow top-peek figure is lowered into the carousel frame; the tested
+  frame overlap is `10-16px` and the reference category measures `12px`, so the
+  horizontal crop line is hidden and the palms sit on the card;
+- the `Товары раздела` heading is raised into the left safe zone beside the
+  thoughtful figure instead of starting below a large empty block;
+- the product-count copy begins `4-14px` below the mascot feet across all ten
+  poses; on the reference category the upper and lower composition gaps are
+  `9px` and `13px`;
+- the supplier-logo safe zone, call button, carousel product image and mobile
+  filters remain collision-free.
+
+### Active staging release
+
+- Implementation commit: `65cb51d`
+- Active build ID: `6ifPip-yNQOrJD9gbAXST`
+- Active unit: `pumbum-redesign-preview-mobile-composition-final-20260801.service`
+- Listener: `127.0.0.1:3025`
+- Tailnet preview: `http://100.95.56.90:3027/`
+- Public read-only preview:
+  `https://giving-moves-winds-sig.trycloudflare.com/`
+- Exact previous-build rollback:
+  `/home/administrator/backups/pumbum-redesign/mobile-composition-20260801/.next-CkM2fMHxqyyBr5tPBja5R`
+
+### Verification
+
+- candidate and post-activation browser QA passed at `1280x847`, `820x1180`
+  and `390x844`, including all ten category geometries, with zero runtime
+  errors and zero horizontal overflow;
+- taxonomy, full pagination, CSP and ten-category carousel checks passed;
+- taxonomy remains `9276` products, ten categories, nine manufacturers and
+  `9354` sitemap URLs;
+- Tailnet and public preview routes return `200`; public `POST /api/leads`
+  remains blocked with `405`, and the preview remains `noindex`;
+- active app reports zero restarts; memory PSI is zero with approximately
+  `11 GiB` available; SalesGame and funding services remained running.
+
+Production `477477.ru` was not changed; a read-only public check returned
+`200` after staging activation.
+
 ## Mobile category edge and CTA correction — 2026-08-01
 
 The corrective pass fixes the two narrow-layout defects reported from real

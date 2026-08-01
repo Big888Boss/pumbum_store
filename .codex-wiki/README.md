@@ -212,3 +212,14 @@ lint, TypeScript, isolation, taxonomy, full pagination, CSP and dependency
 checks. The exact rollback is
 `/home/administrator/backups/pumbum-redesign/mobile-responsive-20260801/.next-7amE_klJPTk9sNkUGIEkJ`;
 production `477477.ru` was not touched.
+
+The final 2026-08-01 phone composition alignment is active at commit
+`65cb51d` and build `6ifPip-yNQOrJD9gbAXST`. Across all ten category pages,
+top-peek figures now overlap the carousel frame by `10-16px`, hiding the crop
+line and placing their hands on the frame. The `Товары раздела` heading uses
+the left safe zone beside the thoughtful figure, while the product-count copy
+starts `4-14px` below its feet. Candidate and post-switch desktop, tablet and
+phone browser QA, taxonomy, full pagination, CSP and carousel checks passed.
+The exact previous build is retained at
+`/home/administrator/backups/pumbum-redesign/mobile-composition-20260801/.next-CkM2fMHxqyyBr5tPBja5R`;
+production `477477.ru` was not changed.
