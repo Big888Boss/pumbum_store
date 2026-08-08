@@ -43,7 +43,8 @@ function collectRuntimeErrors(page, target) {
     const errorText = request.failure()?.errorText ?? 'unknown';
     const isCancelledNextPrefetch = errorText === 'net::ERR_ABORTED' && new URL(url).searchParams.has('_rsc');
     const isCancelledImageOnNavigation = errorText === 'net::ERR_ABORTED' && request.resourceType() === 'image';
-    if (isCancelledNextPrefetch || isCancelledImageOnNavigation) return;
+    const isCancelledMediaOnNavigation = errorText === 'net::ERR_ABORTED' && request.resourceType() === 'media';
+    if (isCancelledNextPrefetch || isCancelledImageOnNavigation || isCancelledMediaOnNavigation) return;
     target.push(`requestfailed: ${url} :: ${errorText}`);
   });
 }

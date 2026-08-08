@@ -14,6 +14,7 @@ The current production implementation notes are maintained in `docs/`.
 - Current redesign UX and mascot release: `docs/REDESIGN_UX_MASCOTS_RELEASE_2026-07-30.md`
 - Current presentation-directed mascot release: `docs/REDESIGN_PRESENTATION_MASCOTS_RELEASE_2026-07-31.md`
 - Current responsive manufacturer mascot release: `docs/MANUFACTURER_RESPONSIVE_RELEASE_2026-08-01.md`
+- Current category 3D video release: `docs/CATEGORY_3D_VIDEO_RELEASE_2026-08-08.md`
 - Performance release: `docs/PERFORMANCE_RELEASE_2026-07-11.md`
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`
@@ -236,3 +237,14 @@ browser suite passed at `1280x847`, `820x1180` and `390x844`. The exact prior
 build remains under
 `/home/administrator/backups/pumbum-redesign/manufacturer-responsive-20260801`.
 Production `477477.ru` was not changed.
+
+The 2026-08-08 category-video release is active only on isolated staging at
+build `VrSm6Yp1QPN1nYTJVNRbY`. Each of the ten catalog categories now has one
+semantically matched, optimized 3D product video immediately after the
+`Товары раздела` summary. Media loads only near the viewport, plays while
+visible, pauses out of view and becomes a static poster for reduced-motion
+users. Candidate and post-switch checks passed all 30 phone/tablet/desktop
+combinations plus full storefront, taxonomy, pagination, CSP, dependency and
+bounded-load regressions. The previous build is retained at
+`/home/administrator/backups/pumbum-redesign/category-videos-20260808/.next-QZnoOkwbi7rClrMSQP2nG`;
+production `477477.ru` was not changed.

@@ -1,3 +1,37 @@
+# Design QA — category 3D video release
+
+Date: 2026-08-08
+
+## Reference and implementation comparison
+
+The supplied mobile reference places the new media directly after the
+`Товары раздела` heading area. The implementation screenshot was compared
+beside that reference at the same narrow-page state. The existing heading,
+product-count copy, mascot safe zone and category tags remain in their accepted
+order; the video occupies a separate full-width frame between the section
+summary and the tags.
+
+## Visual checks
+
+- Existing typography, color, border, radius, shadow and grid tokens are reused.
+- The 16:9 subject remains fully visible without stretching or cropping.
+- Phone `390x844`, tablet `820x1180` and desktop `1280x847` have balanced
+  spacing and no horizontal overflow.
+- Supplier/product imagery and all previously accepted mascot placements stay
+  unobstructed.
+- Poster, playing and paused states keep the same geometry, avoiding layout
+  shift.
+- The `3D-обзор` label and caption remain legible in dark and light themes.
+
+## Interaction checks
+
+- No playback controls, fullscreen, download or picture-in-picture UI.
+- Source attaches only near the viewport and playback begins at 42% visibility.
+- Playback pauses out of view and when the document is hidden.
+- Reduced-motion users receive the static poster without attaching video.
+- All 30 category/viewport combinations pass with no runtime errors.
+
+Final result: passed.
 # Responsive mascot design QA — 2026-08-01
 
 ## Scope
@@ -175,3 +209,5 @@ final result: passed
 - The focused geometry suite and the complete storefront browser suite both
   exited `0` after activation. Runtime errors: none.
 - Production `477477.ru` was not changed.
+
+---

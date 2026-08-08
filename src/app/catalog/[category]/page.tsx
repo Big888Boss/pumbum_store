@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { CategoryProductCarousel } from '@/components/catalog/CategoryProductCarousel';
+import { CategorySectionVideo } from '@/components/catalog/CategorySectionVideo';
 import { CatalogScrollRestorer } from '@/components/catalog/CatalogScrollRestorer';
 import { CallStoreButton } from '@/components/layout/CallStoreButton';
 import { MascotFigure } from '@/components/layout/MascotFigure';
@@ -14,6 +15,7 @@ import type { CatalogFilterKey, CatalogFilterSelection } from '@/lib/catalog/fil
 import { activeCatalogFilterCount, applyCatalogFilters, buildCatalogFilters, getProductGroupLabel, parseCatalogFilterSelection, priceRangeLabel } from '@/lib/catalog/filters';
 import { getCatalogSubcategories, getCategoryBySlug, getFeaturedProductsByCategory, getProductsByCategory, getRelatedProducts } from '@/lib/catalog/loaders';
 import { formatProductPrice } from '@/lib/catalog/pricing';
+import { getCategoryVideo } from '@/lib/catalog/category-videos';
 import { getProductImage } from '@/lib/catalog/product-images';
 import { getProductDistinctionFacts, getProductKeyFacts } from '@/lib/catalog/specs';
 import { categoryJsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld';
@@ -201,7 +203,9 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   });
 }
 
-function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode, sort, requestedPage }: { categorySlug: string; products: Product[]; baseProducts: Product[]; selected: CatalogFilterSelection; viewMode: CatalogViewMode; sort: CatalogSortMode; requestedPage: number }) {
+function ProductGrid({ category, products, baseProducts, selected, viewMode, sort, requestedPage }: { category: Category; products: Product[]; baseProducts: Product[]; selected: CatalogFilterSelection; viewMode: CatalogViewMode; sort: CatalogSortMode; requestedPage: number }) {
+  const categorySlug = category.slug;
+  const categoryVideo = getCategoryVideo(categorySlug);
   const pageCount = Math.max(1, Math.ceil(products.length / productsPerPage));
   const currentPage = Math.min(Math.max(requestedPage, 1), pageCount);
   const startIndex = (currentPage - 1) * productsPerPage;
@@ -231,6 +235,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
           </div>
           {products.length > 0 ? <p className="meta">Показаны позиции {visibleStart.toLocaleString('ru-RU')}–{visibleEnd.toLocaleString('ru-RU')} из {products.length.toLocaleString('ru-RU')}.</p> : null}
         </div>
+        {categoryVideo ? <CategorySectionVideo categoryName={category.name} video={categoryVideo} /> : null}
         {productGroups.length > 0 ? (
           <div className="catalog-groups" aria-label="Группы товаров раздела">
             {productGroups.map((group) => (
@@ -430,7 +435,7 @@ function RadiatorsCategoryView({ category, product, products, related, viewMode,
           </div>
         </div>
       </section>
-      <ProductGrid categorySlug={category.slug} products={sortCatalogProducts(products, sort)} baseProducts={products} selected={{}} viewMode={viewMode} sort={sort} requestedPage={page} />
+      <ProductGrid category={category} products={sortCatalogProducts(products, sort)} baseProducts={products} selected={{}} viewMode={viewMode} sort={sort} requestedPage={page} />
       <CategoryExpertText category={category} />
     </>
   );
@@ -514,7 +519,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
           </aside>
         </div>
       </section>
-      <ProductGrid categorySlug={categoryData.slug} products={filteredProducts} baseProducts={categoryProducts} selected={selectedFilters} viewMode={viewMode} sort={sort} requestedPage={page} />
+      <ProductGrid category={categoryData} products={filteredProducts} baseProducts={categoryProducts} selected={selectedFilters} viewMode={viewMode} sort={sort} requestedPage={page} />
       <CategoryExpertText category={categoryData} />
 
       <section className="section">

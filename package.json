@@ -22,6 +22,8 @@
     "catalog:check-taxonomy": "node scripts/check-category-taxonomy.mjs",
     "catalog:check-navigation": "node scripts/check-category-taxonomy.mjs",
     "catalog:check-carousels-browser": "node scripts/check-category-carousels-browser.mjs",
+    "catalog:check-category-videos": "node scripts/check-category-videos.mjs",
+    "catalog:check-category-videos-browser": "node scripts/check-category-videos-browser.mjs",
     "redesign:check-browser": "node scripts/check-redesign-browser.mjs",
     "catalog:check-legacy-purpose-redirects": "node scripts/check-legacy-purpose-redirect-coverage.mjs",
     "images:audit": "node scripts/audit-product-images.mjs",
@@ -54,6 +56,7 @@
   "overrides": {
     "brace-expansion": "5.0.8",
     "js-yaml": "^4.3.0",
+    "nanoid": "3.3.17",
     "postcss": "8.5.24",
     "sharp": "0.35.3"
   },
