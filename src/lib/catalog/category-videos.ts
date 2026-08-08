@@ -25,8 +25,8 @@ export function getCategoryVideo(categorySlug: string): CategoryVideo | undefine
   return {
     slug: categorySlug,
     label,
-    src: `/videos/categories/${categorySlug}.mp4`,
-    poster: `/videos/categories/posters/${categorySlug}.jpg`,
+    src: `/videos/categories/hq-v2/${categorySlug}.mp4`,
+    poster: `/videos/categories/hq-v2/posters/${categorySlug}.jpg`,
   };
 }
 

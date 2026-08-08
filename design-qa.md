@@ -32,6 +32,26 @@ summary and the tags.
 - All 30 category/viewport combinations pass with no runtime errors.
 
 Final result: passed.
+
+## Source-quality 720p follow-up — 2026-08-08
+
+- The supplied `1280x720` H.264 picture stream is preserved without a lossy
+  transcode; only unused audio is removed and MP4 fast-start metadata is added.
+- The existing 16:9 component geometry is unchanged. Phone media remains inside
+  the content gutters, tablet media is bounded, and desktop media remains capped
+  at `860px` instead of expanding to the viewport.
+- Automated browser QA measures all ten categories at `390x844`, `820x1180`
+  and `1280x847`, checks the actual decoded `1280x720` resolution, autoplay and
+  pause behavior, reduced-motion poster mode, and horizontal overflow.
+
+Reference `codex-clipboard-3b81c032-e0b7-46eb-9063-1a3f56724db2.jpg` and the
+candidate phone capture were inspected together in
+`work/pumbum-category-video-hq-qa-20260808/mobile-reference-vs-hq.png`.
+The media stays inside the existing content gutters and does not displace the
+heading, mascot, summary or category pills. Desktop evidence confirms the
+existing centered `860px` cap.
+
+Final result: passed.
 # Responsive mascot design QA — 2026-08-01
 
 ## Scope
@@ -161,6 +181,21 @@ connected to, restarted or modified.
 
 ---
 
+## Active source-quality video verification — 2026-08-08
+
+- Active build: `lS3jNHYnNcDbUzn_QdkMC` on loopback `3025`.
+- All ten category videos pass at phone `390x844`, tablet `820x1180` and
+  desktop `1280x847` after activation.
+- The decoded media is `1280x720`; phone and tablet retain content gutters,
+  desktop remains centered at no more than `860px`, and no page gains
+  horizontal overflow.
+- Full storefront regression passes with no console, page or same-origin
+  request errors. The supplied mobile reference and active composition were
+  reviewed together; the video is bounded and does not displace existing copy,
+  mascots or category controls.
+
+Final result: passed.
+
 # Design QA — manufacturer mascot responsive seams
 
 ## Reference
@@ -211,3 +246,11 @@ final result: passed
 - Production `477477.ru` was not changed.
 
 ---
+
+## Final current release result
+
+The active source-quality category-video release is build
+`lS3jNHYnNcDbUzn_QdkMC`. Its focused 30-combination media QA and complete
+storefront regression passed after activation; production remains untouched.
+
+Final result: passed.

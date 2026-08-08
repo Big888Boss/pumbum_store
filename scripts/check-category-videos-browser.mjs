@@ -67,7 +67,7 @@ try {
         poster: element.getAttribute('poster') ?? '',
       }));
       assert(!beforeScroll.controls, `${viewport.name}/${category}: native controls are visible`);
-      assert(beforeScroll.poster.endsWith(`/posters/${category}.jpg`), `${viewport.name}/${category}: poster mapping is wrong`);
+      assert(beforeScroll.poster.endsWith(`/hq-v2/posters/${category}.jpg`), `${viewport.name}/${category}: poster mapping is wrong`);
 
       const headingBox = await heading.boundingBox();
       const figureBox = await figure.boundingBox();
@@ -76,12 +76,21 @@ try {
       assert(gap >= -5 && gap <= 40, `${viewport.name}/${category}: heading-to-video gap is ${Math.round(gap)}px`);
       assert(figureBox.x >= 0 && figureBox.x + figureBox.width <= viewport.width + 1, `${viewport.name}/${category}: video overflows horizontally`);
       assert(Math.abs((figureBox.width / figureBox.height) - (16 / 9)) < 0.04, `${viewport.name}/${category}: video ratio regressed`);
+      if (viewport.name === 'phone') {
+        const rightGutter = viewport.width - (figureBox.x + figureBox.width);
+        assert(figureBox.x >= 12 && rightGutter >= 12, `${viewport.name}/${category}: video escaped the mobile content gutters (${Math.round(figureBox.x)}px/${Math.round(rightGutter)}px)`);
+      } else if (viewport.name === 'tablet') {
+        const rightGutter = viewport.width - (figureBox.x + figureBox.width);
+        assert(figureBox.x >= 20 && rightGutter >= 20, `${viewport.name}/${category}: video escaped the tablet content gutters (${Math.round(figureBox.x)}px/${Math.round(rightGutter)}px)`);
+      } else {
+        assert(figureBox.width <= 860, `${viewport.name}/${category}: video exceeded the desktop max width`);
+      }
 
       await figure.evaluate((element) => element.scrollIntoView({ block: 'center' }));
       await page.waitForFunction(
         (slug) => {
           const element = document.querySelector(`[data-category-video="${slug}"] video`);
-          return element instanceof HTMLVideoElement && element.currentSrc.endsWith(`/videos/categories/${slug}.mp4`);
+          return element instanceof HTMLVideoElement && element.currentSrc.endsWith(`/videos/categories/hq-v2/${slug}.mp4`);
         },
         category,
         { timeout: 10_000 },
@@ -94,6 +103,12 @@ try {
         category,
         { timeout: 10_000 },
       );
+
+      const mediaResolution = await video.evaluate((element) => ({
+        width: element.videoWidth,
+        height: element.videoHeight,
+      }));
+      assert(mediaResolution.width === 1280 && mediaResolution.height === 720, `${viewport.name}/${category}: expected 1280x720 media, got ${mediaResolution.width}x${mediaResolution.height}`);
 
       if (index === 0 && viewport.name !== 'tablet') {
         await page.screenshot({ path: join(outputDir, `${viewport.name}-${category}.png`), fullPage: false });
@@ -135,7 +150,7 @@ try {
   }));
   assert(reducedState.currentSrc === '', 'reduced-motion: video source was attached');
   assert(reducedState.paused, 'reduced-motion: video started playing');
-  assert(reducedState.poster.endsWith('/posters/vodosnabzhenie.jpg'), 'reduced-motion: poster is missing');
+  assert(reducedState.poster.endsWith('/hq-v2/posters/vodosnabzhenie.jpg'), 'reduced-motion: poster is missing');
   await reducedContext.close();
 
   assert(runtimeErrors.length === 0, `runtime errors: ${runtimeErrors.join(' | ')}`);

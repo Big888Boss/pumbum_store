@@ -20,11 +20,11 @@ for (const slug of categorySlugs) {
 for (const slug of videoSlugs) {
   if (!categorySlugs.includes(slug)) failures.push(`video mapping has unknown category ${slug}`);
 
-  const videoPath = join(root, 'public/videos/categories', `${slug}.mp4`);
-  const posterPath = join(root, 'public/videos/categories/posters', `${slug}.jpg`);
+  const videoPath = join(root, 'public/videos/categories/hq-v2', `${slug}.mp4`);
+  const posterPath = join(root, 'public/videos/categories/hq-v2/posters', `${slug}.jpg`);
   try {
     const size = statSync(videoPath).size;
-    if (size < 50_000 || size > 1_500_000) failures.push(`${slug}.mp4 has unexpected size ${size}`);
+    if (size < 1_000_000 || size > 4_000_000) failures.push(`${slug}.mp4 has unexpected size ${size}`);
     const signature = readFileSync(videoPath).subarray(4, 8).toString('ascii');
     if (signature !== 'ftyp') failures.push(`${slug}.mp4 has no MP4 ftyp signature`);
   } catch {

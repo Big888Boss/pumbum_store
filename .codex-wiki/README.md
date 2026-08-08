@@ -239,12 +239,13 @@ build remains under
 Production `477477.ru` was not changed.
 
 The 2026-08-08 category-video release is active only on isolated staging at
-build `VrSm6Yp1QPN1nYTJVNRbY`. Each of the ten catalog categories now has one
-semantically matched, optimized 3D product video immediately after the
+build `lS3jNHYnNcDbUzn_QdkMC`. Each of the ten catalog categories now has one
+semantically matched, source-quality `1280x720` 3D product video immediately after the
 `Товары раздела` summary. Media loads only near the viewport, plays while
 visible, pauses out of view and becomes a static poster for reduced-motion
-users. Candidate and post-switch checks passed all 30 phone/tablet/desktop
+users. The component keeps its existing content-column geometry and `860px`
+desktop cap. Candidate and post-switch checks passed all 30 phone/tablet/desktop
 combinations plus full storefront, taxonomy, pagination, CSP, dependency and
 bounded-load regressions. The previous build is retained at
-`/home/administrator/backups/pumbum-redesign/category-videos-20260808/.next-QZnoOkwbi7rClrMSQP2nG`;
+`/home/administrator/backups/pumbum-redesign/category-video-hq-20260808/.next-VrSm6Yp1QPN1nYTJVNRbY`;
 production `477477.ru` was not changed.
