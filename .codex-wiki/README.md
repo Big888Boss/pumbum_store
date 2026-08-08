@@ -15,6 +15,7 @@ The current production implementation notes are maintained in `docs/`.
 - Current presentation-directed mascot release: `docs/REDESIGN_PRESENTATION_MASCOTS_RELEASE_2026-07-31.md`
 - Current responsive manufacturer mascot release: `docs/MANUFACTURER_RESPONSIVE_RELEASE_2026-08-01.md`
 - Current category 3D video release: `docs/CATEGORY_3D_VIDEO_RELEASE_2026-08-08.md`
+- Current category hero correction release: `docs/CATEGORY_HERO_CORRECTIONS_RELEASE_2026-08-09.md`
 - Performance release: `docs/PERFORMANCE_RELEASE_2026-07-11.md`
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`
@@ -249,3 +250,18 @@ combinations plus full storefront, taxonomy, pagination, CSP, dependency and
 bounded-load regressions. The previous build is retained at
 `/home/administrator/backups/pumbum-redesign/category-video-hq-20260808/.next-VrSm6Yp1QPN1nYTJVNRbY`;
 production `477477.ru` was not changed.
+
+The 2026-08-09 category hero correction is active only on isolated staging at
+build `3DPRAiMccBM2DzAzrs_iA`. Desktop side-peek positions now use
+category-specific seams: Teplovik and Smesevich moved right; Filtrych,
+Naporych and Krepych moved left; Trubych and alcohol-free Krestovich use new
+inward-facing transparent poses. Narrow layouts continue using the accepted
+top-peek assets, so desktop tuning does not leak into phone or tablet.
+The mounting rail uses a new clean high-resolution transparent derivative and
+the VALTEC pipe image is replaced by a clean transparent three-pipe asset with
+no grey/black background contamination. Candidate and post-switch checks
+passed all seven corrected categories at `1280x847`, `820x1180` and `390x844`,
+plus taxonomy, full pagination, carousel/video, CSP, dependency and bounded
+load gates. Exact rollback build `lS3jNHYnNcDbUzn_QdkMC` is retained at
+`/home/administrator/backups/pumbum-redesign/category-hero-corrections-20260809/.next-lS3jNHYnNcDbUzn_QdkMC`.
+Production `477477.ru` was not connected to, restarted or modified.

@@ -493,6 +493,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
               products={featuredProducts}
               groupLabels={featuredGroupLabels}
               mascot={categoryMascot ? getCategoryMascotPose(categoryMascot, 'peek') : undefined}
+              categorySlug={categoryData.slug}
             />
           </div>
         </div>

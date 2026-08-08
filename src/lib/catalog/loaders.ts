@@ -169,6 +169,8 @@ const carouselImageOverrides: Record<string, string> = {
   'tim-c-l50-02bk': '/images/carousel-products/tim-cl5002bk.webp',
   'cimm-cm-afesb-050': '/images/carousel-products/CM.AFESB.050_0-clean.webp',
   'valtec-vt-uspd-r1-4': '/images/products/_transparent-v1/vt.uspd.r1.4-34c96a602ffde9b4-detail-22e88d2fe55dd831-detail.webp',
+  'tim-zsr-2501-5002': '/images/carousel-products/tim-zsr-2501-5002-clean-v2.webp',
+  'valtec-vtp-700-al25-20': '/images/carousel-products/valtec-vtp-700-al25-clean-v4.webp',
 };
 
 const categoryFeaturedSubcategoryOrder: Record<string, string[]> = {

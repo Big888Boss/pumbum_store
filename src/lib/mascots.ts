@@ -69,7 +69,7 @@ export const CATEGORY_MASCOTS: Record<string, CategoryMascotAsset> = {
   },
   'truby-i-fitingi': {
     name: 'Трубыч',
-    peekSrc: '/images/mascots/pose-v2/trubych-peek-v2.webp',
+    peekSrc: '/images/mascots/pose-v5/trubych-peek-right-v5.webp',
     topPeekSrc: '/images/mascots/pose-v4/trubych-top-peek-v4.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/trubych-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/trubych-seated-v2.webp',
@@ -83,7 +83,7 @@ export const CATEGORY_MASCOTS: Record<string, CategoryMascotAsset> = {
   },
   'prochee-oborudovanie': {
     name: 'Крестович',
-    peekSrc: '/images/mascots/pose-v2/krestovich-peek-v2.webp',
+    peekSrc: '/images/mascots/pose-v5/krestovich-peek-right-v5.webp',
     topPeekSrc: '/images/mascots/pose-v4/krestovich-top-peek-v4.webp',
     thoughtfulSrc: '/images/mascots/pose-v2/krestovich-thoughtful-v2.webp',
     seatedSrc: '/images/mascots/pose-v2/krestovich-seated-v2.webp',

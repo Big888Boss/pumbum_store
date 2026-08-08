@@ -14,10 +14,12 @@ export function CategoryProductCarousel({
   products,
   groupLabels,
   mascot,
+  categorySlug,
 }: {
   products: Product[];
   groupLabels?: string[];
   mascot?: MascotAsset;
+  categorySlug: string;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -70,6 +72,7 @@ export function CategoryProductCarousel({
     <section
       className={`category-product-carousel${mascot ? ' category-product-carousel-has-mascot' : ''}`}
       aria-label="Рекомендуемые товары раздела"
+      data-category={categorySlug}
       data-carousel-size={products.length}
       data-carousel-groups={groupLabels?.join('|')}
       aria-roledescription="карусель"

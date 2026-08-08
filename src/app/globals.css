@@ -799,6 +799,24 @@ p {
   z-index: 3;
 }
 
+@media (min-width: 1121px) {
+  .category-product-carousel[data-category="vodosnabzhenie"] .mascot-figure-peek,
+  .category-product-carousel[data-category="smesiteli-i-sifony"] .mascot-figure-peek {
+    right: calc(100% - 52px);
+  }
+
+  .category-product-carousel[data-category="filtraciya"] .mascot-figure-peek,
+  .category-product-carousel[data-category="nasosy"] .mascot-figure-peek,
+  .category-product-carousel[data-category="krepezh-dlya-montazha"] .mascot-figure-peek {
+    right: calc(100% - 30px);
+  }
+
+  .category-product-carousel[data-category="truby-i-fitingi"] .mascot-figure-peek,
+  .category-product-carousel[data-category="prochee-oborudovanie"] .mascot-figure-peek {
+    right: calc(100% - 44px);
+  }
+}
+
 .category-advice-card {
   position: relative;
   display: grid;

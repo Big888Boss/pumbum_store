@@ -287,7 +287,7 @@ try {
   const peekFigureBox = await page.locator('.mascot-figure-peek').boundingBox();
   assert(heroMediaBox && peekFigureBox, 'desktop category hero: placement geometry is unavailable');
   const peekOverlap = peekFigureBox.x + peekFigureBox.width - heroMediaBox.x;
-  assert(peekOverlap >= 34 && peekOverlap <= 46, `desktop category hero: peek overlap is ${peekOverlap}px instead of the intended 40px seam`);
+  assert(peekOverlap >= 46 && peekOverlap <= 58, `desktop category hero: peek overlap is ${peekOverlap}px instead of the corrected 52px seam`);
   await page.locator('.hero .container').screenshot({ path: join(outputDir, 'category-hero-desktop-dark.png') });
   const adviceCard = page.locator('.category-advice-card');
   await revealForScreenshot(page, adviceCard);

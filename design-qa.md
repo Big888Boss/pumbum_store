@@ -52,6 +52,7 @@ heading, mascot, summary or category pills. Desktop evidence confirms the
 existing centered `860px` cap.
 
 Final result: passed.
+
 # Responsive mascot design QA — 2026-08-01
 
 ## Scope
@@ -254,3 +255,26 @@ The active source-quality category-video release is build
 storefront regression passed after activation; production remains untouched.
 
 Final result: passed.
+
+---
+
+## Category hero corrections — 2026-08-09
+
+- Reference set: seven owner screenshots covering water supply, filtration,
+  pumps, mixers, fasteners, pipes and tools.
+- Comparison board:
+  `/Users/zilbertov/Documents/Codex/2026-07-25/ssh/work/pumbum-category-fixes/comparisons/all-reference-vs-candidate.png`.
+- Desktop side-peek offsets now match the requested left/right directions.
+- Trubych and alcohol-free Krestovich face inward and grip the real carousel
+  seam.
+- The corrected mounting rail is sharp, semantically correct and transparent.
+- The VALTEC pipe image has a clean transparent edge with no black/grey
+  contamination.
+- Phone and tablet retain the accepted top-peek design; the desktop offsets are
+  isolated above `1120px`.
+- Focused candidate and active runs covered seven categories at desktop
+  `1280x847`, tablet `820x1180`, and phone `390x844`. All images loaded, no
+  horizontal overflow occurred, and browser/runtime errors were empty.
+- The complete storefront browser suite passed after activation.
+
+final result: passed
