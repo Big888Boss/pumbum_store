@@ -27,6 +27,7 @@
     "redesign:check-browser": "node scripts/check-redesign-browser.mjs",
     "catalog:check-legacy-purpose-redirects": "node scripts/check-legacy-purpose-redirect-coverage.mjs",
     "images:audit": "node scripts/audit-product-images.mjs",
+    "images:audit-backgrounds": "node --expose-gc scripts/audit-product-backgrounds.mjs --root .",
     "images:normalize": "node scripts/normalize-product-images.mjs",
     "images:audit-transparency": "node scripts/process-product-transparency.mjs",
     "images:process-transparency": "node scripts/process-product-transparency.mjs --process",
