@@ -11,7 +11,7 @@ import {
   getBuyerSubcategoryProducts,
   type BuyerSubcategory,
 } from '@/lib/catalog/buyer-subcategories';
-import { applyProductPricing } from '@/lib/catalog/pricing';
+import { applyProductPricing } from '@/lib/catalog/pricing-runtime';
 import { applyProductImageManifest } from '@/lib/catalog/product-images';
 import { getCategoryProductPriority, normalizeProductCategory, purposeCategories } from '@/lib/catalog/purpose';
 
