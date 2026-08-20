@@ -189,6 +189,11 @@ function FilterPanel({ categorySlug, products, selected, viewMode, sort }: { cat
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { category } = await params;
   const query = searchParams ? await searchParams : {};
+  const hasQueryParameters = Object.values(query).some((value) => (
+    Array.isArray(value)
+      ? value.some((entry) => entry.trim().length > 0)
+      : (value ?? '').trim().length > 0
+  ));
   const hasFilters = activeCatalogFilterCount(parseCatalogFilterSelection(query)) > 0;
   const hasPagination = parseCatalogPage(query) > 1;
   const hasSort = parseCatalogSort(query) !== 'default';
@@ -198,7 +203,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     title: categoryData.title,
     description: categoryData.description,
     path: `/catalog/${categoryData.slug}`,
-    noindex: hasFilters || hasPagination || hasSort,
+    noindex: hasQueryParameters,
     followWhenNoindex: hasPagination && !hasFilters && !hasSort,
   });
 }

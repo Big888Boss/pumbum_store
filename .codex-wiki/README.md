@@ -16,6 +16,7 @@ The current production implementation notes are maintained in `docs/`.
 - Current responsive manufacturer mascot release: `docs/MANUFACTURER_RESPONSIVE_RELEASE_2026-08-01.md`
 - Current category 3D video release: `docs/CATEGORY_3D_VIDEO_RELEASE_2026-08-08.md`
 - Current category hero correction release: `docs/CATEGORY_HERO_CORRECTIONS_RELEASE_2026-08-09.md`
+- Current pre-production readiness audit and build rules: `docs/PREPROD_READINESS_2026-08-20.md`
 - Performance release: `docs/PERFORMANCE_RELEASE_2026-07-11.md`
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`
