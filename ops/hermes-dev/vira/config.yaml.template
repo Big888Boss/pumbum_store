@@ -104,7 +104,7 @@ plugins:
 
 security:
   redact_secrets: true
-  tirith_enabled: true
+  tirith_enabled: false
 
 auxiliary:
   compression:
