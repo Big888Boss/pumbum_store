@@ -1,34 +1,113 @@
-# Profile-local Hermes configuration. Secrets are read from the profile .env.
+_config_version: 33
+
 model:
   default: gpt-5.6-sol
   provider: openai-codex
+  base_url: https://chatgpt.com/backend-api/codex
 
 agent:
+  reasoning_effort: high
   max_turns: 40
+  verify_on_stop: false
+  disabled_toolsets:
+    - terminal
+    - file
+    - code_execution
+    - delegation
+    - messaging
+    - web
+    - browser
+    - computer
+    - vision
+    - documents
+
+memory:
+  memory_enabled: false
+  user_profile_enabled: false
+
+stt:
+  enabled: false
+
+display:
+  busy_input_mode: queue
+  busy_queue_max_pending: 5
+  show_reasoning: false
+  streaming: true
+  tool_progress: false
+  interim_assistant_messages: true
+
+session_reset:
+  idle_hours: 168
+  notify: false
+
+telegram:
+  dm_policy: allowlist
+  group_policy: disabled
+  group_allow_from: []
+  gateway_restart_notification: false
+  user_allowed_commands:
+    - start
+    - help
+    - new
+    - status
+  extra:
+    drop_pending_updates_on_cold_start: true
+
+platforms:
+  telegram:
+    unauthorized_dm_behavior: ignore
+    extra:
+      max_download_mb: 20
+      concurrent_updates: 4
+      command_menu:
+        max_commands: 4
+        priority_mode: replace
+        priority:
+          - start
+          - help
+          - new
+          - status
 
 mcp_servers:
   pumbum_dev:
     url: http://100.95.56.90:8798/mcp
     headers:
       Authorization: "Bearer ${PUMBUM_DEV_MCP_TOKEN}"
+    enabled: true
     timeout: 120
     connect_timeout: 15
     supports_parallel_tool_calls: false
+    tools:
+      resources: false
+      prompts: false
+      include:
+        - workspace_status
+        - start_development_task
+        - task_status
+        - recent_tasks
+        - start_preview
+        - prepare_release
+        - cancel_queued_task
 
 platform_toolsets:
-  cli: [mcp-pumbum_dev]
-  telegram: [mcp-pumbum_dev]
+  cli:
+    - pumbum_dev
+  telegram:
+    - pumbum_dev
 
-display:
-  tool_progress: new
-  interim_assistant_messages: true
-  show_commentary: false
+plugins:
+  enabled: []
+  disabled: []
 
-gateway:
-  platforms:
-    telegram:
-      enabled: true
-      extra:
-        disable_link_previews: true
-        rich_messages: false
-        rich_drafts: false
+security:
+  redact_secrets: true
+  tirith_enabled: true
+
+auxiliary:
+  compression:
+    timeout: 300
+
+onboarding:
+  profile_build: "off"
+  seen:
+    busy_input_prompt: true

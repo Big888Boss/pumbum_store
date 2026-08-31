@@ -31,7 +31,9 @@ Code worker запускает Codex без вложенного `bubblewrap`, �
 
 `factory/install-factory.sh` запускается из чистой рабочей копии на Fanding. До запуска должен существовать runtime env с `PUMBUM_DEV_MCP_TOKEN`. Установщик собирает pinned worker image, запускает MCP API, worker и preview-reload path unit.
 
-Профиль Vira устанавливается `vira/install-profile.sh` после заполнения серверного файла окружения. Нужны новый BotFather-токен, числовые Telegram ID разрешённых пользователей и тот же MCP bearer token. `TELEGRAM_ALLOWED_CHATS` должен дословно совпадать с `TELEGRAM_ALLOWED_USERS`: личный chat ID равен user ID, а отрицательные ID групп не пройдут этот gate.
+Профиль Vira сначала безопасно готовится без запуска: `vira/install-profile.sh --prepare-only`. Команда создаёт изолированный профиль, устанавливает совместимый с Vira Hermes `0.18.0` config/SOUL и hardened unit `vira-pumbum-hermes.service`, но не включает его. Для запуска создаётся mode-0600 файл `/home/vira-admin/.config/pumbum-hermes-dev/runtime.env` по `vira/runtime.env.example`, затем выполняется обычный `vira/install-profile.sh`.
+
+Нужны новый BotFather-токен, числовые Telegram ID разрешённых пользователей и тот же MCP bearer token. `TELEGRAM_ALLOWED_CHATS` должен дословно совпадать с `TELEGRAM_ALLOWED_USERS`: личный chat ID равен user ID, а отрицательные ID групп не пройдут этот gate. Сервис использует immutable Hermes release Vira и управляемое общее Codex OAuth-хранилище; отдельные OAuth-копии в профиль не создаются.
 
 ## Граница релиза
 

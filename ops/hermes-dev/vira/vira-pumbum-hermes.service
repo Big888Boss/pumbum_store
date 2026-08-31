@@ -1,0 +1,39 @@
+[Unit]
+Description=Vira Pumbum Dev - isolated Hermes Telegram Gateway
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/home/vira-admin/.hermes/profiles/pumbum-dev/workspace
+Environment=HERMES_HOME=/home/vira-admin/.hermes/profiles/pumbum-dev
+Environment=HERMES_SHARED_AUTH_PATH=/home/vira-admin/.hermes/shared-auth/auth.json
+Environment=PYTHONUNBUFFERED=1
+Environment=VIRTUAL_ENV=/home/vira-admin/.hermes/releases/20260814T133920Z-c80d88678660/venv
+Environment=PATH=/home/vira-admin/.hermes/releases/20260814T133920Z-c80d88678660/venv/bin:/home/vira-admin/.hermes/releases/20260814T133920Z-c80d88678660/node_modules/.bin:/home/vira-admin/.local/bin:/usr/local/bin:/usr/bin:/bin
+EnvironmentFile=/home/vira-admin/.config/pumbum-hermes-dev/runtime.env
+ExecStart=/home/vira-admin/.hermes/releases/20260814T133920Z-c80d88678660/venv/bin/python -m hermes_cli.main gateway run
+ExecReload=/bin/kill -USR1 $MAINPID
+ExecStopPost=-/home/vira-admin/.hermes/releases/20260814T133920Z-c80d88678660/venv/bin/python -m gateway.cgroup_cleanup
+Restart=always
+RestartSec=5
+RestartForceExitStatus=75
+TimeoutStopSec=900
+KillMode=mixed
+KillSignal=SIGTERM
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadOnlyPaths=/opt/pumbum-hermes-dev
+ReadWritePaths=/home/vira-admin/.hermes/profiles/pumbum-dev
+ReadWritePaths=/home/vira-admin/.hermes/shared-auth
+MemoryMax=3G
+TasksMax=512
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
