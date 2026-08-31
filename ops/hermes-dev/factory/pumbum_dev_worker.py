@@ -23,7 +23,7 @@ from pumbum_dev_common import (
 
 
 CODEX_BIN = os.environ.get(
-    "PUMBUM_DEV_CODEX_BIN", "/home/administrator/.nvm/versions/node/v22.22.2/bin/codex"
+    "PUMBUM_DEV_CODEX_BIN", "/home/administrator/.local/bin/codex"
 )
 CODEX_HOME = os.environ.get(
     "PUMBUM_DEV_CODEX_HOME", "/home/administrator/ai-gateway/tmp/codex_pools/codex4/.codex"
