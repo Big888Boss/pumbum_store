@@ -21,6 +21,25 @@
 - Production-деплой, публикация, push и запуск долгоживущего сервера в рамках
   canary не выполнялись. Приложение сайта и секреты не изменялись.
 
+## Финальный canary протокола marker/ack
+
+- После успешных preview gate-проверок container worker удаляет прежний
+  `preview-health.json` и атомарно записывает `preview-ready.json` с ожидаемым
+  commit.
+- Получив marker, host обязан сверить указанный commit с текущим commit рабочей
+  копии и только при точном совпадении перезапустить host preview.
+- Host обязан записать `preview-health.json` только после успешного health-check
+  перезапущенного preview со `status=ok` и `runtime.siteEnv=staging`.
+  Acknowledgement должен относиться к тому же commit; health для production или
+  другого окружения не является допустимым подтверждением.
+- Container worker принимает acknowledgement только при совпадении commit и
+  подтверждённом staging health. До получения такого ack preview gate не может
+  считаться успешным.
+
+Этот документационный canary не запускал host-активатор и не получил финальный
+health acknowledgement. Поэтому успешность финального preview не подтверждена;
+приложение сайта и секреты в рамках этой проверки не изменялись.
+
 ## Выполненные проверки
 
 - `python3 -m unittest discover -s ops/hermes-dev/factory -p 'test_*.py'` —
