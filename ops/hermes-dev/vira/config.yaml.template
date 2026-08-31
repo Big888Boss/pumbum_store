@@ -20,6 +20,7 @@ agent:
     - computer
     - vision
     - documents
+    - clarify
 
 memory:
   memory_enabled: false
@@ -91,9 +92,11 @@ mcp_servers:
 
 platform_toolsets:
   cli:
-    - mcp-pumbum_dev
+    - clarify
+    - pumbum_dev
   telegram:
-    - mcp-pumbum_dev
+    - clarify
+    - pumbum_dev
 
 plugins:
   enabled: []
