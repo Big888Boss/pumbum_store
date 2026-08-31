@@ -115,9 +115,9 @@ def run_development(task: dict[str, Any]) -> None:
         str(WORKSPACE),
         "-m",
         MODEL,
-        # The whole worker already runs inside a systemd mount namespace that
-        # exposes only this workspace, its state directory and the dedicated
-        # auth pool. Ubuntu's AppArmor policy blocks nested bubblewrap here.
+        # The worker runs inside a locked-down container that exposes only this
+        # workspace, its state directory and the dedicated auth pool. Ubuntu's
+        # AppArmor policy blocks nested bubblewrap on the host.
         "--dangerously-bypass-approvals-and-sandbox",
         "--ephemeral",
         "-c",
@@ -184,14 +184,28 @@ def run_preview(task: dict[str, Any]) -> None:
             "NODE_ENV": "production",
         }
     )
-    run_checked(task["id"], "npm ci", [NPM_BIN, "ci"], 1800, log_parts, env)
-    for label, args, timeout in (
-        ("lint", [NPM_BIN, "run", "lint"], 1200),
-        ("isolation", [NPM_BIN, "run", "check:isolation"], 600),
-        ("analytics", [NPM_BIN, "run", "analytics:check"], 600),
-        ("build", [NPM_BIN, "run", "build"], 2400),
-    ):
-        run_checked(task["id"], label, args, timeout, log_parts, env)
+    try:
+        # NODE_ENV=production is required for the resulting Next.js build, but
+        # npm would otherwise omit eslint and the other development toolchain.
+        run_checked(
+            task["id"],
+            "npm ci",
+            [NPM_BIN, "ci", "--include=dev"],
+            1800,
+            log_parts,
+            env,
+        )
+        for label, args, timeout in (
+            ("lint", [NPM_BIN, "run", "lint"], 1200),
+            ("isolation", [NPM_BIN, "run", "check:isolation"], 600),
+            ("analytics", [NPM_BIN, "run", "analytics:check"], 600),
+            ("build", [NPM_BIN, "run", "build"], 2400),
+        ):
+            run_checked(task["id"], label, args, timeout, log_parts, env)
+    except Exception:
+        if log_parts:
+            write_log(task["id"], "\n\n".join(log_parts))
+        raise
     marker = STATE_DIR / "preview-ready.json"
     marker_tmp = STATE_DIR / "preview-ready.json.tmp"
     marker_tmp.write_text(

@@ -49,6 +49,7 @@ install -m 644 "${workspace}/ops/hermes-dev/factory/pumbum-hermes-preview-reload
 systemctl --user daemon-reload
 systemctl --user disable --now pumbum-hermes-worker.service >/dev/null 2>&1 || true
 systemctl --user enable --now pumbum-hermes-mcp.service pumbum-hermes-preview-reload.path
+systemctl --user restart pumbum-hermes-mcp.service
 docker compose --file "${workspace}/ops/hermes-dev/factory/compose.worker.yaml" up --detach --build worker
 
 echo "Factory contour installed. Preview remains stopped until a verified build is ready."

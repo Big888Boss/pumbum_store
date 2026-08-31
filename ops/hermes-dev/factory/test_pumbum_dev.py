@@ -4,8 +4,10 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import pumbum_dev_common as common
+import pumbum_dev_worker as worker
 
 
 class CommonTests(unittest.TestCase):
@@ -62,6 +64,51 @@ class CommonTests(unittest.TestCase):
             common.enqueue("development", "   ", "telegram:1")
         with self.assertRaisesRegex(ValueError, "превышает"):
             common.enqueue("development", "x" * (common.MAX_REQUEST_CHARS + 1), "telegram:1")
+
+
+class WorkerTests(unittest.TestCase):
+    def test_preview_installs_development_toolchain_in_production_env(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            state_dir = Path(temporary)
+            task = {"id": "preview-1", "parent_id": "development-1"}
+            parent = {"commit_after": "a" * 40}
+            checked_calls: list[tuple[str, list[str]]] = []
+
+            def record_check(
+                _task_id: str,
+                label: str,
+                args: list[str],
+                _timeout: int,
+                _log_parts: list[str],
+                _env: dict[str, str] | None = None,
+            ) -> None:
+                checked_calls.append((label, args))
+
+            health = subprocess.CompletedProcess([], 0, stdout='{"status":"ok"}', stderr="")
+            with (
+                mock.patch.object(worker, "STATE_DIR", state_dir),
+                mock.patch.object(worker, "get_task", return_value=parent),
+                mock.patch.object(
+                    worker,
+                    "ensure_workspace_ready",
+                    return_value={"commit": parent["commit_after"]},
+                ),
+                mock.patch.object(worker, "run_checked", side_effect=record_check),
+                mock.patch.object(worker, "command", return_value=health),
+                mock.patch.object(worker, "write_log", return_value=state_dir / "preview.log"),
+                mock.patch.object(worker, "update_task") as update_task,
+            ):
+                worker.run_preview(task)
+
+            self.assertEqual(
+                ("npm ci", [worker.NPM_BIN, "ci", "--include=dev"]),
+                checked_calls[0],
+            )
+            self.assertEqual(
+                ["npm ci", "lint", "isolation", "analytics", "build"],
+                [label for label, _args in checked_calls],
+            )
+            update_task.assert_called_once()
 
 
 if __name__ == "__main__":
