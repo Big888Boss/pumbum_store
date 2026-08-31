@@ -91,9 +91,9 @@ mcp_servers:
 
 platform_toolsets:
   cli:
-    - pumbum_dev
+    - mcp-pumbum_dev
   telegram:
-    - pumbum_dev
+    - mcp-pumbum_dev
 
 plugins:
   enabled: []
