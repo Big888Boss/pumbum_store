@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import signal
 import subprocess
@@ -208,26 +209,35 @@ def run_preview(task: dict[str, Any]) -> None:
         raise
     marker = STATE_DIR / "preview-ready.json"
     marker_tmp = STATE_DIR / "preview-ready.json.tmp"
+    acknowledgement = STATE_DIR / "preview-health.json"
+    acknowledgement.unlink(missing_ok=True)
     marker_tmp.write_text(
         json_dump({"commit": expected_commit, "ready_at": time.time()}),
         encoding="utf-8",
     )
     marker_tmp.replace(marker)
     log_parts.append(f"## preview signal\n{marker.name} written for {expected_commit}")
-    health = None
-    for _attempt in range(60):
-        health = command(
-            ["/usr/bin/curl", "--fail", "--silent", "--show-error", f"{PREVIEW_URL}/api/health"],
-            timeout=10,
-            env=env,
-        )
-        if health.returncode == 0:
-            break
+    acknowledged = None
+    for _attempt in range(150):
+        if acknowledgement.exists():
+            try:
+                candidate = json.loads(acknowledgement.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                candidate = None
+            if (
+                isinstance(candidate, dict)
+                and candidate.get("commit") == expected_commit
+                and isinstance(candidate.get("health"), dict)
+                and candidate["health"].get("status") == "ok"
+                and candidate["health"].get("runtime", {}).get("siteEnv") == "staging"
+            ):
+                acknowledged = candidate
+                break
         time.sleep(1)
-    assert health is not None
-    log_parts.append(f"## health\n{health.stdout}\n{health.stderr}")
-    if health.returncode != 0:
-        raise RuntimeError("Preview health check failed")
+    if acknowledged is None:
+        write_log(task["id"], "\n\n".join(log_parts))
+        raise RuntimeError("Host preview activation did not acknowledge a healthy staging build")
+    log_parts.append(f"## health acknowledgement\n{json_dump(acknowledged)}")
     log_path = write_log(task["id"], "\n\n".join(log_parts))
     summary = (
         f"Приватный staging/noindex preview готов: {PREVIEW_URL}. "

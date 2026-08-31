@@ -3,4 +3,4 @@ Description=Activate the verified Pumbum Hermes preview build
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/systemctl --user enable --now pumbum-hermes-preview.service
+ExecStart=/usr/bin/python3 /home/administrator/agent-projects/pumbum-hermes-dev/ops/hermes-dev/factory/pumbum_dev_preview_activate.py

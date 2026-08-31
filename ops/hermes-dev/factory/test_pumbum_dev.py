@@ -3,10 +3,12 @@ from __future__ import annotations
 import subprocess
 import tempfile
 import unittest
+import json
 from pathlib import Path
 from unittest import mock
 
 import pumbum_dev_common as common
+import pumbum_dev_preview_activate as preview_activate
 import pumbum_dev_worker as worker
 
 
@@ -84,7 +86,20 @@ class WorkerTests(unittest.TestCase):
             ) -> None:
                 checked_calls.append((label, args))
 
-            health = subprocess.CompletedProcess([], 0, stdout='{"status":"ok"}', stderr="")
+            def acknowledge_preview(_seconds: float) -> None:
+                (state_dir / "preview-health.json").write_text(
+                    json.dumps(
+                        {
+                            "commit": parent["commit_after"],
+                            "health": {
+                                "status": "ok",
+                                "runtime": {"siteEnv": "staging"},
+                            },
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+
             with (
                 mock.patch.object(worker, "STATE_DIR", state_dir),
                 mock.patch.object(worker, "get_task", return_value=parent),
@@ -94,7 +109,7 @@ class WorkerTests(unittest.TestCase):
                     return_value={"commit": parent["commit_after"]},
                 ),
                 mock.patch.object(worker, "run_checked", side_effect=record_check),
-                mock.patch.object(worker, "command", return_value=health),
+                mock.patch.object(worker.time, "sleep", side_effect=acknowledge_preview),
                 mock.patch.object(worker, "write_log", return_value=state_dir / "preview.log"),
                 mock.patch.object(worker, "update_task") as update_task,
             ):
@@ -109,6 +124,18 @@ class WorkerTests(unittest.TestCase):
                 [label for label, _args in checked_calls],
             )
             update_task.assert_called_once()
+
+    def test_host_preview_health_requires_staging(self) -> None:
+        self.assertTrue(
+            preview_activate.health_is_ready(
+                {"status": "ok", "runtime": {"siteEnv": "staging"}}
+            )
+        )
+        self.assertFalse(
+            preview_activate.health_is_ready(
+                {"status": "ok", "runtime": {"siteEnv": "production"}}
+            )
+        )
 
 
 if __name__ == "__main__":
