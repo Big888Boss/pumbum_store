@@ -37,6 +37,8 @@ class CommonTests(unittest.TestCase):
 
     def test_queue_requires_successful_parent(self) -> None:
         development = common.enqueue("development", "Добавить полезную страницу", "telegram:1")
+        self.assertEqual("telegram:1", development["actor"])
+        self.assertEqual("Добавить полезную страницу", development["request"])
         with self.assertRaisesRegex(ValueError, "ещё не завершена"):
             common.enqueue("preview", "Собрать preview", "telegram:1", parent_id=development["id"])
         common.update_task(development["id"], "succeeded", commit_after="a" * 40)

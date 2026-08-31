@@ -110,7 +110,15 @@ def enqueue(kind: str, request: str, actor: str, parent_id: str | None = None) -
             INSERT INTO tasks(id, kind, status, actor, request, parent_id, created_at, updated_at)
             VALUES (?, ?, 'queued', ?, ?, ?, ?, ?)
             """,
-            (task_id, kind, normalize_text(request, field="request"), normalize_text(actor, field="actor", maximum=200), parent_id, now, now),
+            (
+                task_id,
+                kind,
+                normalize_text(actor, field="actor", maximum=200),
+                normalize_text(request, field="request"),
+                parent_id,
+                now,
+                now,
+            ),
         )
     return get_task(task_id)
 
