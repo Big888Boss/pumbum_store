@@ -1,0 +1,28 @@
+[Unit]
+Description=Pumbum Hermes isolated sequential code worker
+After=network-online.target pumbum-hermes-mcp.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/administrator/agent-projects/pumbum-hermes-dev
+EnvironmentFile=/home/administrator/.config/pumbum-hermes-dev/runtime.env
+ExecStart=/home/administrator/.local/share/pumbum-hermes-dev/venv/bin/python /home/administrator/agent-projects/pumbum-hermes-dev/ops/hermes-dev/factory/pumbum_dev_worker.py
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/administrator/agent-projects/pumbum-hermes-dev /home/administrator/.local/state/pumbum-hermes-dev /home/administrator/ai-gateway/tmp/codex_pools/codex4/.codex
+InaccessiblePaths=/home/administrator/.ssh /home/administrator/.aws /home/administrator/.gnupg /home/administrator/.kube /home/administrator/.docker
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryMax=6G
+CPUQuota=300%
+TasksMax=512
+
+[Install]
+WantedBy=default.target

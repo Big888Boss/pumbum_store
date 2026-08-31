@@ -1,0 +1,30 @@
+[Unit]
+Description=Pumbum Hermes private staging preview
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/administrator/agent-projects/pumbum-hermes-dev
+Environment=PATH=/home/administrator/.nvm/versions/node/v22.22.2/bin:/usr/local/bin:/usr/bin:/bin
+Environment=NODE_ENV=production
+Environment=NEXT_PUBLIC_SITE_ENV=staging
+Environment=NEXT_PUBLIC_SITE_URL=http://100.95.56.90:3032
+Environment=NEXT_PUBLIC_YANDEX_METRIKA_ID=
+Environment=PORT=3032
+ExecStart=/home/administrator/.nvm/versions/node/v22.22.2/bin/npm run start -- -H 100.95.56.90 -p 3032
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/administrator/agent-projects/pumbum-hermes-dev/.next
+InaccessiblePaths=/home/administrator/.ssh /home/administrator/.aws /home/administrator/.gnupg /home/administrator/.kube /home/administrator/.docker /home/administrator/ai-gateway
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryMax=2G
+CPUQuota=200%
+
+[Install]
+WantedBy=default.target

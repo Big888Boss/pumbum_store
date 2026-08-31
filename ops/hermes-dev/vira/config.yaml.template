@@ -1,0 +1,34 @@
+# Profile-local Hermes configuration. Secrets are read from the profile .env.
+model:
+  default: gpt-5.6-sol
+  provider: openai-codex
+
+agent:
+  max_turns: 40
+
+mcp_servers:
+  pumbum_dev:
+    url: http://100.95.56.90:8798/mcp
+    headers:
+      Authorization: "Bearer ${PUMBUM_DEV_MCP_TOKEN}"
+    timeout: 120
+    connect_timeout: 15
+    supports_parallel_tool_calls: false
+
+platform_toolsets:
+  cli: [mcp-pumbum_dev]
+  telegram: [mcp-pumbum_dev]
+
+display:
+  tool_progress: new
+  interim_assistant_messages: true
+  show_commentary: false
+
+gateway:
+  platforms:
+    telegram:
+      enabled: true
+      extra:
+        disable_link_previews: true
+        rich_messages: false
+        rich_drafts: false
