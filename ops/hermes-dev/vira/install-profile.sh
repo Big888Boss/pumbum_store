@@ -11,7 +11,7 @@ if [[ "${1:-}" == "--prepare-only" ]]; then
   prepare_only=true
   shift
 fi
-source_root="${1:-/opt/pumbum-hermes-dev/vira}"
+source_root="${1:-/home/vira-admin/pumbum-hermes-dev/vira}"
 runtime_env="${config_root}/runtime.env"
 hermes_bin="/home/vira-admin/.local/bin/hermes"
 
