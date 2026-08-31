@@ -20,19 +20,24 @@
 ## Сервисы Fanding
 
 - `pumbum-hermes-mcp.service` — MCP API на Tailscale-адресе, Bearer-аутентификация;
-- `pumbum-hermes-worker.service` — единственный исполнитель очереди;
+- контейнер `pumbum-hermes-worker` — единственный исполнитель очереди, без Docker socket и SSH-клиента;
 - `pumbum-hermes-preview.service` — staging/noindex preview последнего проверенного commit.
 
 Секреты хранятся только на сервере в `~/.config/pumbum-hermes-dev/runtime.env` с режимом `0600`.
 
-Code worker запускает Codex без его вложенного `bubblewrap`, потому что на Ubuntu 24.04 пользовательские namespace ограничены AppArmor. Граница не снимается: worker целиком помещён в отдельный systemd mount namespace. В нём видны и доступны для записи только рабочая копия, очередь и выделенный Codex auth pool; домашний каталог скрыт, SSH-ключи и соседние проекты отсутствуют.
+Code worker запускает Codex без вложенного `bubblewrap`, потому что на Ubuntu 24.04 пользовательские namespace ограничены AppArmor. Граница не снимается: worker целиком помещён в отдельный Docker-контейнер с read-only rootfs. В контейнер смонтированы только рабочая копия, очередь и выделенный Codex auth pool; Docker socket, SSH-клиент, SSH-ключи и соседние проекты отсутствуют.
 
 ## Установка
 
-`factory/install-factory.sh` запускается из чистой рабочей копии на Fanding. До запуска должен существовать runtime env с `PUMBUM_DEV_MCP_TOKEN`.
+`factory/install-factory.sh` запускается из чистой рабочей копии на Fanding. До запуска должен существовать runtime env с `PUMBUM_DEV_MCP_TOKEN`. Установщик собирает pinned worker image, запускает MCP API, worker и preview-reload path unit.
 
 Профиль Vira устанавливается `vira/install-profile.sh` после заполнения серверного файла окружения. Нужны новый BotFather-токен, числовые Telegram ID разрешённых пользователей и тот же MCP bearer token. `TELEGRAM_ALLOWED_CHATS` должен дословно совпадать с `TELEGRAM_ALLOWED_USERS`: личный chat ID равен user ID, а отрицательные ID групп не пройдут этот gate.
 
 ## Граница релиза
 
 Фразы согласования описаны в `vira/SOUL.md`, но безопасность не зависит от prompt: API намеренно не содержит инструмента production-деплоя, а worker не получает SSH-ключи production.
+
+## Read-only acceptance
+
+- `curl --fail --silent http://100.95.56.90:8798/health` проверяет MCP API без раскрытия токена.
+- Авторизованный `tools/list` должен вернуть ровно семь инструментов из `factory/pumbum_dev_mcp.py`; инструмента production-деплоя среди них нет.

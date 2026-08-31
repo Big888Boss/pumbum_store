@@ -42,10 +42,13 @@ python3 -m venv "${runtime_root}/venv"
 "${runtime_root}/venv/bin/pip" install --disable-pip-version-check --requirement "${workspace}/ops/hermes-dev/requirements.txt"
 
 install -m 644 "${workspace}/ops/hermes-dev/factory/pumbum-hermes-mcp.service" "${unit_root}/pumbum-hermes-mcp.service"
-install -m 644 "${workspace}/ops/hermes-dev/factory/pumbum-hermes-worker.service" "${unit_root}/pumbum-hermes-worker.service"
 install -m 644 "${workspace}/ops/hermes-dev/factory/pumbum-hermes-preview.service" "${unit_root}/pumbum-hermes-preview.service"
+install -m 644 "${workspace}/ops/hermes-dev/factory/pumbum-hermes-preview-reload.service" "${unit_root}/pumbum-hermes-preview-reload.service"
+install -m 644 "${workspace}/ops/hermes-dev/factory/pumbum-hermes-preview-reload.path" "${unit_root}/pumbum-hermes-preview-reload.path"
 
 systemctl --user daemon-reload
-systemctl --user enable --now pumbum-hermes-mcp.service pumbum-hermes-worker.service
+systemctl --user disable --now pumbum-hermes-worker.service >/dev/null 2>&1 || true
+systemctl --user enable --now pumbum-hermes-mcp.service pumbum-hermes-preview-reload.path
+docker compose --file "${workspace}/ops/hermes-dev/factory/compose.worker.yaml" up --detach --build worker
 
 echo "Factory contour installed. Preview remains stopped until a verified build is ready."

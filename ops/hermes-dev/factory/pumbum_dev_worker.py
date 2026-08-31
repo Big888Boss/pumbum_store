@@ -32,7 +32,6 @@ MODEL = os.environ.get("PUMBUM_DEV_CODEX_MODEL", "gpt-5.6-sol")
 TASK_TIMEOUT_SECONDS = int(os.environ.get("PUMBUM_DEV_TASK_TIMEOUT_SECONDS", "5400"))
 POLL_SECONDS = int(os.environ.get("PUMBUM_DEV_POLL_SECONDS", "3"))
 NPM_BIN = os.environ.get("PUMBUM_DEV_NPM_BIN", "/home/administrator/.nvm/versions/node/v22.22.2/bin/npm")
-SYSTEMCTL_BIN = "/usr/bin/systemctl"
 STOP = False
 
 
@@ -52,23 +51,19 @@ def sanitized_environment() -> dict[str, str]:
         "HTTP_PROXY",
         "HTTPS_PROXY",
         "NO_PROXY",
+        "GIT_AUTHOR_NAME",
+        "GIT_AUTHOR_EMAIL",
+        "GIT_COMMITTER_NAME",
+        "GIT_COMMITTER_EMAIL",
     }
     env = {key: value for key, value in os.environ.items() if key in allowed}
     env.update(
         {
-            "HOME": "/home/administrator",
+            "HOME": os.environ.get("PUMBUM_DEV_AGENT_HOME", "/home/administrator"),
             "CODEX_HOME": CODEX_HOME,
             "PATH": f"{Path(CODEX_BIN).parent}:{Path(NPM_BIN).parent}:/usr/local/bin:/usr/bin:/bin",
         }
     )
-    return env
-
-
-def operational_environment() -> dict[str, str]:
-    env = sanitized_environment()
-    for key in ("XDG_RUNTIME_DIR", "DBUS_SESSION_BUS_ADDRESS"):
-        if os.environ.get(key):
-            env[key] = os.environ[key]
     return env
 
 
@@ -80,7 +75,7 @@ def command(args: list[str], *, timeout: int, env: dict[str, str] | None = None)
         capture_output=True,
         check=False,
         timeout=timeout,
-        env=env or operational_environment(),
+        env=env or sanitized_environment(),
     )
 
 
@@ -197,19 +192,25 @@ def run_preview(task: dict[str, Any]) -> None:
         ("build", [NPM_BIN, "run", "build"], 2400),
     ):
         run_checked(task["id"], label, args, timeout, log_parts, env)
-    run_checked(
-        task["id"],
-        "restart preview",
-        [SYSTEMCTL_BIN, "--user", "restart", "pumbum-hermes-preview.service"],
-        120,
-        log_parts,
-        env,
+    marker = STATE_DIR / "preview-ready.json"
+    marker_tmp = STATE_DIR / "preview-ready.json.tmp"
+    marker_tmp.write_text(
+        json_dump({"commit": expected_commit, "ready_at": time.time()}),
+        encoding="utf-8",
     )
-    health = command(
-        ["/usr/bin/curl", "--fail", "--silent", "--show-error", f"{PREVIEW_URL}/api/health"],
-        timeout=60,
-        env=env,
-    )
+    marker_tmp.replace(marker)
+    log_parts.append(f"## preview signal\n{marker.name} written for {expected_commit}")
+    health = None
+    for _attempt in range(60):
+        health = command(
+            ["/usr/bin/curl", "--fail", "--silent", "--show-error", f"{PREVIEW_URL}/api/health"],
+            timeout=10,
+            env=env,
+        )
+        if health.returncode == 0:
+            break
+        time.sleep(1)
+    assert health is not None
     log_parts.append(f"## health\n{health.stdout}\n{health.stderr}")
     if health.returncode != 0:
         raise RuntimeError("Preview health check failed")

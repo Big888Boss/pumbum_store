@@ -1,0 +1,40 @@
+services:
+  worker:
+    build:
+      context: ..
+      dockerfile: factory/Dockerfile.worker
+      args:
+        CODEX_VERSION: "0.151.0"
+    image: pumbum-hermes-worker:0.151.0
+    container_name: pumbum-hermes-worker
+    restart: unless-stopped
+    init: true
+    user: "1000:1000"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 512
+    mem_limit: 6g
+    cpus: 3
+    environment:
+      PUMBUM_DEV_WORKSPACE: /workspace
+      PUMBUM_DEV_STATE_DIR: /state
+      PUMBUM_DEV_PREVIEW_URL: http://100.95.56.90:3032
+      PUMBUM_DEV_CODEX_HOME: /codex-home
+      PUMBUM_DEV_CODEX_BIN: /usr/local/bin/codex
+      PUMBUM_DEV_CODEX_MODEL: gpt-5.6-sol
+      PUMBUM_DEV_NPM_BIN: /usr/local/bin/npm
+      PUMBUM_DEV_AGENT_HOME: /home/agent
+      GIT_AUTHOR_NAME: Pumbum Hermes
+      GIT_AUTHOR_EMAIL: pumbum-hermes@local.invalid
+      GIT_COMMITTER_NAME: Pumbum Hermes
+      GIT_COMMITTER_EMAIL: pumbum-hermes@local.invalid
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=1g,uid=1000,gid=1000
+      - /home/agent:rw,nosuid,nodev,size=256m,uid=1000,gid=1000
+    volumes:
+      - /home/administrator/agent-projects/pumbum-hermes-dev:/workspace:rw
+      - /home/administrator/.local/state/pumbum-hermes-dev:/state:rw
+      - /home/administrator/ai-gateway/tmp/codex_pools/codex4/.codex:/codex-home:rw

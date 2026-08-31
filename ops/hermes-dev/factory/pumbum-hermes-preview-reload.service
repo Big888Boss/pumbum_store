@@ -1,0 +1,6 @@
+[Unit]
+Description=Activate the verified Pumbum Hermes preview build
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl --user enable --now pumbum-hermes-preview.service

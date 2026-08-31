@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch for a verified Pumbum Hermes preview build
+
+[Path]
+PathChanged=/home/administrator/.local/state/pumbum-hermes-dev/preview-ready.json
+Unit=pumbum-hermes-preview-reload.service
+
+[Install]
+WantedBy=default.target
