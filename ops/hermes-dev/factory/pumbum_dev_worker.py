@@ -120,8 +120,10 @@ def run_development(task: dict[str, Any]) -> None:
         str(WORKSPACE),
         "-m",
         MODEL,
-        "-s",
-        "workspace-write",
+        # The whole worker already runs inside a systemd mount namespace that
+        # exposes only this workspace, its state directory and the dedicated
+        # auth pool. Ubuntu's AppArmor policy blocks nested bubblewrap here.
+        "--dangerously-bypass-approvals-and-sandbox",
         "--ephemeral",
         "-c",
         'model_reasoning_effort="high"',

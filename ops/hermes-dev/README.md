@@ -25,6 +25,8 @@
 
 Секреты хранятся только на сервере в `~/.config/pumbum-hermes-dev/runtime.env` с режимом `0600`.
 
+Code worker запускает Codex без его вложенного `bubblewrap`, потому что на Ubuntu 24.04 пользовательские namespace ограничены AppArmor. Граница не снимается: worker целиком помещён в отдельный systemd mount namespace. В нём видны и доступны для записи только рабочая копия, очередь и выделенный Codex auth pool; домашний каталог скрыт, SSH-ключи и соседние проекты отсутствуют.
+
 ## Установка
 
 `factory/install-factory.sh` запускается из чистой рабочей копии на Fanding. До запуска должен существовать runtime env с `PUMBUM_DEV_MCP_TOKEN`.

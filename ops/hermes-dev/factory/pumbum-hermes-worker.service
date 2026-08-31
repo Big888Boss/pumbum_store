@@ -5,7 +5,13 @@ After=network-online.target pumbum-hermes-mcp.service
 [Service]
 Type=simple
 WorkingDirectory=/home/administrator/agent-projects/pumbum-hermes-dev
-EnvironmentFile=/home/administrator/.config/pumbum-hermes-dev/runtime.env
+Environment=PUMBUM_DEV_WORKSPACE=/home/administrator/agent-projects/pumbum-hermes-dev
+Environment=PUMBUM_DEV_STATE_DIR=/home/administrator/.local/state/pumbum-hermes-dev
+Environment=PUMBUM_DEV_PREVIEW_URL=http://100.95.56.90:3032
+Environment=PUMBUM_DEV_CODEX_HOME=/home/administrator/ai-gateway/tmp/codex_pools/codex4/.codex
+Environment=PUMBUM_DEV_CODEX_BIN=/home/administrator/.local/bin/codex
+Environment=PUMBUM_DEV_CODEX_MODEL=gpt-5.6-sol
+Environment=PUMBUM_DEV_NPM_BIN=/home/administrator/.nvm/versions/node/v22.22.2/bin/npm
 ExecStart=/home/administrator/.local/share/pumbum-hermes-dev/venv/bin/python /home/administrator/agent-projects/pumbum-hermes-dev/ops/hermes-dev/factory/pumbum_dev_worker.py
 Restart=on-failure
 RestartSec=5
@@ -15,11 +21,19 @@ UMask=0077
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
-ProtectHome=read-only
+ProtectHome=tmpfs
+BindPaths=/home/administrator/agent-projects/pumbum-hermes-dev
+BindPaths=/home/administrator/.local/state/pumbum-hermes-dev
+BindPaths=/home/administrator/ai-gateway/tmp/codex_pools/codex4/.codex
+BindReadOnlyPaths=/home/administrator/.local/share/pumbum-hermes-dev
+BindReadOnlyPaths=/home/administrator/.local/bin/codex
+BindReadOnlyPaths=/home/administrator/.codex/packages/standalone
+BindReadOnlyPaths=/home/administrator/.nvm/versions/node/v22.22.2
+BindReadOnlyPaths=/home/administrator/.gitconfig
 ReadWritePaths=/home/administrator/agent-projects/pumbum-hermes-dev /home/administrator/.local/state/pumbum-hermes-dev /home/administrator/ai-gateway/tmp/codex_pools/codex4/.codex
-InaccessiblePaths=/home/administrator/.ssh /home/administrator/.aws /home/administrator/.gnupg /home/administrator/.kube /home/administrator/.docker
 RestrictSUIDSGID=true
 LockPersonality=true
+ProtectProc=ptraceable
 MemoryMax=6G
 CPUQuota=300%
 TasksMax=512
