@@ -30,7 +30,8 @@ install -m 600 "${source_root}/config.yaml.template" "${profile_root}/config.yam
 install -m 600 "${source_root}/SOUL.md" "${profile_root}/SOUL.md"
 install -m 644 "${source_root}/vira-pumbum-hermes.service" "${unit_root}/${service_name}"
 systemctl --user daemon-reload
-systemd-analyze --user verify "${unit_root}/${service_name}"
+XDG_RUNTIME_DIR="/run/user/$(id -u)" \
+  systemd-analyze --user verify "${unit_root}/${service_name}"
 
 if [[ "${prepare_only}" == true ]]; then
   echo "Pumbum Hermes profile and inactive service are prepared; runtime credentials are still required."
