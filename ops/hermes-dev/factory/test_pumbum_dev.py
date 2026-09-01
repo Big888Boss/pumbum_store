@@ -116,6 +116,19 @@ class GitSyncTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.tempdir.cleanup()
 
+    def test_user_unit_avoids_unsupported_capability_directives(self) -> None:
+        unit = Path(__file__).with_name("pumbum-hermes-git-sync.service").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn("PrivateDevices=true", unit)
+        self.assertNotIn("ProtectKernelModules=true", unit)
+
+    def test_git_sync_script_has_python_shebang(self) -> None:
+        script = Path(__file__).with_name("pumbum_dev_git_sync.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertTrue(script.startswith("#!/usr/bin/python3\n"))
+
     def test_sanitized_environment_drops_service_credential_paths(self) -> None:
         with mock.patch.dict(
             os.environ,
