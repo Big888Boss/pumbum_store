@@ -15,6 +15,7 @@ WORKSPACE = Path(os.environ.get("PUMBUM_DEV_WORKSPACE", "/home/administrator/age
 STATE_DIR = Path(os.environ.get("PUMBUM_DEV_STATE_DIR", "/home/administrator/.local/state/pumbum-hermes-dev")).resolve()
 DB_PATH = STATE_DIR / "state.sqlite"
 LOG_DIR = STATE_DIR / "logs"
+GIT_SYNC_STATUS_PATH = STATE_DIR / "git-sync-status.json"
 EXPECTED_BRANCH = "codex/hermes-seo-geo"
 PREVIEW_URL = os.environ.get("PUMBUM_DEV_PREVIEW_URL", "http://100.95.56.90:3032").rstrip("/")
 MAX_REQUEST_CHARS = 12_000
@@ -47,6 +48,29 @@ def workspace_snapshot() -> dict[str, Any]:
         "status": run_git("status", "--short", "--branch"),
         "preview_url": PREVIEW_URL,
     }
+
+
+def git_sync_snapshot() -> dict[str, Any]:
+    try:
+        payload = json.loads(GIT_SYNC_STATUS_PATH.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {"status": "not_configured"}
+    except (OSError, ValueError):
+        return {"status": "unreadable"}
+    if not isinstance(payload, dict):
+        return {"status": "unreadable"}
+    allowed = {
+        "status",
+        "updated_at",
+        "remote_repository",
+        "remote_branch",
+        "remote_commit",
+        "commit",
+        "reason",
+        "task_id",
+        "baseline_authorized",
+    }
+    return {key: payload[key] for key in allowed if key in payload}
 
 
 def connect() -> sqlite3.Connection:

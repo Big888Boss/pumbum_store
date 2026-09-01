@@ -1,0 +1,37 @@
+[Unit]
+Description=Push verified Pumbum development commits to the isolated GitHub branch
+After=network-online.target pumbum-hermes-mcp.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/administrator/agent-projects/pumbum-hermes-dev
+Environment=PUMBUM_GIT_SYNC_WORKSPACE=/home/administrator/agent-projects/pumbum-hermes-dev
+Environment=PUMBUM_GIT_SYNC_STATE_DIR=/home/administrator/.local/state/pumbum-hermes-dev
+Environment=PUMBUM_GIT_SYNC_DATABASE=/home/administrator/.local/state/pumbum-hermes-dev/state.sqlite
+Environment=PUMBUM_GIT_SYNC_REMOTE=github
+Environment=PUMBUM_GIT_SYNC_REMOTE_URL=git@github.com:Big888Boss/pumbum_store.git
+Environment=PUMBUM_GIT_SYNC_BRANCH=codex/hermes-seo-geo
+Environment=PUMBUM_GIT_SYNC_KEY=%d/github_key
+Environment=PUMBUM_GIT_SYNC_KNOWN_HOSTS=%d/github_known_hosts
+LoadCredential=github_key:/home/administrator/.ssh/pumbum-hermes-github
+LoadCredential=github_known_hosts:/home/administrator/.ssh/known_hosts
+ExecStart=/usr/bin/python3 /home/administrator/.local/share/pumbum-hermes-dev/pumbum_dev_git_sync.py
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadOnlyPaths=/home/administrator/agent-projects/pumbum-hermes-dev
+ReadOnlyPaths=/home/administrator/.local/share/pumbum-hermes-dev/pumbum_dev_git_sync.py
+ReadWritePaths=/home/administrator/.local/state/pumbum-hermes-dev
+InaccessiblePaths=/home/administrator/.ssh /home/administrator/.aws /home/administrator/.gnupg /home/administrator/.kube /home/administrator/.docker /home/administrator/ai-gateway
+RestrictSUIDSGID=true
+LockPersonality=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=256M
+CPUQuota=50%

@@ -14,22 +14,26 @@
 1. Разработчик обычным сообщением описывает задачу.
 2. Hermes создаёт задачу и возвращает её ID.
 3. Worker меняет код в `codex/hermes-seo-geo`, проверяет и коммитит его.
-4. Hermes запускает приватный preview и отдаёт ссылку, commit и проверки.
-5. Команда подготовки релиза формирует карточку релиза. Production-деплоя в MCP API нет.
+4. Отдельный host-сервис проверяет успешный статус задачи и автоматически отправляет commit только в одноимённую GitHub-ветку без force-push.
+5. Hermes запускает приватный preview и отдаёт ссылку, commit и проверки.
+6. Команда подготовки релиза формирует карточку релиза. Production-деплоя в MCP API нет.
 
 ## Сервисы Fanding
 
 - `pumbum-hermes-mcp.service` — MCP API на Tailscale-адресе, Bearer-аутентификация;
 - контейнер `pumbum-hermes-worker` — единственный исполнитель очереди, без Docker socket и SSH-клиента;
 - `pumbum-hermes-preview.service` — staging/noindex preview последнего проверенного commit.
+- `pumbum-hermes-git-sync.timer` — host-side синхронизация успешных commit в `Big888Boss/pumbum_store:codex/hermes-seo-geo`.
 
 Секреты хранятся только на сервере в `~/.config/pumbum-hermes-dev/runtime.env` с режимом `0600`.
 
 Code worker запускает Codex без вложенного `bubblewrap`, потому что на Ubuntu 24.04 пользовательские namespace ограничены AppArmor. Граница не снимается: worker целиком помещён в отдельный Docker-контейнер с read-only rootfs. В контейнер смонтированы только рабочая копия, очередь и выделенный Codex auth pool; Docker socket, SSH-клиент, SSH-ключи и соседние проекты отсутствуют.
 
+GitHub deploy key остаётся на host и передаётся только одноразовому systemd-сервису через credentials directory. Сервис исполняет установленную копию sync-скрипта вне изменяемой worker рабочей директории, принимает только чистый `codex/hermes-seo-geo` HEAD с успешной development-задачей и использует обычный non-force push. `main`, merge, tags и production в его интерфейсе отсутствуют.
+
 ## Установка
 
-`factory/install-factory.sh` запускается из чистой рабочей копии на Fanding. До запуска должен существовать runtime env с `PUMBUM_DEV_MCP_TOKEN`. Установщик собирает pinned worker image, запускает MCP API, worker и preview-reload path unit.
+`factory/install-factory.sh` запускается из чистой рабочей копии на Fanding. До запуска должны существовать runtime env с `PUMBUM_DEV_MCP_TOKEN` и mode-0600 deploy key `/home/administrator/.ssh/pumbum-hermes-github`. Установщик проверяет или добавляет точный remote `github`, устанавливает доверенную копию sync-скрипта, собирает pinned worker image и запускает MCP API, worker, preview-reload path unit и Git sync timer.
 
 Профиль Vira сначала безопасно готовится без запуска: `vira/install-profile.sh --prepare-only`. Команда создаёт изолированный профиль, устанавливает совместимый с Vira Hermes `0.18.0` config/SOUL и hardened unit `vira-pumbum-hermes.service`, но не включает его. Для запуска создаётся mode-0600 файл `/home/vira-admin/.config/pumbum-hermes-dev/runtime.env` по `vira/runtime.env.example`, затем выполняется обычный `vira/install-profile.sh`.
 

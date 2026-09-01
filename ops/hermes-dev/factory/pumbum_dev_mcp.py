@@ -12,6 +12,7 @@ from pumbum_dev_common import (
     EXPECTED_BRANCH,
     PREVIEW_URL,
     enqueue,
+    git_sync_snapshot,
     get_task,
     initialize_database,
     normalize_text,
@@ -48,6 +49,7 @@ def workspace_status() -> dict[str, Any]:
     """Показать ветку, commit, чистоту рабочей копии и адрес preview."""
     snapshot = workspace_snapshot()
     snapshot["expected_branch"] = EXPECTED_BRANCH
+    snapshot["github_sync"] = git_sync_snapshot()
     snapshot["production_deploy_available"] = False
     return snapshot
 

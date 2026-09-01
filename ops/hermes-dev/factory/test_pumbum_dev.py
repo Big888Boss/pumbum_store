@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import json
+import os
 import subprocess
 import tempfile
 import unittest
-import json
 from pathlib import Path
 from unittest import mock
 
 import pumbum_dev_common as common
+import pumbum_dev_git_sync as git_sync
 import pumbum_dev_preview_activate as preview_activate
 import pumbum_dev_worker as worker
 
@@ -29,6 +31,7 @@ class CommonTests(unittest.TestCase):
         common.STATE_DIR = state
         common.DB_PATH = state / "state.sqlite"
         common.LOG_DIR = state / "logs"
+        common.GIT_SYNC_STATUS_PATH = state / "git-sync-status.json"
 
     def tearDown(self) -> None:
         self.tempdir.cleanup()
@@ -66,6 +69,147 @@ class CommonTests(unittest.TestCase):
             common.enqueue("development", "   ", "telegram:1")
         with self.assertRaisesRegex(ValueError, "превышает"):
             common.enqueue("development", "x" * (common.MAX_REQUEST_CHARS + 1), "telegram:1")
+
+    def test_git_sync_snapshot_exposes_only_public_status_fields(self) -> None:
+        common.STATE_DIR.mkdir(parents=True, exist_ok=True)
+        common.GIT_SYNC_STATUS_PATH.write_text(
+            json.dumps(
+                {
+                    "status": "pushed",
+                    "remote_commit": "a" * 40,
+                    "remote_repository": "Big888Boss/pumbum_store",
+                    "secret": "must-not-leak",
+                }
+            ),
+            encoding="utf-8",
+        )
+        snapshot = common.git_sync_snapshot()
+        self.assertEqual("pushed", snapshot["status"])
+        self.assertNotIn("secret", snapshot)
+
+
+class GitSyncTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.tempdir = tempfile.TemporaryDirectory()
+        root = Path(self.tempdir.name)
+        self.workspace = root / "workspace"
+        self.state = root / "state"
+        self.workspace.mkdir()
+        self.state.mkdir()
+        self.key = root / "key"
+        self.known_hosts = root / "known_hosts"
+        self.key.write_text("private", encoding="utf-8")
+        self.known_hosts.write_text("github.com key", encoding="utf-8")
+        self.key.chmod(0o600)
+        self.known_hosts.chmod(0o600)
+        self.config = git_sync.SyncConfig(
+            workspace=self.workspace,
+            state_dir=self.state,
+            database=self.state / "state.sqlite",
+            remote_name="github",
+            remote_url=git_sync.EXPECTED_REMOTE_URL,
+            branch=git_sync.EXPECTED_BRANCH,
+            key_path=self.key,
+            known_hosts_path=self.known_hosts,
+        )
+
+    def tearDown(self) -> None:
+        self.tempdir.cleanup()
+
+    def test_sanitized_environment_drops_service_credential_paths(self) -> None:
+        with mock.patch.dict(
+            os.environ,
+            {
+                "PUMBUM_GIT_SYNC_KEY": "/run/credentials/private-key",
+                "UNRELATED_SECRET": "hidden",
+            },
+        ):
+            environment = git_sync.sanitized_environment()
+        self.assertNotIn("PUMBUM_GIT_SYNC_KEY", environment)
+        self.assertNotIn("UNRELATED_SECRET", environment)
+        self.assertEqual("/dev/null", environment["GIT_CONFIG_GLOBAL"])
+
+    def test_git_disables_workspace_hooks_and_fsmonitor(self) -> None:
+        with mock.patch.object(git_sync, "run_command", return_value="ok") as command:
+            git_sync.git(self.config, "status", "--porcelain")
+        args = command.call_args.args[0]
+        self.assertIn("core.hooksPath=/dev/null", args)
+        self.assertIn("core.fsmonitor=false", args)
+
+    def git_side_effect(self, head: str, pushed: list[tuple[str, ...]]):
+        def fake_git(
+            _config: git_sync.SyncConfig,
+            *args: str,
+            env: dict[str, str] | None = None,
+            timeout: int = 120,
+        ) -> str:
+            del env, timeout
+            if args == ("branch", "--show-current"):
+                return git_sync.EXPECTED_BRANCH
+            if args == ("rev-parse", "HEAD"):
+                return head
+            if args == ("status", "--porcelain", "--untracked-files=all"):
+                return ""
+            if args == ("remote", "get-url", "github"):
+                return git_sync.EXPECTED_REMOTE_URL
+            if args == ("remote", "get-url", "--push", "github"):
+                return git_sync.EXPECTED_REMOTE_URL
+            if args and args[0] == "push":
+                pushed.append(args)
+                return "Done"
+            raise AssertionError(f"Unexpected git call: {args}")
+
+        return fake_git
+
+    def test_sync_skips_unverified_commit(self) -> None:
+        head = "a" * 40
+        pushed: list[tuple[str, ...]] = []
+        with (
+            mock.patch.object(git_sync, "git", side_effect=self.git_side_effect(head, pushed)),
+            mock.patch.object(git_sync, "ssh_environment", return_value={}),
+            mock.patch.object(git_sync, "remote_commit", return_value=None),
+            mock.patch.object(git_sync, "successful_development_task", return_value=None),
+        ):
+            result = git_sync.synchronize(self.config)
+        self.assertEqual("skipped", result["status"])
+        self.assertEqual("commit_not_from_successful_development_task", result["reason"])
+        self.assertEqual([], pushed)
+
+    def test_sync_pushes_exact_non_force_branch_for_successful_task(self) -> None:
+        head = "b" * 40
+        pushed: list[tuple[str, ...]] = []
+        with (
+            mock.patch.object(git_sync, "git", side_effect=self.git_side_effect(head, pushed)),
+            mock.patch.object(git_sync, "ssh_environment", return_value={}),
+            mock.patch.object(git_sync, "remote_commit", side_effect=[None, head]),
+            mock.patch.object(
+                git_sync,
+                "successful_development_task",
+                return_value="development-task",
+            ),
+        ):
+            result = git_sync.synchronize(self.config)
+        self.assertEqual("pushed", result["status"])
+        self.assertEqual("development-task", result["task_id"])
+        self.assertEqual(1, len(pushed))
+        self.assertNotIn("--force", pushed[0])
+        self.assertEqual(
+            f"HEAD:refs/heads/{git_sync.EXPECTED_BRANCH}", pushed[0][-1]
+        )
+
+    def test_sync_accepts_up_to_date_baseline_without_task(self) -> None:
+        head = "c" * 40
+        pushed: list[tuple[str, ...]] = []
+        with (
+            mock.patch.object(git_sync, "git", side_effect=self.git_side_effect(head, pushed)),
+            mock.patch.object(git_sync, "ssh_environment", return_value={}),
+            mock.patch.object(git_sync, "remote_commit", return_value=head),
+            mock.patch.object(git_sync, "successful_development_task") as task_lookup,
+        ):
+            result = git_sync.synchronize(self.config)
+        self.assertEqual("up_to_date", result["status"])
+        task_lookup.assert_not_called()
+        self.assertEqual([], pushed)
 
 
 class WorkerTests(unittest.TestCase):
