@@ -7,6 +7,7 @@ import { ProductImage } from '@/components/product/ProductImage';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getCategoryBySlug, getProductBySlug, getProductByUniqueSlug, getRelatedProductsForProduct } from '@/lib/catalog/loaders';
 import { getProductAvailabilityPresentation } from '@/lib/catalog/availability';
+import { canPublishProductInSitemap } from '@/lib/catalog/quality';
 import { formatProductPrice } from '@/lib/catalog/pricing';
 import { formatSpecLabel, getProductDistinctionFacts, getProductKeyFacts } from '@/lib/catalog/specs';
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonld';
@@ -27,6 +28,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: getProductSeoDescription(product),
     path: `/catalog/${product.categorySlug}/${product.slug}`,
     images: [product.image],
+    noindex: !canPublishProductInSitemap(product),
+    followWhenNoindex: true,
   });
 }
 

@@ -1,7 +1,12 @@
 import { siteConfig } from '@/lib/seo/config';
 
+const canonicalProductionUrl = 'https://477477.ru';
+
 export function isProductionIndexingEnabled(): boolean {
-  return process.env.NEXT_PUBLIC_SITE_ENV === 'production';
+  return (
+    process.env.NEXT_PUBLIC_SITE_ENV === 'production'
+    && siteConfig.siteUrl.replace(/\/$/, '') === canonicalProductionUrl
+  );
 }
 
 export function getRobotsPolicy() {

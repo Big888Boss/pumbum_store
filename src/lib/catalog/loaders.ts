@@ -13,6 +13,7 @@ import {
 } from '@/lib/catalog/buyer-subcategories';
 import { applyProductPricing } from '@/lib/catalog/pricing-runtime';
 import { applyProductImageManifest } from '@/lib/catalog/product-images';
+import { canPublishProductInSitemap } from '@/lib/catalog/quality';
 import { getCategoryProductPriority, normalizeProductCategory, purposeCategories } from '@/lib/catalog/purpose';
 
 export type ManufacturerGroup = {
@@ -482,9 +483,9 @@ export function getRelatedProductsForProduct(product: Product, limit = 3): Produ
 }
 
 export function getPublishedCategories(): Category[] {
-  return getAllCategories().filter((category) => getProductsByCategory(category.slug).some((product) => product.dataQuality.publishInSitemap));
+  return getAllCategories().filter((category) => getProductsByCategory(category.slug).some(canPublishProductInSitemap));
 }
 
 export function getPublishedProducts(): Product[] {
-  return allProducts.filter((product) => product.dataQuality.publishInSitemap);
+  return allProducts.filter(canPublishProductInSitemap);
 }

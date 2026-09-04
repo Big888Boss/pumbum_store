@@ -9,11 +9,17 @@ import { buildMetadata } from '@/lib/seo/metadata';
 
 type PageProps = { searchParams: Promise<{ category?: string; sku?: string; message?: string; sent?: string; error?: string }> };
 
-export const metadata: Metadata = buildMetadata({
-  title: 'Контакты — Сантехникъ',
-  description: 'Контакты магазина Сантехникъ: телефон, email, адрес, режим работы и карта проезда в Саратове.',
-  path: '/contacts',
-});
+export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const hasQueryParameters = Object.values(params).some((value) => value?.trim());
+  return buildMetadata({
+    title: 'Контакты — Сантехникъ',
+    description: 'Контакты магазина Сантехникъ: телефон, email, адрес, режим работы и карта проезда в Саратове.',
+    path: '/contacts',
+    noindex: hasQueryParameters,
+    followWhenNoindex: true,
+  });
+}
 
 export default async function ContactsPage({ searchParams }: PageProps) {
   const params = await searchParams;
