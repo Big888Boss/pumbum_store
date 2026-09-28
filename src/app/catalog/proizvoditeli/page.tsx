@@ -9,7 +9,7 @@ import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Производители — каталог инженерной сантехники',
-  description: 'Каталог по производителям и разделам поставщиков: SINIKON, VALTEC, Гидроконтракт, AQUARIO, VIVALDO, АКВАТЕК, ZOTA, TIM и ESPA.',
+  description: 'Каталог по производителям инженерной сантехники и фильтрации: SINIKON, VALTEC, AQUARIO, АКВАБРАЙТ, VRT, PUDEKANG, VONTRON, Экобрайт, АЛСИС и другие.',
   path: '/catalog/proizvoditeli',
 });
 

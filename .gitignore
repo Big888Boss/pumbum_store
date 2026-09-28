@@ -23,6 +23,10 @@ artifacts/
 # Local/server-side image archives and generated operational reports
 .asset-store/
 public/images/products/
+!public/images/products/
+public/images/products/*
+!public/images/products/vrt/
+!public/images/products/aquabright/
 
 # Generated validation/runtime evidence artifacts
 # Keep curated docs/evidence files only when intentionally added by a task handoff.

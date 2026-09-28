@@ -20,7 +20,7 @@ function assert(condition, message) {
   if (!condition) throw new Error(`ESPA validation failed: ${message}`);
 }
 
-assert(products.length === 9276, `expected 9276 total products, got ${products.length}`);
+assert(products.length === 9562, `expected 9562 total products, got ${products.length}`);
 assert(espaProducts.length === 68, `expected 68 ESPA products, got ${espaProducts.length}`);
 assert(stockProducts.length === 32, `expected 32 stock products, got ${stockProducts.length}`);
 assert(orderProducts.length === 36, `expected 36 order products, got ${orderProducts.length}`);

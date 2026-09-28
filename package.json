@@ -12,6 +12,8 @@
     "catalog:import-legacy": "node scripts/import-legacy-catalog.mjs",
     "catalog:normalize-suppliers": "node scripts/normalize-product-suppliers.mjs",
     "catalog:import-espa": "node scripts/import-espa-catalog.mjs",
+    "catalog:import-water-filters": "node scripts/import-water-filter-catalog.mjs",
+    "catalog:validate-water-filters": "node scripts/validate-water-filter-catalog.mjs",
     "catalog:validate-espa": "node scripts/validate-espa-catalog.mjs",
     "catalog:write-health": "node scripts/write-catalog-health.mjs",
     "security:check-csp": "node scripts/check-csp-runtime.mjs",
