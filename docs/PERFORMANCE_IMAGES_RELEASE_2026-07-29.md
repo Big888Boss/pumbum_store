@@ -64,7 +64,7 @@ Verified invariants:
 ## Deployment
 
 - Active compose:
-  `/opt/plumbing_store_v2/deploy/docker-compose.performance-images-20260729.yml`
+  `<deploy-root>/deploy/docker-compose.performance-images-20260729.yml`
 - Active container:
   `plumbing_store_v2_performance_images_20260729-v2-performance-images-1`
 - Active loopback port: `3027`
@@ -74,7 +74,7 @@ Verified invariants:
   `plumbing_store_v2_catalog_ux_csp_20260725-v2-catalog-ux-csp-1` (stopped,
   retained)
 - Backups:
-  `/opt/plumbing_store_v2/backups/performance-images-20260729`
+  `<deploy-root>/backups/performance-images-20260729`
 
 The candidate was warmed and verified before nginx reload. Running both Next.js
 containers temporarily increased memory pressure, so the previous container was
@@ -101,11 +101,11 @@ without OOM or restart and public health remained successful.
 
 1. Start the previous compose:
 
-   `cd /opt/plumbing_store_v2 && docker compose -f deploy/docker-compose.bluegreen-catalog-ux-csp-20260725.yml up -d`
+   `cd <deploy-root> && docker compose -f deploy/docker-compose.bluegreen-catalog-ux-csp-20260725.yml up -d`
 
 2. Verify `127.0.0.1:3026/api/health`.
 3. Restore
-   `/opt/plumbing_store_v2/backups/performance-images-20260729/plumbing_store.conf.pre-performance-images`
+   `<deploy-root>/backups/performance-images-20260729/plumbing_store.conf.pre-performance-images`
    to `/etc/nginx/sites-enabled/plumbing_store.conf`.
 4. Run `sudo nginx -t` and reload nginx.
 5. Stop the performance-images compose only after public rollback verification.
