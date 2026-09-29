@@ -12,7 +12,7 @@
 2. Rebuild the normalized V2 artifact:
 
 ```bash
-LEGACY_CATALOG_SOURCE=/home/administrator/agent-projects/pumbum-store \
+LEGACY_CATALOG_SOURCE=<build-workspace>/pumbum-store \
 LEGACY_CATALOG_GENERATED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
 npm run catalog:import-legacy
 ```
@@ -141,7 +141,7 @@ The manifest is the switchboard. Product JSON stays stable, while UI components 
 
 For supplier-specific repairs, prefer exact source connectors over manual manifest edits:
 
-- SINIKON article page: `npm run images:apply-sinikon-source -- --dry-run --no-default-seeds --page-url <official product url> --sku <article>`.
+- SINIKON article page: the former `npm run images:apply-sinikon-source` script is unavailable (`scripts/apply-sinikon-source-images.mjs` is not in the repository); see `docs/IMAGE_ASSET_MANIFEST.md`.
 - АКВАТЕК model card: `npm run images:apply-aquatec-source -- --dry-run --sku "<model>"`.
 
 After `dry-run` matches the expected product and source image, rerun without `--dry-run`.

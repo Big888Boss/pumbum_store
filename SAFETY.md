@@ -1,5 +1,11 @@
 # Safety Boundary for new-store-v2
 
+> **Historical document.** This file dates from the period when the V2 storefront was
+> developed inside a `new-store-v2/` folder of the legacy monorepo. In this repository
+> the V2 storefront *is* the root (`src/`, `content/`, `deploy/`, `Dockerfile`), so the
+> `new-store-v2/` paths below no longer exist. It is kept for the audit trail only; see
+> `README.md` and `docs/AGENT_CONTEXT.md` for the current layout and rules.
+
 This folder is the only allowed workspace for the new parallel store project.
 
 ## Mandatory rule

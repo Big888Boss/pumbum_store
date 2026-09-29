@@ -87,7 +87,7 @@
 - image: `plumbing_store_v2-v2:catalog-ux-20260725-v3`;
 - active localhost port: `3026`;
 - verified rollback image/container: `catalog-ux-20260725-v2` on `3025`, stopped after the public release checks to save RAM/swap;
-- build only on `administrator@100.95.56.90`; never build on the small production host;
+- build only on `<build-user>@<staging-host>`; never build on the small production host;
 - release and rollback evidence: `docs/CATALOG_UX_RELEASE_2026-07-25.md`.
 
 Нельзя:

@@ -30,7 +30,7 @@ This keeps unrelated products and all 9,276 catalog rows unchanged.
 - `npm run check:isolation`: passed.
 - `npm run analytics:check`: passed.
 - `npm audit --audit-level=moderate`: `0 vulnerabilities`.
-- `npm run build`: passed on `administrator@100.95.56.90`; no build ran on production.
+- `npm run build`: passed on `<build-user>@<staging-host>`; no build ran on production.
 - `catalog:check-taxonomy`: 9,276 products, 10 categories and 9,293 sitemap URLs.
 - `catalog:check-legacy-purpose-redirects`: 7,546 moved paths covered, 0 missing, 0 ambiguous.
 - `catalog:check-pagination`: 3,379 unique pipe/fitting products across 57 pages; warm staging max 746 ms.

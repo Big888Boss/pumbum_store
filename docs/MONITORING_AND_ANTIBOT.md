@@ -2,7 +2,12 @@
 
 ## What is implemented in V2 now
 
-- `/api/health` returns service status, runtime, catalog totals and timestamp.
+- `/api/health` returns service status, catalog totals and timestamp to everyone. Runtime
+  details (`runtime.node`, `runtime.env`, `runtime.siteEnv`, `uptimeSeconds`) are returned
+  only when the request carries the synthetic monitor user agent `pumbum-monitoring/1.0`
+  (the same marker the middleware trusts), so anonymous callers cannot fingerprint the
+  Node version or environment. Grafana/blackbox checks that parse `runtime` must send
+  this user agent.
 - `middleware.ts` adds app-level rate limiting for `/`, `/catalog`, product pages, `/search` and `/api`.
 - Script-like clients are blocked on catalog/search/API paths by user-agent and browser-header heuristics.
 - Bulk-catalog probe paths such as `/api/public/catalog`, `/api/catalog`, `/api/products` and `/content/generated/**` are blocked and penalized.
@@ -14,7 +19,7 @@
 - Active business goals preserve the legacy identifiers: `search_submit`, `click_phone`, `click_email`, `view_product` and `click_order`.
 - Search goal parameters include only the query length, category when selected, and UI location. The raw search text is not sent to Metrika.
 
-Live V2 verification on `100.95.56.90:3020` after the July 4 anti-bot and UI hardening:
+Live V2 verification on `<staging-host>:3020` after the July 4 anti-bot and UI hardening:
 
 - Browser-like catalog request: `200`, `X-AntiBot-Policy: catalog`.
 - `python-requests` catalog request: `403`, `X-AntiBot-Policy: script-client`, `Retry-After: 900`.
@@ -22,6 +27,21 @@ Live V2 verification on `100.95.56.90:3020` after the July 4 anti-bot and UI har
 - Browser-like catalog request immediately after a bulk probe: `200`. This verifies that scripted probes do not create a global IP block for normal visitors.
 - `/api/health` from `curl`: `200`, `X-AntiBot-Policy: health`, `X-RateLimit-Limit: 240`.
 - Mobile smoke pages `/`, `/catalog`, `/search?q=Valtec`: `200`, no `Too many requests`.
+
+## Client IP source for rate limiting
+
+The middleware reads the client IP from exactly one header, configured with
+`TRUSTED_CLIENT_IP_HEADER` (default `x-real-ip`). `CF-Connecting-IP`,
+`X-Forwarded-For` and any other client-supplied header are ignored, so a scraper
+cannot obtain a fresh rate-limit bucket per request by rotating spoofed headers.
+
+Requirement for the reverse proxy in front of the container: nginx must set this
+header itself from the connection address (`proxy_set_header X-Real-IP $remote_addr;`)
+and must not pass through incoming `CF-Connecting-IP`, `X-Real-IP` or
+`X-Forwarded-For` values from clients. If the header is absent, all visitors fall
+back to the visitor cookie / header fingerprint and share limits, so verify the
+nginx configuration before every deployment (`curl -I` a catalog page and compare
+`X-RateLimit-Remaining` across two different client addresses).
 
 ## Region analytics
 

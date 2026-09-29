@@ -35,16 +35,20 @@ const suspiciousPath = /^\/(?:api\/public|api\/catalog|api\/products|content\/ge
 const disabledOrderApiPath = /^\/api\/(?:cart|leads)$/i;
 const cspReportPath = '/api/csp-report';
 
-function getClientIp(request: NextRequest): string {
-  const forwarded = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+const defaultTrustedClientIpHeader = 'x-real-ip';
+
+export function getTrustedClientIpHeader(): string {
+  return (process.env.TRUSTED_CLIENT_IP_HEADER || defaultTrustedClientIpHeader).trim().toLowerCase();
+}
+
+// Only the header set by the trusted reverse proxy (nginx) is honoured. Any other
+// client-supplied IP header (cf-connecting-ip, x-forwarded-for, ...) is ignored so a
+// scraper cannot mint a fresh rate-limit bucket per request by rotating headers.
+export function getClientIp(request: NextRequest): string {
   const nextIp = (request as unknown as { ip?: string }).ip;
-  return (
-    request.headers.get('cf-connecting-ip') ||
-    request.headers.get('x-real-ip') ||
-    forwarded ||
-    nextIp ||
-    'unknown'
-  );
+  const header = getTrustedClientIpHeader();
+  const value = request.headers.get(header)?.split(',')[0]?.trim();
+  return value || nextIp || 'unknown';
 }
 
 function makeVisitorId(): string {
