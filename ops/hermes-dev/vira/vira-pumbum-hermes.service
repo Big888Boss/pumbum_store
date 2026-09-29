@@ -6,16 +6,16 @@ StartLimitIntervalSec=0
 
 [Service]
 Type=simple
-WorkingDirectory=/home/vira-admin/.hermes/profiles/pumbum-dev/workspace
-Environment=HERMES_HOME=/home/vira-admin/.hermes/profiles/pumbum-dev
-Environment=HERMES_SHARED_AUTH_PATH=/home/vira-admin/.hermes/shared-auth/auth.json
+WorkingDirectory=%h/.hermes/profiles/pumbum-dev/workspace
+Environment=HERMES_HOME=%h/.hermes/profiles/pumbum-dev
+Environment=HERMES_SHARED_AUTH_PATH=%h/.hermes/shared-auth/auth.json
 Environment=PYTHONUNBUFFERED=1
-Environment=VIRTUAL_ENV=/home/vira-admin/.hermes/releases/20260814T133920Z-c80d88678660/venv
-Environment=PATH=/home/vira-admin/.hermes/releases/20260814T133920Z-c80d88678660/venv/bin:/home/vira-admin/.hermes/releases/20260814T133920Z-c80d88678660/node_modules/.bin:/home/vira-admin/.local/bin:/usr/local/bin:/usr/bin:/bin
-EnvironmentFile=/home/vira-admin/.config/pumbum-hermes-dev/runtime.env
-ExecStart=/home/vira-admin/.hermes/releases/20260814T133920Z-c80d88678660/venv/bin/python -m hermes_cli.main gateway run
+Environment=VIRTUAL_ENV=%h/.hermes/releases/20260814T133920Z-c80d88678660/venv
+Environment=PATH=%h/.hermes/releases/20260814T133920Z-c80d88678660/venv/bin:%h/.hermes/releases/20260814T133920Z-c80d88678660/node_modules/.bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+EnvironmentFile=%h/.config/pumbum-hermes-dev/runtime.env
+ExecStart=%h/.hermes/releases/20260814T133920Z-c80d88678660/venv/bin/python -m hermes_cli.main gateway run
 ExecReload=/bin/kill -USR1 $MAINPID
-ExecStopPost=-/home/vira-admin/.hermes/releases/20260814T133920Z-c80d88678660/venv/bin/python -m gateway.cgroup_cleanup
+ExecStopPost=-%h/.hermes/releases/20260814T133920Z-c80d88678660/venv/bin/python -m gateway.cgroup_cleanup
 Restart=always
 RestartSec=5
 RestartForceExitStatus=75
@@ -27,9 +27,9 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=read-only
-ReadOnlyPaths=/home/vira-admin/pumbum-hermes-dev
-ReadWritePaths=/home/vira-admin/.hermes/profiles/pumbum-dev
-ReadWritePaths=/home/vira-admin/.hermes/shared-auth
+ReadOnlyPaths=%h/pumbum-hermes-dev
+ReadWritePaths=%h/.hermes/profiles/pumbum-dev
+ReadWritePaths=%h/.hermes/shared-auth
 MemoryMax=3G
 TasksMax=512
 StandardOutput=journal

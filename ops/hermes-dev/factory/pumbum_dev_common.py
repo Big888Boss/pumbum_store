@@ -11,13 +11,13 @@ from pathlib import Path
 from typing import Any
 
 
-WORKSPACE = Path(os.environ.get("PUMBUM_DEV_WORKSPACE", "/home/administrator/agent-projects/pumbum-hermes-dev")).resolve()
-STATE_DIR = Path(os.environ.get("PUMBUM_DEV_STATE_DIR", "/home/administrator/.local/state/pumbum-hermes-dev")).resolve()
+WORKSPACE = Path(os.environ.get("PUMBUM_DEV_WORKSPACE", str(Path.home() / "agent-projects/pumbum-hermes-dev"))).resolve()
+STATE_DIR = Path(os.environ.get("PUMBUM_DEV_STATE_DIR", str(Path.home() / ".local/state/pumbum-hermes-dev"))).resolve()
 DB_PATH = STATE_DIR / "state.sqlite"
 LOG_DIR = STATE_DIR / "logs"
 GIT_SYNC_STATUS_PATH = STATE_DIR / "git-sync-status.json"
 EXPECTED_BRANCH = "codex/hermes-seo-geo"
-PREVIEW_URL = os.environ.get("PUMBUM_DEV_PREVIEW_URL", "http://100.95.56.90:3032").rstrip("/")
+PREVIEW_URL = os.environ.get("PUMBUM_DEV_PREVIEW_URL", f"http://{os.environ.get('PUMBUM_DEV_TAILNET_HOST', '127.0.0.1')}:3032").rstrip("/")
 MAX_REQUEST_CHARS = 12_000
 
 

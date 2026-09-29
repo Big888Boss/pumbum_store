@@ -3,7 +3,7 @@ name: plumbing_store_v2
 services:
   v2:
     build:
-      context: ./new-store-v2
+      context: ..
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://477477.ru}
@@ -19,6 +19,8 @@ services:
       NEXT_PUBLIC_SITE_ENV: ${NEXT_PUBLIC_SITE_ENV:-production}
       NEXT_PUBLIC_YANDEX_METRIKA_ID: ${NEXT_PUBLIC_YANDEX_METRIKA_ID:-}
       CSP_MODE: ${CSP_MODE:-enforce}
+      # Header that nginx sets with the real client IP; other IP headers are ignored.
+      TRUSTED_CLIENT_IP_HEADER: ${TRUSTED_CLIENT_IP_HEADER:-x-real-ip}
     volumes:
       - ./public/images/products:/app/public/images/products:ro
     ports:

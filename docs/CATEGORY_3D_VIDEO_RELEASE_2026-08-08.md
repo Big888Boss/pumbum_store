@@ -72,7 +72,7 @@ The active staging build is `lS3jNHYnNcDbUzn_QdkMC`, served by
   memory and zero memory PSI during final checks.
 
 The exact previous build `VrSm6Yp1QPN1nYTJVNRbY` is retained at
-`/home/administrator/backups/pumbum-redesign/category-video-hq-20260808/.next-VrSm6Yp1QPN1nYTJVNRbY`
+`<build-home>/backups/pumbum-redesign/category-video-hq-20260808/.next-VrSm6Yp1QPN1nYTJVNRbY`
 for rollback. Production `477477.ru` was not changed.
 
 Final result: passed.

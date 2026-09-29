@@ -13,17 +13,17 @@ from typing import Any
 WORKSPACE = Path(
     os.environ.get(
         "PUMBUM_DEV_WORKSPACE",
-        "/home/administrator/agent-projects/pumbum-hermes-dev",
+        str(Path.home() / "agent-projects/pumbum-hermes-dev"),
     )
 ).resolve()
 STATE_DIR = Path(
     os.environ.get(
         "PUMBUM_DEV_STATE_DIR",
-        "/home/administrator/.local/state/pumbum-hermes-dev",
+        str(Path.home() / ".local/state/pumbum-hermes-dev"),
     )
 ).resolve()
 PREVIEW_URL = os.environ.get(
-    "PUMBUM_DEV_PREVIEW_URL", "http://100.95.56.90:3032"
+    "PUMBUM_DEV_PREVIEW_URL", f"http://{os.environ.get('PUMBUM_DEV_TAILNET_HOST', '127.0.0.1')}:3032"
 ).rstrip("/")
 MARKER_PATH = STATE_DIR / "preview-ready.json"
 ACK_PATH = STATE_DIR / "preview-health.json"
@@ -62,7 +62,11 @@ def health_is_ready(payload: dict[str, Any]) -> bool:
 
 def read_health() -> dict[str, Any] | None:
     try:
-        with urllib.request.urlopen(f"{PREVIEW_URL}/api/health", timeout=5) as response:
+        request = urllib.request.Request(
+            f"{PREVIEW_URL}/api/health",
+            headers={"User-Agent": "pumbum-monitoring/1.0"},
+        )
+        with urllib.request.urlopen(request, timeout=5) as response:
             if response.status != 200:
                 return None
             payload = json.loads(response.read().decode("utf-8"))

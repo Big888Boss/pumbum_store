@@ -267,6 +267,10 @@ function classifyTim(product: Product): string {
 export function getPurposeCategorySlug(product: Product): string {
   const text = getProductText(product);
 
+  if (product.id.startsWith('water-vrt-') || product.id.startsWith('water-terra-')) {
+    return product.categorySlug === CATEGORY.mixer ? CATEGORY.mixer : CATEGORY.filter;
+  }
+
   if (isSupplier(product, 'aquario') || isSupplier(product, 'gidrokontrakt') || isSupplier(product, 'espa')) return CATEGORY.pump;
   if (isSupplier(product, 'vivaldo') || isSupplier(product, 'zota')) return CATEGORY.heating;
   if (isSupplier(product, 'aquatec')) {

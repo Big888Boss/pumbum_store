@@ -73,6 +73,12 @@ const supplierSourceGroups = [
   { slug: 'zota', name: 'ZOTA', sources: ['zota/catalog.json'] },
   { slug: 'tim', name: 'TIM', sources: ['tim/catalog.json'] },
   { slug: 'espa', name: 'ESPA', sources: ['espa/catalog.json'] },
+  { slug: 'vrt', name: 'VRT', sources: [] },
+  { slug: 'aquabright', name: 'АКВАБРАЙТ', sources: [] },
+  { slug: 'pudekang', name: 'PUDEKANG', sources: [] },
+  { slug: 'vontron', name: 'VONTRON', sources: [] },
+  { slug: 'ecobright', name: 'Экобрайт', sources: [] },
+  { slug: 'alsis', name: 'АЛСИС', sources: [] },
 ] as const;
 
 type SupplierSlug = (typeof supplierSourceGroups)[number]['slug'];
@@ -87,6 +93,12 @@ const supplierLogoFallbacks: Record<SupplierSlug, string> = {
   zota: '/brand-logos/zota.svg',
   tim: '/brand-logos/tim.jpg',
   espa: '/brand-logos/espa.png',
+  vrt: '/brand-logos/vrt.svg',
+  aquabright: '/brand-logos/aquabright.png',
+  pudekang: '/brand-logos/pudekang.png',
+  vontron: '/brand-logos/vontron.png',
+  ecobright: '/brand-logos/ecobright.svg',
+  alsis: '/brand-logos/alsis.png',
 };
 
 function sourceLabels(product: Product): string {
@@ -144,6 +156,12 @@ function supplierDisplayName(supplier: SupplierSlug): string {
   if (supplier === 'zota') return 'ZOTA';
   if (supplier === 'tim') return 'TIM';
   if (supplier === 'espa') return 'ESPA';
+  if (supplier === 'vrt') return 'VRT';
+  if (supplier === 'aquabright') return 'АКВАБРАЙТ';
+  if (supplier === 'pudekang') return 'PUDEKANG';
+  if (supplier === 'vontron') return 'VONTRON';
+  if (supplier === 'ecobright') return 'Экобрайт';
+  if (supplier === 'alsis') return 'АЛСИС';
   return supplier;
 }
 

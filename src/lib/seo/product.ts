@@ -35,6 +35,7 @@ function trimAtWord(value: string, maxLength: number): string {
 
 export function getProductDisplayName(product: Product): string {
   const name = compact(product.name);
+  if (product.brand === 'generic' && product.brandName === 'Производитель не указан') return name;
   const brand = compact(product.brandName);
   return name.toLocaleLowerCase('ru-RU').includes(brand.toLocaleLowerCase('ru-RU'))
     ? name

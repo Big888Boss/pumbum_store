@@ -28,11 +28,11 @@ Production `477477.ru` was not modified.
 - Active unit:
   `pumbum-redesign-preview-manufacturer-responsive-20260801.service`
 - App listener: `127.0.0.1:3025`
-- Tailnet gate: `100.95.56.90:3027`
+- Tailnet gate: `<tailnet-host>:3027`
 - Public read-only gate: `127.0.0.1:3028` through the existing outbound-only
   Cloudflare transport
 - Exact previous build:
-  `/home/administrator/backups/pumbum-redesign/manufacturer-responsive-20260801/.next-6ifPip-yNQOrJD9gbAXST`
+  `<build-home>/backups/pumbum-redesign/manufacturer-responsive-20260801/.next-6ifPip-yNQOrJD9gbAXST`
 
 ## Verification
 

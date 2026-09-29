@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-workspace="/home/administrator/agent-projects/pumbum-hermes-dev"
-runtime_env="/home/administrator/.config/pumbum-hermes-dev/runtime.env"
-runtime_root="/home/administrator/.local/share/pumbum-hermes-dev"
-state_root="/home/administrator/.local/state/pumbum-hermes-dev"
-unit_root="/home/administrator/.config/systemd/user"
+workspace="${HOME}/agent-projects/pumbum-hermes-dev"
+runtime_env="${HOME}/.config/pumbum-hermes-dev/runtime.env"
+runtime_root="${HOME}/.local/share/pumbum-hermes-dev"
+state_root="${HOME}/.local/state/pumbum-hermes-dev"
+unit_root="${HOME}/.config/systemd/user"
 github_remote="git@github.com:Big888Boss/pumbum_store.git"
-github_key="/home/administrator/.ssh/pumbum-hermes-github"
+github_key="${HOME}/.ssh/pumbum-hermes-github"
 
-if [[ "$(id -un)" != "administrator" ]]; then
-  echo "Run as administrator" >&2
+if [[ "$(id -u)" == "0" ]]; then
+  echo "Run as an unprivileged deployment user" >&2
   exit 1
 fi
 
@@ -28,6 +28,21 @@ if ! grep -Eq '^PUMBUM_DEV_MCP_TOKEN=.{32,}$' "${runtime_env}"; then
   echo "PUMBUM_DEV_MCP_TOKEN is missing or too short" >&2
   exit 1
 fi
+
+for key in PUMBUM_DEV_TAILNET_HOST PUMBUM_DEV_PREVIEW_URL NEXT_PUBLIC_SITE_URL; do
+  if ! grep -Eq "^${key}=.+$" "${runtime_env}"; then
+    echo "${key} is missing from ${runtime_env}" >&2
+    exit 1
+  fi
+done
+
+set -a
+# shellcheck disable=SC1090
+source "${runtime_env}"
+set +a
+export PUMBUM_DEV_WORKSPACE="${workspace}"
+export PUMBUM_DEV_STATE_DIR="${state_root}"
+: "${PUMBUM_DEV_CODEX_HOME:?Set PUMBUM_DEV_CODEX_HOME in runtime.env}"
 
 if [[ "$(git -C "${workspace}" branch --show-current)" != "codex/hermes-seo-geo" ]]; then
   echo "Wrong workspace branch" >&2

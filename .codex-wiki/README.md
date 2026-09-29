@@ -26,7 +26,7 @@ Production builds are created on the USA build host. The small production server
 The 2026-07-25 high-end redesign is an isolated source/build prototype based on
 production commit `a6bc64e`. The owner approved a temporary preview whose app
 process stays on `127.0.0.1:3025`. Tailnet access is provided through
-`100.95.56.90:3027`; one non-tailnet reviewer uses an invitation-gated,
+`<tailnet-host>:3027`; one non-tailnet reviewer uses an invitation-gated,
 outbound-only TLS tunnel. Cloudflare Quick Tunnel is the preferred transport;
 an outbound-only `localhost.run` SSH tunnel is the temporary fallback while
 Cloudflare returns allocation rate-limit `1015/429`. Both reach the same
@@ -88,7 +88,7 @@ above-the-fold content, replaces the non-composited placeholder shimmer with a
 static low-cost state, and serves the selected carousel/category showcase images
 as deterministic WebP derivatives while retaining their PNG originals. The
 active build ID is `ntJzITqB6mFDEfk1uCyWy`; the previous `.next` build remains
-under `/home/administrator/backups/pumbum-redesign/performance-20260729` for
+under `<build-home>/backups/pumbum-redesign/performance-20260729` for
 rollback. The live loopback app remains on `3025`, the Tailnet gate remains on
 `3027`, and the public read-only gate remains on `3028`. Health reports all
 9,276 products and ten categories. Desktop/mobile browser QA, taxonomy, legacy
@@ -124,10 +124,10 @@ staging activation. Production `477477.ru` was not changed.
 
 The card-integrated mascot build is now active on staging at commit `92bde2b`
 and build ID `aan2vpoPFXuxQezetsdd_`. The app remains loopback-only on `3025`,
-with the Tailnet gate on `100.95.56.90:3027` and the public read-only gate on
+with the Tailnet gate on `<tailnet-host>:3027` and the public read-only gate on
 `3028`. Post-switch browser QA passed at desktop `1280 x 847` and mobile
 `390 x 844` with no runtime errors. The exact previous build is retained at
-`/home/administrator/backups/pumbum-redesign/card-mascots-v2-20260730/.next-ioTJXSOnOFtqczXlpHGzk`.
+`<build-home>/backups/pumbum-redesign/card-mascots-v2-20260730/.next-ioTJXSOnOFtqczXlpHGzk`.
 
 The owner-directed rollback candidate `oGVITNX3iPc27gSte3MyV` removes the two
 newest mascot layers only: the page-edge companion trail and the later
@@ -140,11 +140,11 @@ CSP, dependency and bounded load checks before staging activation. Production
 
 The rollback is active on staging at commit `1ec79e0` and build ID
 `oGVITNX3iPc27gSte3MyV`. The Tailnet endpoint remains
-`http://100.95.56.90:3027/`; loopback listeners and access gates did not
+`http://<tailnet-host>:3027/`; loopback listeners and access gates did not
 change. Post-switch desktop/mobile browser QA passed without runtime errors,
 and the rejected companion/runner layers are absent. The exact previously
 active build is retained at
-`/home/administrator/backups/pumbum-redesign/mascot-layer-rollback-20260730/.next-aan2vpoPFXuxQezetsdd_`.
+`<build-home>/backups/pumbum-redesign/mascot-layer-rollback-20260730/.next-aan2vpoPFXuxQezetsdd_`.
 
 The corrected 2026-07-31 presentation-directed staging release restores only
 the character assets required by the colleague's marked composition, without
@@ -159,7 +159,7 @@ area. The overlays do not change card, grid or text geometry. Active commit
 post-activation desktop/mobile browser QA, all ten mappings, lint, TypeScript,
 isolation, taxonomy, full pagination, carousel and CSP checks. The previous
 build `oGVITNX3iPc27gSte3MyV` remains available under
-`/home/administrator/backups/pumbum-redesign/presentation-mascots-corrective-20260731`
+`<build-home>/backups/pumbum-redesign/presentation-mascots-corrective-20260731`
 for exact rollback. Production `477477.ru` was not changed.
 
 The later 2026-07-31 seam-tuning follow-up is active at commit `38d8c9c` and
@@ -168,7 +168,7 @@ carousel seam, seats every related-category figure lower on the left edge of
 the third card, and rebalances the pre-purchase phone card without moving the
 surrounding grids. Manufacturers and About were intentionally left unchanged.
 The previous build is retained at
-`/home/administrator/backups/pumbum-redesign/mascot-tuning-20260731/.next-JKCl7iHZyZoerzEGWZ7YM`.
+`<build-home>/backups/pumbum-redesign/mascot-tuning-20260731/.next-JKCl7iHZyZoerzEGWZ7YM`.
 Desktop/mobile browser QA, catalog/taxonomy/pagination/carousel, CSP, dependency
 and bounded load checks passed; production `477477.ru` was not touched.
 
@@ -179,7 +179,7 @@ offset; `VALTEC` no longer hosts a figure. Pose assets, scale, vertical seam,
 card geometry and mobile behavior are unchanged. Candidate and post-activation
 desktop/mobile QA, lint, TypeScript, isolation, taxonomy, CSP and dependency
 checks passed. The previous build is retained at
-`/home/administrator/backups/pumbum-redesign/manufacturer-placement-20260731/.next-KoqQfjCznzqwU-erirpnY`;
+`<build-home>/backups/pumbum-redesign/manufacturer-placement-20260731/.next-KoqQfjCznzqwU-erirpnY`;
 production `477477.ru` was not touched.
 
 The final 2026-08-01 mobile geometry correction is active at commit `05d1c50`
@@ -190,7 +190,7 @@ starts below the phone CTA, while the gap before `Товары раздела` r
 bounded and collision-free. Automated checks wait for fonts, measure all ten
 phone categories plus tablet, and retain the accepted desktop composition.
 Exact rollback builds are stored under
-`/home/administrator/backups/pumbum-redesign/mobile-geometry-20260801`.
+`<build-home>/backups/pumbum-redesign/mobile-geometry-20260801`.
 Production `477477.ru` was not touched.
 
 The exact-corner correction is active at commit `7f8ee9f` and build
@@ -199,7 +199,7 @@ straddles the rounded upper-left SINIKON border with both legs hanging inside
 the card, while Тепловик is centered farther left on ZOTA. Фильтрыч, card
 geometry, manufacturer copy and the mobile breakpoint remain unchanged. The
 previous build is retained at
-`/home/administrator/backups/pumbum-redesign/manufacturer-corner-20260731/.next-sh4maH1zXLMXPQW744aKf`.
+`<build-home>/backups/pumbum-redesign/manufacturer-corner-20260731/.next-sh4maH1zXLMXPQW744aKf`.
 Candidate and post-activation desktop/mobile QA, geometry assertions, lint,
 TypeScript, isolation, taxonomy, CSP and dependency checks passed; production
 `477477.ru` was not touched.
@@ -214,7 +214,7 @@ Escape, outside pointer input and route navigation. Candidate and active runs
 passed desktop `1280x847`, tablet `820x1180` and phone `390x844` browser QA,
 lint, TypeScript, isolation, taxonomy, full pagination, CSP and dependency
 checks. The exact rollback is
-`/home/administrator/backups/pumbum-redesign/mobile-responsive-20260801/.next-7amE_klJPTk9sNkUGIEkJ`;
+`<build-home>/backups/pumbum-redesign/mobile-responsive-20260801/.next-7amE_klJPTk9sNkUGIEkJ`;
 production `477477.ru` was not touched.
 
 The final 2026-08-01 phone composition alignment is active at commit
@@ -225,7 +225,7 @@ the left safe zone beside the thoughtful figure, while the product-count copy
 starts `4-14px` below its feet. Candidate and post-switch desktop, tablet and
 phone browser QA, taxonomy, full pagination, CSP and carousel checks passed.
 The exact previous build is retained at
-`/home/administrator/backups/pumbum-redesign/mobile-composition-20260801/.next-CkM2fMHxqyyBr5tPBja5R`;
+`<build-home>/backups/pumbum-redesign/mobile-composition-20260801/.next-CkM2fMHxqyyBr5tPBja5R`;
 production `477477.ru` was not changed.
 
 The 2026-08-01 manufacturer responsive seam correction is active at
@@ -237,7 +237,7 @@ toward TIM. All manufacturer-card gaps remain `16px`; figures do not cover
 logos, copy or the manufacturer links. Focused geometry and the full storefront
 browser suite passed at `1280x847`, `820x1180` and `390x844`. The exact prior
 build remains under
-`/home/administrator/backups/pumbum-redesign/manufacturer-responsive-20260801`.
+`<build-home>/backups/pumbum-redesign/manufacturer-responsive-20260801`.
 Production `477477.ru` was not changed.
 
 The 2026-08-08 category-video release is active only on isolated staging at
@@ -249,7 +249,7 @@ users. The component keeps its existing content-column geometry and `860px`
 desktop cap. Candidate and post-switch checks passed all 30 phone/tablet/desktop
 combinations plus full storefront, taxonomy, pagination, CSP, dependency and
 bounded-load regressions. The previous build is retained at
-`/home/administrator/backups/pumbum-redesign/category-video-hq-20260808/.next-VrSm6Yp1QPN1nYTJVNRbY`;
+`<build-home>/backups/pumbum-redesign/category-video-hq-20260808/.next-VrSm6Yp1QPN1nYTJVNRbY`;
 production `477477.ru` was not changed.
 
 The 2026-08-09 category hero correction is active only on isolated staging at
@@ -264,5 +264,5 @@ no grey/black background contamination. Candidate and post-switch checks
 passed all seven corrected categories at `1280x847`, `820x1180` and `390x844`,
 plus taxonomy, full pagination, carousel/video, CSP, dependency and bounded
 load gates. Exact rollback build `lS3jNHYnNcDbUzn_QdkMC` is retained at
-`/home/administrator/backups/pumbum-redesign/category-hero-corrections-20260809/.next-lS3jNHYnNcDbUzn_QdkMC`.
+`<build-home>/backups/pumbum-redesign/category-hero-corrections-20260809/.next-lS3jNHYnNcDbUzn_QdkMC`.
 Production `477477.ru` was not connected to, restarted or modified.

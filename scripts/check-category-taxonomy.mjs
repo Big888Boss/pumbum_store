@@ -32,8 +32,8 @@ async function get(path, options = {}) {
 const healthResult = await get('/api/health');
 assert(healthResult.response.ok, `/api/health returned ${healthResult.response.status}`);
 const health = JSON.parse(healthResult.body);
-assert(health.catalog?.products === 9276, `expected 9276 products, got ${health.catalog?.products}`);
-assert(health.catalog?.publishedProducts === 9276, `expected 9276 published products, got ${health.catalog?.publishedProducts}`);
+assert(health.catalog?.products === 9562, `expected 9562 products, got ${health.catalog?.products}`);
+assert(health.catalog?.publishedProducts === 9532, `expected 9532 published products, got ${health.catalog?.publishedProducts}`);
 assert(health.catalog?.categories === 10, `expected 10 categories, got ${health.catalog?.categories}`);
 
 const catalog = await get('/catalog');
@@ -102,7 +102,7 @@ assert(locations.length > 9293, `expected new navigation routes in sitemap, got 
 assert(new Set(locations).size === locations.length, 'sitemap contains duplicate URLs');
 assert(locations.filter((url) => url.includes('/podrazdel/')).length >= 30, 'too few buyer subcategory routes in sitemap');
 assert(locations.filter((url) => url.includes('/catalog/po-zadache/')).length === 6, 'buyer task routes are incomplete');
-assert(locations.filter((url) => /\/catalog\/proizvoditeli\/[^/]+$/.test(url)).length === 9, 'manufacturer routes are incomplete');
+assert(locations.filter((url) => /\/catalog\/proizvoditeli\/[^/]+$/.test(url)).length === 15, 'manufacturer routes are incomplete');
 assert(!locations.some((url) => url.includes('/catalog/nasosy-i-vodosnabzhenie')), 'old pumps category remains in sitemap');
 assert(!locations.some((url) => url.includes('/catalog/kanalizaciya-i-vodootvedenie')), 'old sewer category remains in sitemap');
 
@@ -130,7 +130,7 @@ console.log(JSON.stringify({
   redirects: 3,
   buyerSubcategories: locations.filter((url) => url.includes('/podrazdel/')).length,
   buyerTasks: 6,
-  manufacturers: 9,
+  manufacturers: 15,
   navigationRoutesChecked: navigationLocations.length,
   navigationConcurrency,
   phone: expectedPhone,

@@ -46,14 +46,14 @@ class SyncConfig:
         state_dir = Path(
             os.environ.get(
                 "PUMBUM_GIT_SYNC_STATE_DIR",
-                "/home/administrator/.local/state/pumbum-hermes-dev",
+                str(Path.home() / ".local/state/pumbum-hermes-dev"),
             )
         ).resolve()
         return cls(
             workspace=Path(
                 os.environ.get(
                     "PUMBUM_GIT_SYNC_WORKSPACE",
-                    "/home/administrator/agent-projects/pumbum-hermes-dev",
+                    str(Path.home() / "agent-projects/pumbum-hermes-dev"),
                 )
             ).resolve(),
             state_dir=state_dir,
@@ -68,13 +68,13 @@ class SyncConfig:
             key_path=Path(
                 os.environ.get(
                     "PUMBUM_GIT_SYNC_KEY",
-                    "/home/administrator/.ssh/pumbum-hermes-github",
+                    str(Path.home() / ".ssh/pumbum-hermes-github"),
                 )
             ).resolve(),
             known_hosts_path=Path(
                 os.environ.get(
                     "PUMBUM_GIT_SYNC_KNOWN_HOSTS",
-                    "/home/administrator/.ssh/known_hosts",
+                    str(Path.home() / ".ssh/known_hosts"),
                 )
             ).resolve(),
         )

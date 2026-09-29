@@ -71,7 +71,7 @@ platforms:
 
 mcp_servers:
   pumbum_dev:
-    url: http://100.95.56.90:8798/mcp
+    url: __PUMBUM_DEV_MCP_URL__
     headers:
       Authorization: "Bearer ${PUMBUM_DEV_MCP_TOKEN}"
     enabled: true

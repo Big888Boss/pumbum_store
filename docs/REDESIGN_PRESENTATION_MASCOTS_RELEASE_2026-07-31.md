@@ -48,15 +48,15 @@ mascots remain.
 - Build controls: `MemoryMax=4G`, `MemoryHigh=3500M`, `CPUQuota=160%`,
   `Nice=10`
 - App listener: `127.0.0.1:3025`
-- Tailnet gate: `http://100.95.56.90:3027/`
+- Tailnet gate: `http://<tailnet-host>:3027/`
 - Public read-only URL:
   `https://giving-moves-winds-sig.trycloudflare.com/`
 - Public access remains behind the existing outbound tunnel and loopback gate
   on `127.0.0.1:3028`
 - Exact rollback build:
-  `/home/administrator/backups/pumbum-redesign/presentation-mascots-corrective-20260731/.next-oGVITNX3iPc27gSte3MyV`
+  `<build-home>/backups/pumbum-redesign/presentation-mascots-corrective-20260731/.next-oGVITNX3iPc27gSte3MyV`
 - Transparent PNG working sources:
-  `/home/administrator/backups/pumbum-redesign/presentation-mascots-corrective-20260731/pose-v2-png-sources/`
+  `<build-home>/backups/pumbum-redesign/presentation-mascots-corrective-20260731/pose-v2-png-sources/`
 
 ## Verification
 
@@ -115,7 +115,7 @@ pre-purchase advice card.
 - Listener: `127.0.0.1:3025`
 - Tailnet and public read-only routes: unchanged
 - Exact previous-build rollback:
-  `/home/administrator/backups/pumbum-redesign/mascot-tuning-20260731/.next-JKCl7iHZyZoerzEGWZ7YM`
+  `<build-home>/backups/pumbum-redesign/mascot-tuning-20260731/.next-JKCl7iHZyZoerzEGWZ7YM`
 
 ### Follow-up verification
 
@@ -158,11 +158,11 @@ desktop composition.
 - Active build ID: `6ifPip-yNQOrJD9gbAXST`
 - Active unit: `pumbum-redesign-preview-mobile-composition-final-20260801.service`
 - Listener: `127.0.0.1:3025`
-- Tailnet preview: `http://100.95.56.90:3027/`
+- Tailnet preview: `http://<tailnet-host>:3027/`
 - Public read-only preview:
   `https://giving-moves-winds-sig.trycloudflare.com/`
 - Exact previous-build rollback:
-  `/home/administrator/backups/pumbum-redesign/mobile-composition-20260801/.next-CkM2fMHxqyyBr5tPBja5R`
+  `<build-home>/backups/pumbum-redesign/mobile-composition-20260801/.next-CkM2fMHxqyyBr5tPBja5R`
 
 ### Verification
 
@@ -200,7 +200,7 @@ below the call button and use a bounded reserved seam before `Товары ра�
 - active app and both access gates have zero restarts; memory PSI is zero.
 
 Exact rollbacks are retained under
-`/home/administrator/backups/pumbum-redesign/mobile-geometry-20260801`.
+`<build-home>/backups/pumbum-redesign/mobile-geometry-20260801`.
 Production `477477.ru` was not touched.
 
 ## Exact SINIKON upper-corner correction
@@ -224,7 +224,7 @@ the card grid or any manufacturer content.
 - Listener: `127.0.0.1:3025`
 - Tailnet and public read-only routes: unchanged
 - Exact previous-build rollback:
-  `/home/administrator/backups/pumbum-redesign/manufacturer-corner-20260731/.next-sh4maH1zXLMXPQW744aKf`
+  `<build-home>/backups/pumbum-redesign/manufacturer-corner-20260731/.next-sh4maH1zXLMXPQW744aKf`
 
 ### Verification
 
@@ -263,7 +263,7 @@ mobile behavior remain unchanged.
 - Listener: `127.0.0.1:3025`
 - Tailnet and public read-only routes: unchanged
 - Exact previous-build rollback:
-  `/home/administrator/backups/pumbum-redesign/manufacturer-placement-20260731/.next-KoqQfjCznzqwU-erirpnY`
+  `<build-home>/backups/pumbum-redesign/manufacturer-placement-20260731/.next-KoqQfjCznzqwU-erirpnY`
 
 ### Verification
 
@@ -305,10 +305,10 @@ border. The product image and supplier safe zone remain unobstructed.
 - Active build ID: `E4IO4uqeibUwYb9MjOG6P`
 - Active unit: `pumbum-redesign-preview-mobile-responsive-20260801.service`
 - Listener: `127.0.0.1:3025`
-- Tailnet gate: `100.95.56.90:3027`
+- Tailnet gate: `<tailnet-host>:3027`
 - Public read-only gate: `127.0.0.1:3028`
 - Exact previous-build rollback:
-  `/home/administrator/backups/pumbum-redesign/mobile-responsive-20260801/.next-7amE_klJPTk9sNkUGIEkJ`
+  `<build-home>/backups/pumbum-redesign/mobile-responsive-20260801/.next-7amE_klJPTk9sNkUGIEkJ`
 
 ### Verification
 

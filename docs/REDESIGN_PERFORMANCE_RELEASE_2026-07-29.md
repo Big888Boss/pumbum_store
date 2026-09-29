@@ -28,10 +28,10 @@ indexing boundary remain unchanged.
 - Active build ID: `ntJzITqB6mFDEfk1uCyWy`
 - Active service: `pumbum-redesign-preview-image-recovery.service`
 - Active app: `127.0.0.1:3025`
-- Tailnet review gate: `100.95.56.90:3027`
+- Tailnet review gate: `<tailnet-host>:3027`
 - Public read-only gate: `127.0.0.1:3028`
 - Previous build backup:
-  `/home/administrator/backups/pumbum-redesign/performance-20260729/.next-YGRfpAanulE_-XUt-qG2P`
+  `<build-home>/backups/pumbum-redesign/performance-20260729/.next-YGRfpAanulE_-XUt-qG2P`
 
 Rollback is an atomic `.next` directory swap followed by a restart of the app
 and both gates. Do not remove the backup during the review period.

@@ -32,7 +32,7 @@ mcp = FastMCP(
         "Изолированная разработка нового сайта Pumbum. Инструментов production-деплоя, "
         "старого сайта, MyShop и 1С здесь нет."
     ),
-    host=os.environ.get("PUMBUM_DEV_MCP_HOST", "100.95.56.90"),
+    host=os.environ.get("PUMBUM_DEV_MCP_HOST", "127.0.0.1"),
     port=int(os.environ.get("PUMBUM_DEV_MCP_PORT", "8798")),
     streamable_http_path="/mcp",
     stateless_http=True,

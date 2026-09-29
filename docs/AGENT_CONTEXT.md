@@ -87,7 +87,7 @@
 - image: `plumbing_store_v2-v2:catalog-navigation-20260723-v1`;
 - active localhost port: `3023`;
 - verified rollback image/container: `carousel-polish-20260723-v1` on `3022`, stopped after the public release checks to save RAM/swap;
-- build only on `administrator@100.95.56.90`; never build on the small production host;
+- build only on `<deploy-user>@<tailnet-host>`; never build on the small production host;
 - release and rollback evidence: `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md`.
 
 Нельзя:
@@ -103,9 +103,9 @@
 - Build: `QZnoOkwbi7rClrMSQP2nG`
 - Unit: `pumbum-redesign-preview-manufacturer-responsive-20260801.service`
 - App listener: `127.0.0.1:3025`
-- Tailnet preview: `http://100.95.56.90:3027/`
+- Tailnet preview: `http://<tailnet-host>:3027/`
 - Exact previous-build rollback:
-  `/home/administrator/backups/pumbum-redesign/manufacturer-responsive-20260801/.next-6ifPip-yNQOrJD9gbAXST`
+  `<build-home>/backups/pumbum-redesign/manufacturer-responsive-20260801/.next-6ifPip-yNQOrJD9gbAXST`
 - At `1120px` and below, category hero figures use the ten transparent
   `public/images/mascots/pose-v3/*-top-peek-v3.webp` assets. Desktop keeps the
   accepted side-peek pose.

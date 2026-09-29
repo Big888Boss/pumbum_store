@@ -15,6 +15,12 @@ const supplierMeta = {
   aquatec: { name: 'АКВАТЕК', logo: '/brand-logos/aquatec.svg' },
   gidrokontrakt: { name: 'Гидроконтракт', logo: '/brand-logos/gidrokontrakt.svg' },
   tim: { name: 'TIM', logo: undefined },
+  vrt: { name: 'VRT', logo: '/brand-logos/vrt.svg' },
+  aquabright: { name: 'АКВАБРАЙТ', logo: '/brand-logos/aquabright.png' },
+  pudekang: { name: 'PUDEKANG', logo: '/brand-logos/pudekang.png' },
+  vontron: { name: 'VONTRON', logo: '/brand-logos/vontron.png' },
+  ecobright: { name: 'Экобрайт', logo: '/brand-logos/ecobright.svg' },
+  alsis: { name: 'АЛСИС', logo: '/brand-logos/alsis.png' },
   generic: { name: 'Поставщик уточняется', logo: undefined },
 };
 
@@ -42,6 +48,9 @@ function hasAny(text, terms) {
 }
 
 function inferSupplier(product) {
+  if (['vrt', 'aquabright', 'pudekang', 'vontron', 'ecobright', 'alsis'].includes(product.supplier)) {
+    return { id: product.supplier, confidence: 'source-field' };
+  }
   const refs = product.sourceRefs ?? [];
   for (const ref of refs) {
     const byLabel = sourceSupplierMap.get(ref.label ?? '');
