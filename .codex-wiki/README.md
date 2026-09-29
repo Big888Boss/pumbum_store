@@ -14,6 +14,11 @@ The current production implementation notes are maintained in `docs/`.
 - Yandex Metrika release: `docs/METRIKA_RELEASE_2026-07-15.md`
 - Production deployment and rollback: `docs/PRODUCTION_DEPLOYMENT_PLAN.md`
 
+Host addresses, SSH logins, VM names and build-workspace paths are intentionally
+replaced with placeholders in this public repository (`<prod-host>`, `<staging-host>`,
+`<deploy-user>`, `<build-user>`, `<deploy-root>`, `<build-workspace>`). The real values
+live in the owner's private runbook outside git.
+
 Production builds are created on the USA build host. The small production server must never run `next build` or `docker build`.
 
 Current production storefront release: `plumbing_store_v2-v2:catalog-ux-20260725-v3` on localhost port `3026`. The previous accepted `catalog-ux-20260725-v2` container on port `3025` is stopped to conserve RAM/swap; its image and stopped container are retained for rollback. No build runs on production. See `docs/CATALOG_UX_RELEASE_2026-07-25.md` for acceptance evidence and rollback.

@@ -5,7 +5,7 @@ scrape_configs:
   - job_name: ru_vps_node
     static_configs:
       - targets:
-          - 100.66.106.32:9100
+          - 10.0.0.1:9100
         labels:
           host: ru-vps
           service: 477477
@@ -13,7 +13,7 @@ scrape_configs:
   - job_name: ru_vps_nginx
     static_configs:
       - targets:
-          - 100.66.106.32:9113
+          - 10.0.0.1:9113
         labels:
           host: ru-vps
           service: 477477

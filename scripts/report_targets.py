@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
+from pathlib import Path
 """Read-only: list photo targets (wrong-geometry + placeholder) and unmapped xlsx images."""
 import json, os, re
 from collections import defaultdict
 
-ROOT = "/opt/plumbing_store_v2/new-store-v2/content/generated"
+ROOT = str(Path(__file__).resolve().parents[1] / "content/generated")
 CATALOG = f"{ROOT}/legacy-catalog.json"
 MANIFEST = f"{ROOT}/product-image-manifest.json"
-XLSX_BASE = "/opt/plumbing_store_v2/public/images/products/sinikon/xlsx"
+XLSX_BASE = str(Path(__file__).resolve().parents[1] / "public/images/products/sinikon/xlsx")
 PLACEHOLDER = "/images/generated-placeholders/"
 APPEARANCE = {"diameters_mm", "angle_deg"}
 DIST = ["diameters_mm", "angle_deg", "length_mm", "size"]
@@ -102,4 +103,4 @@ print(f"\nНЕПРИВЯЗАННЫХ xlsx-фото: {len(unmapped)}")
 for u in unmapped:
     print("  ", u)
 json.dump({"targets": targets, "unmapped": unmapped},
-          open("/home/dev477477/photo-targets-20260707.json", "w"), ensure_ascii=False, indent=1)
+          open(str(Path.home() / "photo-targets-20260707.json"), "w"), ensure_ascii=False, indent=1)

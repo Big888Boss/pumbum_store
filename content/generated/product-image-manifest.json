@@ -1,8 +1,8 @@
 {
   "generatedAt": "2026-07-08T20:39:06.713Z",
   "schemaVersion": 1,
-  "publicRoot": "/home/administrator/agent-projects/pumbum-store/public",
-  "outputRoot": "/home/administrator/agent-projects/pumbum-store/public/images/products/_normalized-v2",
+  "publicRoot": "<build-workspace>/pumbum-store/public",
+  "outputRoot": "<build-workspace>/pumbum-store/public/images/products/_normalized-v2",
   "stats": {
     "totalProducts": 9208,
     "selectedSuppliers": [

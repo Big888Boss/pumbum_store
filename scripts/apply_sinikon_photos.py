@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Apply real sinikon.ru type photos to target products (manifest -> ready).
 Only touches the 84 targets that had a wrong-geometry/placeholder photo."""
+from pathlib import Path
 import json, shutil, os
 from datetime import date
 
-ROOT = "/opt/plumbing_store_v2/new-store-v2/content/generated"
+ROOT = str(Path(__file__).resolve().parents[1] / "content/generated")
 MANIFEST = f"{ROOT}/product-image-manifest.json"
 URL_BASE = "/images/products/sinikon/catalog"
 PATCH = "/tmp/sin-patch.json"
-BK = "/home/dev477477/deploy-backup-20260707-photos"
+BK = str(Path.home() / "deploy-backup-20260707-photos")
 
 manifest = json.load(open(MANIFEST))
 mp = manifest.setdefault("products", {})

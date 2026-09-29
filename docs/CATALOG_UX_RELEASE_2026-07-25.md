@@ -44,7 +44,7 @@ backgrounds were removed before the final 1100×825 PNG assets were accepted.
 - `npm run check:isolation`: passed.
 - `npm run analytics:check`: passed.
 - `npm audit --audit-level=moderate`: `0 vulnerabilities`.
-- Production Docker build: passed on `administrator@100.95.56.90`; no build ran on production.
+- Production Docker build: passed on `<build-user>@<staging-host>`; no build ran on production.
 - Public carousel browser check: 10 categories, three products/groups each, 5,000 ms autoplay, stable height, 32 px dot targets and no page errors.
 - Public collection browser check: nine manufacturer cards, clickable group tags, manufacturer/task controls and `noindex,follow` state pages.
 - Public Metrika browser check: one initial hit, one SPA hit, all five goals and no raw search text.

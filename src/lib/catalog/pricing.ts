@@ -23,7 +23,7 @@ function normalizeMoneyAmount(value: number): number {
   return Math.round(value * 100) / 100;
 }
 
-function parseNumericPrice(value: string | undefined): number | undefined {
+export function parseNumericPrice(value: string | undefined): number | undefined {
   if (!value) return undefined;
   const normalized = value.trim().toLowerCase();
   if (!normalized || normalized.includes('запрос') || normalized.includes('договор')) return undefined;

@@ -54,7 +54,7 @@ Acceptance evidence on 2026-07-22:
 
 ## Build and production runtime
 
-Heavy work was performed on `administrator@100.95.56.90`. The production server did not run `npm install`, `next build` or `docker build`.
+Heavy work was performed on `<build-user>@<staging-host>`. The production server did not run `npm install`, `next build` or `docker build`.
 
 The production image must be built with the public values at build time because Next.js inlines `NEXT_PUBLIC_*` variables:
 
@@ -76,7 +76,7 @@ docker build \
 ## Rollback
 
 ```bash
-cd /opt/plumbing_store_v2/deploy
+cd <deploy-root>/deploy
 docker compose -f docker-compose.bluegreen-filters-price-20260717.yml start v2-filters-price
 sudo cp /etc/nginx/plumbing_store.conf.pre-taxonomy-20260722 /etc/nginx/sites-enabled/plumbing_store.conf
 sudo nginx -t

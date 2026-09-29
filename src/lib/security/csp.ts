@@ -53,7 +53,7 @@ export function buildContentSecurityPolicy(nonce: string): string {
     "form-action 'self'",
     "frame-ancestors 'self'",
     `report-uri ${cspReportPath}`,
-    ...(development ? [] : ['upgrade-insecure-requests']),
+    ...(!development && process.env.NEXT_PUBLIC_SITE_ENV === 'production' ? ['upgrade-insecure-requests'] : []),
   ].join('; ');
 }
 

@@ -13,6 +13,7 @@ Fixes three data-presentation defects without merging or deleting records:
 
 Run:  python3 normalize_catalog_presentation.py [--dry-run]
 """
+from pathlib import Path
 import json
 import re
 import shutil
@@ -20,11 +21,11 @@ import sys
 from collections import Counter, defaultdict
 from datetime import date
 
-ROOT = "/opt/plumbing_store_v2/new-store-v2/content/generated"
+ROOT = str(Path(__file__).resolve().parents[1] / "content/generated")
 CATALOG = f"{ROOT}/legacy-catalog.json"
 MANIFEST = f"{ROOT}/product-image-manifest.json"
-BACKUP_DIR = "/home/dev477477/deploy-backup-20260706-catalog"
-AUDIT_OUT = "/home/dev477477/catalog-normalize-audit-20260706.json"
+BACKUP_DIR = str(Path.home() / "deploy-backup-20260706-catalog")
+AUDIT_OUT = str(Path.home() / "catalog-normalize-audit-20260706.json")
 PLACEHOLDER = "/images/generated-placeholders/catalog-product.svg"
 
 DIST_KEYS = ["diameters_mm", "angle_deg", "length_mm", "size", "width_mm",

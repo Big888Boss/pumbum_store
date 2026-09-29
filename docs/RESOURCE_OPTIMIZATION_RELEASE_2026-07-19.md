@@ -1,6 +1,6 @@
 # Production resource optimization release 2026-07-19
 
-Scope: the current `9276`-product storefront on the existing `1 vCPU / 1 GiB RAM` production host. Builds and comparison tests ran only on `administrator@100.95.56.90`. Product data, image assets, public routes, pricing, SEO output, Metrika and the VPN side route were preserved.
+Scope: the current `9276`-product storefront on the existing `1 vCPU / 1 GiB RAM` production host. Builds and comparison tests ran only on `<build-user>@<staging-host>`. Product data, image assets, public routes, pricing, SEO output, Metrika and the VPN side route were preserved.
 
 ## Confirmed cause
 
@@ -38,7 +38,7 @@ A separate factory-only image reused imported product objects instead of retaini
 
 1. Start the retained rollback service:
 
-   `cd /opt/plumbing_store_v2/deploy && docker compose -f docker-compose.bluegreen-brand-seo-20260716.yml up -d v2-brand-seo`
+   `cd <deploy-root>/deploy && docker compose -f docker-compose.bluegreen-brand-seo-20260716.yml up -d v2-brand-seo`
 
 2. Wait for `http://127.0.0.1:3016/api/health` to report `9276` products and for Docker health to become healthy.
 3. If the active release is bad, restore `/etc/nginx/backups/plumbing_store.conf.pre-direct-images-20260719T0152Z`, run `nginx -t`, reload Nginx and verify public health before stopping `3019`.
