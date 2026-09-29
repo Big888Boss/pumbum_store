@@ -1,8 +1,12 @@
 import type { Metadata } from 'next';
 import { StaticImage } from '@/components/media/StaticImage';
+import { InfoTabs } from '@/components/layout/InfoTabs';
+import { MascotFigure } from '@/components/layout/MascotFigure';
+import { PageMascot } from '@/components/layout/PageMascot';
 import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { getManufacturerGroups } from '@/lib/catalog/loaders';
+import { ABOUT_MASCOT } from '@/lib/mascots';
 
 export const metadata: Metadata = buildMetadata({
   title: 'О магазине — Сантехникъ',
@@ -23,15 +27,24 @@ export default function AboutPage() {
   return (
     <>
       <section className="hero">
-        <div className="container">
-          <div className="eyebrow">О компании</div>
-          <h1>Магазин инженерной сантехники в Саратове</h1>
-          <p className="lead">Сантехникъ работает с 2010 года и помогает подбирать комплектующие для водоснабжения, отопления, канализации и монтажа инженерных систем.</p>
+        <div className="container hero-grid hero-grid-mascot">
+          <div>
+            <div className="eyebrow">О компании</div>
+            <h1>Магазин инженерной сантехники в Саратове</h1>
+            <p className="lead">Сантехникъ работает с 2010 года и помогает подбирать комплектующие для водоснабжения, отопления, канализации и монтажа инженерных систем.</p>
+            <InfoTabs active="about" />
+          </div>
+          <PageMascot
+            src="/images/mascots/krestovich-about-present.webp"
+            alt="Крестович рассказывает о магазине"
+            label="Крестович рассказывает о магазине Сантехникъ"
+            variant="about"
+          />
         </div>
       </section>
       <section className="section">
         <div className="container about-layout">
-          <article className="card about-copy">
+          <article className="card about-copy about-copy-mascot-host">
             <h2>О магазине</h2>
             <p>Магазин «Сантехникъ» — специализированный центр инженерной сантехники на Большой Горной. Основной профиль: системные решения для водоснабжения, отопления и внутренней канализации.</p>
             <p>Мы работаем с частными клиентами, монтажниками и строительными организациями. В каталоге собраны трубы, фитинги, насосное оборудование, баки, арматура, комплектующие для обвязки и канализационные системы.</p>
@@ -48,6 +61,7 @@ export default function AboutPage() {
 
             <h2>Гарантия и поставщики</h2>
             <p>Магазин работает с официальными поставщиками и передает гарантию производителя на реализуемую продукцию. Если нужна замена или аналог, менеджер подберет позицию по артикулу, размеру или назначению.</p>
+            <MascotFigure mascot={ABOUT_MASCOT} placement="about" />
           </article>
 
           <aside className="about-side">

@@ -2,76 +2,84 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { MascotFigure } from '@/components/layout/MascotFigure';
 import { ProductImage } from '@/components/product/ProductImage';
 import type { Product } from '@/entities/product/model';
+import type { MascotAsset } from '@/lib/mascots';
 
-const AUTOPLAY_DELAY_MS = 5000;
+const AUTOPLAY_DELAY_MS = 2400;
 
 export function CategoryProductCarousel({
   products,
   groupLabels,
+  mascot,
+  categorySlug,
 }: {
   products: Product[];
   groupLabels?: string[];
+  mascot?: MascotAsset;
+  categorySlug: string;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [hasFocusWithin, setHasFocusWithin] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [isDocumentVisible, setIsDocumentVisible] = useState(true);
   const activeProduct = products[activeIndex] ?? products[0];
 
-  useEffect(() => {
-    products.slice(1).forEach((product) => {
-      const image = new Image();
-      image.src = product.image;
-    });
-  }, [products]);
+  const showPrevious = () => {
+    setActiveIndex((current) => (current - 1 + products.length) % products.length);
+  };
+
+  const showNext = () => {
+    setActiveIndex((current) => (current + 1) % products.length);
+  };
 
   useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const syncMotionPreference = () => setPrefersReducedMotion(media.matches);
+    const nextProduct = products[(activeIndex + 1) % products.length];
+    if (!nextProduct || nextProduct.slug === activeProduct?.slug) return undefined;
+    const timer = window.setTimeout(() => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.fetchPriority = 'low';
+      image.src = nextProduct.image;
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, activeProduct?.slug, products]);
+
+  useEffect(() => {
     const syncDocumentVisibility = () => setIsDocumentVisible(!document.hidden);
-    syncMotionPreference();
     syncDocumentVisibility();
-    media.addEventListener('change', syncMotionPreference);
     document.addEventListener('visibilitychange', syncDocumentVisibility);
     return () => {
-      media.removeEventListener('change', syncMotionPreference);
       document.removeEventListener('visibilitychange', syncDocumentVisibility);
     };
   }, []);
 
   useEffect(() => {
     const shouldRun = products.length > 1
-      && !isPaused
-      && !hasFocusWithin
-      && !prefersReducedMotion
+      && !isHovered
       && isDocumentVisible;
     if (!shouldRun) return undefined;
     const timer = window.setTimeout(() => {
       setActiveIndex((current) => (current + 1) % products.length);
     }, AUTOPLAY_DELAY_MS);
     return () => window.clearTimeout(timer);
-  }, [activeIndex, hasFocusWithin, isDocumentVisible, isPaused, prefersReducedMotion, products.length]);
+  }, [activeIndex, isDocumentVisible, isHovered, products.length]);
 
   if (!activeProduct) return null;
 
   return (
     <section
-      className="category-product-carousel"
+      className={`category-product-carousel${mascot ? ' category-product-carousel-has-mascot' : ''}`}
       aria-label="Рекомендуемые товары раздела"
+      data-category={categorySlug}
       data-carousel-size={products.length}
       data-carousel-groups={groupLabels?.join('|')}
-      data-carousel-autoplay-ms={AUTOPLAY_DELAY_MS}
-      onFocusCapture={() => setHasFocusWithin(true)}
-      onBlurCapture={(event) => {
-        const nextTarget = event.relatedTarget;
-        if (!(nextTarget instanceof Node) || !event.currentTarget.contains(nextTarget)) {
-          setHasFocusWithin(false);
-        }
-      }}
+      aria-roledescription="карусель"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
+      {mascot ? <MascotFigure mascot={mascot} placement="peek" className="mascot-figure-category" priority /> : null}
       <div className="category-carousel-image" key={`${activeProduct.slug}-image`}>
         <ProductImage
           src={activeProduct.image}
@@ -85,7 +93,7 @@ export function CategoryProductCarousel({
       <div
         className="category-carousel-copy"
         key={`${activeProduct.slug}-copy`}
-        aria-live={isPaused || hasFocusWithin ? 'polite' : 'off'}
+        aria-live="off"
       >
         <span className="category-carousel-counter">Рекомендуемые товары · {activeIndex + 1} из {products.length}</span>
         <h2>{activeProduct.name}</h2>
@@ -93,6 +101,14 @@ export function CategoryProductCarousel({
         <Link href={`/catalog/${activeProduct.categorySlug}/${activeProduct.slug}`}>Открыть товар</Link>
       </div>
       <div className="category-carousel-controls">
+        <button
+          className="category-carousel-arrow"
+          type="button"
+          onClick={showPrevious}
+          aria-label="Предыдущий товар"
+        >
+          <ArrowLeft aria-hidden="true" />
+        </button>
         <div className="category-carousel-dots" aria-label="Выбор товара">
           {products.map((product, index) => (
             <button
@@ -106,12 +122,12 @@ export function CategoryProductCarousel({
           ))}
         </div>
         <button
-          className="visually-hidden"
+          className="category-carousel-arrow"
           type="button"
-          onClick={() => setIsPaused((current) => !current)}
-          aria-pressed={isPaused}
+          onClick={showNext}
+          aria-label="Следующий товар"
         >
-          {isPaused ? 'Продолжить автоматическую прокрутку' : 'Остановить автоматическую прокрутку'}
+          <ArrowRight aria-hidden="true" />
         </button>
       </div>
     </section>

@@ -1,12 +1,15 @@
 import type { Metadata } from 'next';
 import { StaticImage } from '@/components/media/StaticImage';
 import Link from 'next/link';
+import { MascotFigure } from '@/components/layout/MascotFigure';
+import { PageMascot } from '@/components/layout/PageMascot';
 import { getManufacturerGroups } from '@/lib/catalog/loaders';
+import { MANUFACTURER_MASCOTS } from '@/lib/mascots';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Производители — каталог инженерной сантехники',
-  description: 'Каталог по производителям и разделам поставщиков: SINIKON, VALTEC, Гидроконтракт, AQUARIO, VIVALDO, АКВАТЕК, ZOTA, TIM и ESPA.',
+  description: 'Каталог по производителям инженерной сантехники и фильтрации: SINIKON, VALTEC, AQUARIO, АКВАБРАЙТ, VRT, PUDEKANG, VONTRON, Экобрайт, АЛСИС и другие.',
   path: '/catalog/proizvoditeli',
 });
 
@@ -24,10 +27,11 @@ function formatSections(count: number): string {
   return `${count.toLocaleString('ru-RU')} ${word}`;
 }
 
-function manufacturerGroupHref(slug: string, group: string): string {
-  const params = new URLSearchParams({ group });
-  return `/catalog/proizvoditeli/${slug}?${params.toString()}`;
-}
+const MANUFACTURER_MASCOT_PLACEMENTS: Record<string, { mascotIndex: number; className: string }> = {
+  sinikon: { mascotIndex: 1, className: 'manufacturer-mascot-sinikon' },
+  gidrokontrakt: { mascotIndex: 2, className: 'manufacturer-mascot-3' },
+  zota: { mascotIndex: 0, className: 'manufacturer-mascot-zota' },
+};
 
 export default function ManufacturersPage() {
   const manufacturers = getManufacturerGroups();
@@ -36,45 +40,66 @@ export default function ManufacturersPage() {
     <>
       <div className="container breadcrumbs"><Link href="/catalog">Каталог</Link> / Производители</div>
       <section className="hero">
-        <div className="container">
-          <div className="eyebrow">Производители</div>
-          <h1>Каталог по производителям</h1>
-          <p className="lead">Разделы поставщиков из полного каталога: позиции, артикулы и группы для быстрого подбора.</p>
-          <div className="actions">
-            <Link className="btn btn-primary" href="/catalog">Каталог по назначению</Link>
-            <Link className="btn btn-secondary" href="/search">Поиск по артикулу</Link>
+        <div className="container hero-grid hero-grid-mascot">
+          <div>
+            <div className="eyebrow">Производители</div>
+            <h1 className="page-title-mobile-compact">Каталог по производителям</h1>
+            <p className="lead">Разделы поставщиков из полного каталога: позиции, артикулы и группы для быстрого подбора.</p>
+            <div className="actions">
+              <Link className="btn btn-primary" href="/catalog">Каталог по назначению</Link>
+              <Link className="btn btn-secondary" href="/search">Поиск по артикулу</Link>
+            </div>
           </div>
+          <PageMascot
+            src="/images/mascots/teplovik-manufacturers.webp"
+            alt="Тепловик показывает технические каталоги"
+            label="Тепловик помогает выбрать производителя"
+            variant="manufacturers"
+          />
         </div>
       </section>
 
       <section className="section">
-        <div className="container manufacturer-list">
-          {manufacturers.map((manufacturer) => (
-            <article key={manufacturer.name} id={manufacturer.slug} className="manufacturer-card">
-              <div className={manufacturer.logo ? `manufacturer-logo manufacturer-logo-${manufacturer.slug}` : 'manufacturer-logo manufacturer-logo-fallback'}>
-                {manufacturer.logo ? (
-                  <StaticImage src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={170} height={70} />
-                ) : (
-                  <span>{manufacturer.name.slice(0, 2).toUpperCase()}</span>
-                )}
-              </div>
-              <div>
-                <h2><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>{manufacturer.name}</Link></h2>
-                <p>{formatPositions(manufacturer.productCount)} · {formatSections(manufacturer.categoryCount)}</p>
-                <ul className="manufacturer-sections">
-                  {manufacturer.sections.slice(0, 6).map((section) => (
-                    <li key={section}>
-                      <Link href={manufacturerGroupHref(manufacturer.slug, section)}>{section}</Link>
-                    </li>
-                  ))}
-                  {manufacturer.sections.length > 6 ? (
-                    <li><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>+{manufacturer.sections.length - 6} разделов</Link></li>
-                  ) : null}
-                </ul>
-                <p className="manufacturer-section-more"><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>Все товары производителя</Link></p>
-              </div>
-            </article>
-          ))}
+        <div className="container manufacturer-grid">
+          {manufacturers.map((manufacturer) => {
+            const placement = MANUFACTURER_MASCOT_PLACEMENTS[manufacturer.slug];
+            const mascot = placement ? MANUFACTURER_MASCOTS[placement.mascotIndex] : undefined;
+            return (
+              <article
+                key={manufacturer.name}
+                id={manufacturer.slug}
+                className={`manufacturer-card${mascot ? ' manufacturer-card-mascot-host' : ''}`}
+              >
+                <div className={manufacturer.logo ? `manufacturer-logo manufacturer-logo-${manufacturer.slug}` : 'manufacturer-logo manufacturer-logo-fallback'}>
+                  {manufacturer.logo ? (
+                    <StaticImage src={manufacturer.logo} alt={`Логотип ${manufacturer.name}`} width={170} height={70} />
+                  ) : (
+                    <span>{manufacturer.name.slice(0, 2).toUpperCase()}</span>
+                  )}
+                </div>
+                <div>
+                  <h2><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>{manufacturer.name}</Link></h2>
+                  <p>{formatPositions(manufacturer.productCount)} · {formatSections(manufacturer.categoryCount)}</p>
+                  <ul className="manufacturer-sections">
+                    {manufacturer.sections.slice(0, 6).map((section) => (
+                      <li key={section}>
+                        <Link href={`/catalog/proizvoditeli/${manufacturer.slug}?group=${encodeURIComponent(section)}`}>{section}</Link>
+                      </li>
+                    ))}
+                    {manufacturer.sections.length > 6 ? <li><span>+{manufacturer.sections.length - 6} разделов</span></li> : null}
+                  </ul>
+                  <p className="manufacturer-section-more"><Link href={`/catalog/proizvoditeli/${manufacturer.slug}`}>Все товары производителя</Link></p>
+                </div>
+                {mascot ? (
+                  <MascotFigure
+                    mascot={mascot}
+                    placement="manufacturer"
+                    className={placement.className}
+                  />
+                ) : null}
+              </article>
+            );
+          })}
         </div>
       </section>
     </>

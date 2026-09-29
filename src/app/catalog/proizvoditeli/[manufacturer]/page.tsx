@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { CatalogCollectionGrid, hasCatalogCollectionState } from '@/components/catalog/CatalogCollectionGrid';
+import { CatalogCollectionGrid } from '@/components/catalog/CatalogCollectionGrid';
 import { getManufacturerGroupBySlug, getProductsByManufacturer } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -10,9 +10,15 @@ type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-function groupHref(basePath: string, group: string): string {
-  const params = new URLSearchParams({ group });
-  return `${basePath}?${params.toString()}`;
+function parsePage(query: Record<string, string | string[] | undefined>): number {
+  const raw = query.page;
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  const page = Number.parseInt(value ?? '1', 10);
+  return Number.isSafeInteger(page) && page > 0 ? page : 1;
+}
+
+function firstQueryValue(value: string | string[] | undefined): string {
+  return (Array.isArray(value) ? value[0] : value ?? '').trim();
 }
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
@@ -24,7 +30,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     title: `${manufacturer.name} — каталог товаров в Саратове`,
     description: `${manufacturer.name}: ${manufacturer.productCount.toLocaleString('ru-RU')} товаров инженерной сантехники. Артикулы, характеристики и цены в каталоге «Сантехникъ».`,
     path: `/catalog/proizvoditeli/${slug}`,
-    noindex: hasCatalogCollectionState(query),
+    noindex: parsePage(query) > 1 || Object.values(query).some((value) => firstQueryValue(value).length > 0),
     followWhenNoindex: true,
   });
 }
@@ -47,7 +53,9 @@ export default async function ManufacturerPage({ params, searchParams }: PagePro
           <p className="lead">{manufacturer.productCount.toLocaleString('ru-RU')} товаров в покупательских разделах каталога.</p>
           <ul className="badges">
             {manufacturer.sections.slice(0, 10).map((section) => (
-              <li className="badge" key={section}><Link href={groupHref(basePath, section)}>{section}</Link></li>
+              <li key={section}>
+                <Link className="badge badge-link" href={`${basePath}?group=${encodeURIComponent(section)}#catalog-products`}>{section}</Link>
+              </li>
             ))}
           </ul>
         </div>
@@ -57,7 +65,6 @@ export default async function ManufacturerPage({ params, searchParams }: PagePro
         basePath={basePath}
         query={query}
         title={`Товары ${manufacturer.name}`}
-        hideBrandFilter
       />
     </>
   );

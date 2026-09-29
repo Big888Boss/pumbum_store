@@ -12,7 +12,7 @@
 2. Rebuild the normalized V2 artifact:
 
 ```bash
-LEGACY_CATALOG_SOURCE=<build-workspace>/pumbum-store \
+LEGACY_CATALOG_SOURCE=<build-home>/agent-projects/pumbum-store \
 LEGACY_CATALOG_GENERATED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
 npm run catalog:import-legacy
 ```

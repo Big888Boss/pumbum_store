@@ -2,7 +2,9 @@ import { readFile } from 'node:fs/promises';
 
 const baseUrl = (process.env.CATEGORY_TAXONOMY_BASE_URL || 'http://127.0.0.1:3010').replace(/\/$/, '');
 const catalog = JSON.parse(await readFile(new URL('../content/generated/legacy-catalog.json', import.meta.url), 'utf8'));
-const products = Array.isArray(catalog.products) ? catalog.products : [];
+const products = Array.isArray(catalog.products)
+  ? catalog.products.filter((product) => !String(product.id).startsWith('water-vrt-') && !String(product.id).startsWith('water-terra-'))
+  : [];
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -32,7 +34,7 @@ const productPaths = [...sitemap.matchAll(/<loc>https:\/\/477477\.ru(\/catalog\/
   .map((match) => match[1])
   .filter((path) => {
     const segments = path.split('/').filter(Boolean);
-    return segments.length === 3 && categorySlugs.has(segments[1]);
+    return segments.length === 3 && categorySlugs.has(segments[1]) && !/^(vrt|terra)-/.test(segments[2]);
   });
 const currentPaths = new Set(productPaths);
 const pathsBySlug = new Map();

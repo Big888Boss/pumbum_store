@@ -49,7 +49,7 @@ host produced p50 3,590 ms. With the same image limits and test parameters,
 p50 was 895 ms, p95 1,692 ms and all 20 responses were `200`.
 
 The production host did not run `npm install`, `next build` or `docker build`.
-The image was built and tested on `<build-user>@<staging-host>`. During
+The image was built and tested on `<deploy-user>@<tailnet-host>`. During
 blue-green verification both versions ran briefly; the previous container was
 stopped after public acceptance. The warmed single-release runtime left about
 220–300 MiB available and used about 750–790 MiB of swap during final checks.
@@ -91,7 +91,7 @@ stopped after public acceptance. The warmed single-release runtime left about
 ## Rollback
 
 ```bash
-cd <deploy-root>/deploy
+cd <legacy-deploy-root>/deploy
 docker compose -f docker-compose.bluegreen-carousel-polish-20260723.yml start v2-carousel-polish
 curl -fsS http://127.0.0.1:3022/api/health
 sudo cp /etc/nginx/plumbing_store.conf.rollback-20260723-3022 /etc/nginx/sites-enabled/plumbing_store.conf

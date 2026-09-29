@@ -1,14 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
-import type { ImgHTMLAttributes } from 'react';
+import { forwardRef, type ImgHTMLAttributes } from 'react';
 
 type StaticImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'alt' | 'decoding' | 'loading'> & {
   alt: string;
   priority?: boolean;
 };
 
-export function StaticImage({ alt, priority = false, ...props }: StaticImageProps) {
+export const StaticImage = forwardRef<HTMLImageElement, StaticImageProps>(function StaticImage({ alt, priority = false, ...props }, ref) {
   return (
     <img
+      ref={ref}
       {...props}
       alt={alt}
       decoding="async"
@@ -16,4 +17,4 @@ export function StaticImage({ alt, priority = false, ...props }: StaticImageProp
       fetchPriority={priority ? 'high' : 'auto'}
     />
   );
-}
+});

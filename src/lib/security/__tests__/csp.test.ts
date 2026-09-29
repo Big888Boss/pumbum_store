@@ -27,14 +27,10 @@ describe('buildContentSecurityPolicy (production)', () => {
     expect(directive(policy, 'object-src')).toBe("object-src 'none'");
     expect(directive(policy, 'base-uri')).toBe("base-uri 'self'");
     expect(directive(policy, 'frame-ancestors')).toBe("frame-ancestors 'self'");
-  });
-
-  it('upgrades insecure requests in production only', () => {
     vi.stubEnv('NEXT_PUBLIC_SITE_ENV', 'production');
     expect(buildContentSecurityPolicy(nonce)).toContain('upgrade-insecure-requests');
     vi.stubEnv('NEXT_PUBLIC_SITE_ENV', 'staging');
     expect(buildContentSecurityPolicy(nonce)).not.toContain('upgrade-insecure-requests');
-    vi.unstubAllEnvs();
   });
 });
 

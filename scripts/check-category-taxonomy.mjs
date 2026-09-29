@@ -4,7 +4,7 @@ const expectedPhone = '+7 (8452) 477-477';
 const categories = [
   ['vodosnabzhenie', 'Водоснабжение', 'ATV 500', /atv|емкост|бак|гидроаккумулятор/i],
   ['kanalizaciya', 'Канализация', 'Труба однораструбная L=1000', /канализац|локальной очистки|душевой лоток|трап/i],
-  ['filtraciya', 'Фильтрация', 'Фильтр промывной', /фильтр|сепаратор/i],
+  ['filtraciya', 'Фильтрация', 'Фильтр механической очистки промывной каскадный', /фильтр|сепаратор/i],
   ['nasosy', 'Насосы', 'AUTO ADB-35', /насос/i],
   ['smesiteli-i-sifony', 'Смесители и сифоны', 'Сифон металлический', /сифон|обвязка|слив/i],
   ['otoplenie-i-kotelnaya', 'Отопление и котельная', 'ZOTA «Zuma»', /zota|котел/i],
@@ -32,8 +32,8 @@ async function get(path, options = {}) {
 const healthResult = await get('/api/health');
 assert(healthResult.response.ok, `/api/health returned ${healthResult.response.status}`);
 const health = JSON.parse(healthResult.body);
-assert(health.catalog?.products === 9276, `expected 9276 products, got ${health.catalog?.products}`);
-assert(health.catalog?.publishedProducts === 9276, `expected 9276 published products, got ${health.catalog?.publishedProducts}`);
+assert(health.catalog?.products === 9562, `expected 9562 products, got ${health.catalog?.products}`);
+assert(health.catalog?.publishedProducts === 9532, `expected 9532 published products, got ${health.catalog?.publishedProducts}`);
 assert(health.catalog?.categories === 10, `expected 10 categories, got ${health.catalog?.categories}`);
 
 const catalog = await get('/catalog');
@@ -52,9 +52,19 @@ for (const [slug, name, featuredText, firstProductPattern] of categories) {
   assert(!page.body.includes('Основной товар раздела'), `old featured-product label remains in ${slug}`);
   const groupAttribute = page.body.match(/data-carousel-groups="([^"]+)"/)?.[1] ?? '';
   const carouselGroups = groupAttribute.split('|').filter(Boolean);
-  assert(page.body.includes('data-carousel-size="3"'), `three-item carousel is missing for ${slug}`);
-  assert(carouselGroups.length === 3, `carousel group labels are missing for ${slug}: ${groupAttribute}`);
-  assert(new Set(carouselGroups).size === 3, `carousel repeats a product group for ${slug}: ${groupAttribute}`);
+  const expectedCarouselSize = slug === 'krepezh-dlya-montazha' ? 2 : 3;
+  assert(
+    page.body.includes(`data-carousel-size="${expectedCarouselSize}"`),
+    `${expectedCarouselSize}-item carousel is missing for ${slug}`,
+  );
+  assert(
+    carouselGroups.length === expectedCarouselSize,
+    `carousel group labels are missing for ${slug}: ${groupAttribute}`,
+  );
+  assert(
+    new Set(carouselGroups).size === expectedCarouselSize,
+    `carousel repeats a product group for ${slug}: ${groupAttribute}`,
+  );
   const gridStart = page.body.indexOf('product-list-grid product-list-grid-with-images');
   const firstGridProduct = page.body.slice(gridStart, gridStart + 25_000).match(/<h3>(.*?)<\/h3>/s)?.[1]?.replace(/<[^>]+>/g, '') ?? '';
   assert(gridStart > 0 && firstProductPattern.test(firstGridProduct), `first product is not core for ${slug}: ${firstGridProduct}`);
@@ -92,7 +102,7 @@ assert(locations.length > 9293, `expected new navigation routes in sitemap, got 
 assert(new Set(locations).size === locations.length, 'sitemap contains duplicate URLs');
 assert(locations.filter((url) => url.includes('/podrazdel/')).length >= 30, 'too few buyer subcategory routes in sitemap');
 assert(locations.filter((url) => url.includes('/catalog/po-zadache/')).length === 6, 'buyer task routes are incomplete');
-assert(locations.filter((url) => /\/catalog\/proizvoditeli\/[^/]+$/.test(url)).length === 9, 'manufacturer routes are incomplete');
+assert(locations.filter((url) => /\/catalog\/proizvoditeli\/[^/]+$/.test(url)).length === 15, 'manufacturer routes are incomplete');
 assert(!locations.some((url) => url.includes('/catalog/nasosy-i-vodosnabzhenie')), 'old pumps category remains in sitemap');
 assert(!locations.some((url) => url.includes('/catalog/kanalizaciya-i-vodootvedenie')), 'old sewer category remains in sitemap');
 
@@ -120,7 +130,7 @@ console.log(JSON.stringify({
   redirects: 3,
   buyerSubcategories: locations.filter((url) => url.includes('/podrazdel/')).length,
   buyerTasks: 6,
-  manufacturers: 9,
+  manufacturers: 15,
   navigationRoutesChecked: navigationLocations.length,
   navigationConcurrency,
   phone: expectedPhone,

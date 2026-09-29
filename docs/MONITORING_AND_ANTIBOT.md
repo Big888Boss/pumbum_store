@@ -18,7 +18,7 @@
 - Active business goals preserve the legacy identifiers: `search_submit`, `click_phone`, `click_email`, `view_product` and `click_order`.
 - Search goal parameters include only the query length, category when selected, and UI location. The raw search text is not sent to Metrika.
 
-Live V2 verification on `<staging-host>:3020` after the July 4 anti-bot and UI hardening:
+Live V2 verification on `<tailnet-host>:3020` after the July 4 anti-bot and UI hardening:
 
 - Browser-like catalog request: `200`, `X-AntiBot-Policy: catalog`.
 - `python-requests` catalog request: `403`, `X-AntiBot-Policy: script-client`, `Retry-After: 900`.

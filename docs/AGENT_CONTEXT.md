@@ -84,11 +84,11 @@
 
 Текущий production runtime:
 
-- image: `plumbing_store_v2-v2:catalog-ux-20260725-v3`;
-- active localhost port: `3026`;
-- verified rollback image/container: `catalog-ux-20260725-v2` on `3025`, stopped after the public release checks to save RAM/swap;
-- build only on `<build-user>@<staging-host>`; never build on the small production host;
-- release and rollback evidence: `docs/CATALOG_UX_RELEASE_2026-07-25.md`.
+- image: `plumbing_store_v2-v2:catalog-navigation-20260723-v1`;
+- active localhost port: `3023`;
+- verified rollback image/container: `carousel-polish-20260723-v1` on `3022`, stopped after the public release checks to save RAM/swap;
+- build only on `<deploy-user>@<tailnet-host>`; never build on the small production host;
+- release and rollback evidence: `docs/CATALOG_NAVIGATION_RELEASE_2026-07-23.md`.
 
 Нельзя:
 
@@ -96,3 +96,44 @@
 - коммитить `.data/leads.jsonl` или другие файлы с заявками/PII;
 - переносить `server_data/admin/users.json`;
 - коммитить весь `public/images` без отдельного решения по asset strategy.
+
+## Active isolated redesign staging — 2026-08-01
+
+- Implementation commit: `074a2f9`
+- Build: `QZnoOkwbi7rClrMSQP2nG`
+- Unit: `pumbum-redesign-preview-manufacturer-responsive-20260801.service`
+- App listener: `127.0.0.1:3025`
+- Tailnet preview: `http://<tailnet-host>:3027/`
+- Exact previous-build rollback:
+  `<build-home>/backups/pumbum-redesign/manufacturer-responsive-20260801/.next-6ifPip-yNQOrJD9gbAXST`
+- At `1120px` and below, category hero figures use the ten transparent
+  `public/images/mascots/pose-v3/*-top-peek-v3.webp` assets. Desktop keeps the
+  accepted side-peek pose.
+- Mobile/tablet manufacturer and About content figures are intentionally
+  visible in reserved seams. Do not restore the old blanket mobile
+  `display:none` rule.
+- Mobile menu close behavior is implemented in the client `SiteHeader` and is
+  covered by Escape, outside-pointer and navigation assertions.
+- Browser QA covers desktop, phone and tablet. Production `477477.ru` was not
+  changed by this release.
+- Top-peek figures are hosted inside the carousel and use alpha-trimmed
+  `pose-v4` assets. Do not move them back to `.category-hero-media` or restore
+  transparent bottom padding.
+- Phone guidance cards reserve a stable post-CTA seam; geometry tests wait for
+  fonts and cover every category before activation.
+- On phone layouts, the top-peek figure overlaps the carousel frame by
+  `10-16px` (measured `12px` on the reference category), so the crop line is
+  hidden and the hands visibly grip the frame.
+- The `Товары раздела` title occupies the left safe zone beside the thoughtful
+  figure; the following product-count copy starts `4-14px` below the figure's
+  feet. The card, CTA and catalog content were not moved or changed.
+- Manufacturer mascot geometry is per character at responsive widths; do not
+  restore one generic offset or reserve extra flow height after mascot cards.
+- At phone and tablet widths, manufacturer-card gaps remain `16px`:
+  Стыкович attaches to the upper-left SINIKON corner, Фильтрыч to the lower-right
+  Гидроконтракт seam toward AQUARIO, and Тепловик to the lower-right ZOTA seam
+  toward TIM. Their layers must not cover supplier logos, copy or the
+  `Все товары производителя` links.
+- `scripts/check-manufacturer-responsive-browser.mjs` is the focused geometry
+  gate. The full `redesign:check-browser` suite also covers all three placements
+  at desktop, tablet and phone viewports.

@@ -8,7 +8,7 @@ Scope: V2 storefront for `477477.ru`. The legacy production server was inspected
 
 ## Current production facts
 
-- Server: `<deploy-user>@<prod-host>`, host `<prod-vm-name>`, Ubuntu 24.04.
+- Server: `<deploy-user>@<tailnet-host>`, host `<legacy-vm>`, Ubuntu 24.04.
 - Legacy project: `/opt/plumbing_store`.
 - Public domain currently uses bare canonical URL: `https://477477.ru`; `www.477477.ru` redirects to it.
 - Active app: legacy Docker service `plumbing_store_legacy-legacy-1`, bound to `127.0.0.1:3000`.
@@ -32,8 +32,8 @@ Scope: V2 storefront for `477477.ru`. The legacy production server was inspected
 
 ## Current V2 staging facts
 
-- Staging server: `<build-user>@<staging-host>`.
-- V2 compose binds the app to Tailscale only: `<staging-host>:3020 -> 3010/tcp`.
+- Staging server: `<deploy-user>@<tailnet-host>`.
+- V2 compose binds the app to Tailscale only: `<tailnet-host>:3020 -> 3010/tcp`.
 - Runtime health on staging reports 5700 products and 6 categories.
 - `.asset-store` is outside `public/` and is not directly served by Next.js.
 - No `.env` file is present in the inspected V2 source directory; production secrets must still be provided through a controlled deploy env, not committed files.

@@ -24,6 +24,7 @@ export function createCspNonce(): string {
 
 export function buildContentSecurityPolicy(nonce: string): string {
   const development = process.env.NODE_ENV === 'development';
+  const productionSite = process.env.NEXT_PUBLIC_SITE_ENV === 'production';
   const scriptSources = [
     "'self'",
     `'nonce-${nonce}'`,
@@ -43,7 +44,7 @@ export function buildContentSecurityPolicy(nonce: string): string {
     "style-src-attr 'unsafe-hashes' 'sha256-/3kWSXHts8LrwfemLzY9W0tOv5I4eLIhrf0pT8cU0WI=' 'sha256-2v0wUgRiMnQqfAAERz6WCRNJ9EZeUWOvHSCDVMftC6Q='",
     "img-src 'self' data: blob: https://aquario.ru https://gidrokontrakt.ru https://mc.yandex.ru https://mc.yandex.com https://yandex.ru https://*.yandex.ru",
     "font-src 'self'",
-    "connect-src 'self' https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.ru wss://mc.yandex.com https://yandex.ru https://*.yandex.ru https://yandex.com https://*.yandex.com",
+    "connect-src 'self' https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.ru https://yandex.ru https://*.yandex.ru https://yandex.com https://*.yandex.com",
     "frame-src https://yandex.ru https://*.yandex.ru",
     "worker-src 'self' blob:",
     "media-src 'self'",
@@ -53,7 +54,7 @@ export function buildContentSecurityPolicy(nonce: string): string {
     "form-action 'self'",
     "frame-ancestors 'self'",
     `report-uri ${cspReportPath}`,
-    ...(!development && process.env.NEXT_PUBLIC_SITE_ENV === 'production' ? ['upgrade-insecure-requests'] : []),
+    ...(!development && productionSite ? ['upgrade-insecure-requests'] : []),
   ].join('; ');
 }
 

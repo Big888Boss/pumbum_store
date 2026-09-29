@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { CategoryProductCarousel } from '@/components/catalog/CategoryProductCarousel';
+import { CategorySectionVideo } from '@/components/catalog/CategorySectionVideo';
+import { CatalogScrollRestorer } from '@/components/catalog/CatalogScrollRestorer';
+import { CallStoreButton } from '@/components/layout/CallStoreButton';
+import { MascotFigure } from '@/components/layout/MascotFigure';
 import { ProductAvailabilityBadge, ProductAvailabilityText } from '@/components/product/ProductAvailability';
 import { ProductImage } from '@/components/product/ProductImage';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -11,6 +15,7 @@ import type { CatalogFilterKey, CatalogFilterSelection } from '@/lib/catalog/fil
 import { activeCatalogFilterCount, applyCatalogFilters, buildCatalogFilters, getProductGroupLabel, parseCatalogFilterSelection, priceRangeLabel } from '@/lib/catalog/filters';
 import { getCatalogSubcategories, getCategoryBySlug, getFeaturedProductsByCategory, getProductsByCategory, getRelatedProducts } from '@/lib/catalog/loaders';
 import { formatProductPrice } from '@/lib/catalog/pricing';
+import { getCategoryVideo } from '@/lib/catalog/category-videos';
 import { getProductImage } from '@/lib/catalog/product-images';
 import { getProductDistinctionFacts, getProductKeyFacts } from '@/lib/catalog/specs';
 import { categoryJsonLd, breadcrumbJsonLd } from '@/lib/seo/jsonld';
@@ -18,12 +23,13 @@ import { buildMetadata } from '@/lib/seo/metadata';
 import { getCspNonce } from '@/lib/security/nonce';
 import { getLegacyCatalogRedirect } from '@/lib/seo/legacy-redirects';
 import { getProductCardDescription, getProductVisibleDescription } from '@/lib/seo/product';
+import { getCategoryMascot, getCategoryMascotPose } from '@/lib/mascots';
 
 type PageProps = {
   params: Promise<{ category: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
-const productsPerPage = 60;
+const productsPerPage = 24;
 type CatalogViewMode = 'grid' | 'list';
 
 function formatPositions(count: number): string {
@@ -101,8 +107,8 @@ function buildCategoryHref(
 function ViewSwitcher({ categorySlug, selected, viewMode, sort, page }: { categorySlug: string; selected: CatalogFilterSelection; viewMode: CatalogViewMode; sort: CatalogSortMode; page: number }) {
   return (
     <div className="catalog-view-switcher" aria-label="Вид каталога">
-      <Link className={viewMode === 'grid' ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, 'grid', sort, { page })}>Карточки с фото</Link>
-      <Link className={viewMode === 'list' ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, 'list', sort, { page })}>Список без фото</Link>
+      <Link className={viewMode === 'grid' ? 'is-active' : ''} href={`${buildCategoryHref(categorySlug, selected, 'grid', sort, { page })}#catalog-products`}>Карточки с фото</Link>
+      <Link className={viewMode === 'list' ? 'is-active' : ''} href={`${buildCategoryHref(categorySlug, selected, 'list', sort, { page })}#catalog-products`}>Список без фото</Link>
     </div>
   );
 }
@@ -116,7 +122,7 @@ function SortSwitcher({ categorySlug, selected, viewMode, sort }: { categorySlug
   return (
     <div className="catalog-view-switcher" aria-label="Сортировка товаров">
       {modes.map(([mode, label]) => (
-        <Link key={mode} className={sort === mode ? 'is-active' : ''} href={buildCategoryHref(categorySlug, selected, viewMode, sort, { sort: mode })}>
+        <Link key={mode} className={sort === mode ? 'is-active' : ''} href={`${buildCategoryHref(categorySlug, selected, viewMode, sort, { sort: mode })}#catalog-products`}>
           {label}
         </Link>
       ))}
@@ -133,6 +139,9 @@ function CategoryExpertText({ category }: { category: Category }) {
           <p>{category.seoText}</p>
           <p>{category.buyingGuide}</p>
           <p className="meta">Товар можно забрать в магазине на Большой Горной, 290 в Саратове. Цену, срок поставки и совместимость комплекта подтвердит менеджер.</p>
+          <div className="actions info-card-actions">
+            <CallStoreButton location={`category_guide_${category.slug}`} />
+          </div>
         </article>
       </div>
     </section>
@@ -150,7 +159,7 @@ function FilterPanel({ categorySlug, products, selected, viewMode, sort }: { cat
       <summary className="btn btn-secondary filter-toggle">
         Фильтры{activeCount > 0 ? ` · ${activeCount}` : ''}
       </summary>
-      <form className="filter-panel" action={`/catalog/${categorySlug}`}>
+      <form className="filter-panel" action={`/catalog/${categorySlug}#catalog-products`}>
         {viewMode === 'list' ? <input type="hidden" name="view" value="list" /> : null}
         {sort !== 'default' ? <input type="hidden" name="sort" value={sort} /> : null}
         <div className="filter-grid">
@@ -170,7 +179,7 @@ function FilterPanel({ categorySlug, products, selected, viewMode, sort }: { cat
         </div>
         <div className="filter-actions">
           <button className="btn btn-primary" type="submit">Показать</button>
-          <Link className="btn btn-secondary" href={buildCategoryHref(categorySlug, {}, viewMode, sort)}>Сбросить</Link>
+          <Link className="btn btn-secondary" href={`${buildCategoryHref(categorySlug, {}, viewMode, sort)}#catalog-products`}>Сбросить</Link>
         </div>
       </form>
     </details>
@@ -180,6 +189,11 @@ function FilterPanel({ categorySlug, products, selected, viewMode, sort }: { cat
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { category } = await params;
   const query = searchParams ? await searchParams : {};
+  const hasQueryParameters = Object.values(query).some((value) => (
+    Array.isArray(value)
+      ? value.some((entry) => entry.trim().length > 0)
+      : (value ?? '').trim().length > 0
+  ));
   const hasFilters = activeCatalogFilterCount(parseCatalogFilterSelection(query)) > 0;
   const hasPagination = parseCatalogPage(query) > 1;
   const hasSort = parseCatalogSort(query) !== 'default';
@@ -189,12 +203,14 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     title: categoryData.title,
     description: categoryData.description,
     path: `/catalog/${categoryData.slug}`,
-    noindex: hasFilters || hasPagination || hasSort,
+    noindex: hasQueryParameters,
     followWhenNoindex: hasPagination && !hasFilters && !hasSort,
   });
 }
 
-function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode, sort, requestedPage }: { categorySlug: string; products: Product[]; baseProducts: Product[]; selected: CatalogFilterSelection; viewMode: CatalogViewMode; sort: CatalogSortMode; requestedPage: number }) {
+function ProductGrid({ category, products, baseProducts, selected, viewMode, sort, requestedPage }: { category: Category; products: Product[]; baseProducts: Product[]; selected: CatalogFilterSelection; viewMode: CatalogViewMode; sort: CatalogSortMode; requestedPage: number }) {
+  const categorySlug = category.slug;
+  const categoryVideo = getCategoryVideo(categorySlug);
   const pageCount = Math.max(1, Math.ceil(products.length / productsPerPage));
   const currentPage = Math.min(Math.max(requestedPage, 1), pageCount);
   const startIndex = (currentPage - 1) * productsPerPage;
@@ -210,7 +226,8 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
   const activeCount = activeCatalogFilterCount(selected);
 
   return (
-    <section className="section">
+    <section className="section category-products-section" id="catalog-products">
+      <CatalogScrollRestorer />
       <div className="container">
         <div className="section-head">
           <div>
@@ -223,6 +240,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
           </div>
           {products.length > 0 ? <p className="meta">Показаны позиции {visibleStart.toLocaleString('ru-RU')}–{visibleEnd.toLocaleString('ru-RU')} из {products.length.toLocaleString('ru-RU')}.</p> : null}
         </div>
+        {categoryVideo ? <CategorySectionVideo categoryName={category.name} video={categoryVideo} /> : null}
         {productGroups.length > 0 ? (
           <div className="catalog-groups" aria-label="Группы товаров раздела">
             {productGroups.map((group) => (
@@ -244,7 +262,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
         {activeCount > 0 ? (
           <div className="active-filters" aria-label="Выбранные фильтры">
             {Object.entries(selected).map(([key, value]) => value ? (
-              <Link key={key} href={buildCategoryHref(categorySlug, selected, viewMode, sort, { key: key as CatalogFilterKey, value })}>
+              <Link key={key} href={`${buildCategoryHref(categorySlug, selected, viewMode, sort, { key: key as CatalogFilterKey, value })}#catalog-products`}>
                 {key === 'price' ? priceRangeLabel(value) : value} ×
               </Link>
             ) : null)}
@@ -254,7 +272,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
           <div className="notice">
             <h2>По выбранным фильтрам товаров не найдено</h2>
             <p>Сбросьте часть параметров или используйте поиск по артикулу. В инженерных категориях часть характеристик приходит из разных файлов поставщиков.</p>
-            <Link className="btn btn-primary" href={`/catalog/${categorySlug}`}>Сбросить фильтры</Link>
+            <Link className="btn btn-primary" href={`/catalog/${categorySlug}#catalog-products`}>Сбросить фильтры</Link>
           </div>
         ) : null}
         {viewMode === 'list' ? (
@@ -280,9 +298,9 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
           </div>
         ) : (
           <div className="product-list-grid product-list-grid-with-images">
-            {visibleProducts.map((item) => (
+            {visibleProducts.map((item, index) => (
               <Link key={`${item.categorySlug}/${item.slug}`} className="product-list-card product-list-card-with-image" href={`/catalog/${item.categorySlug}/${item.slug}`}>
-                <ProductImage src={getProductImage(item, 'card')} alt={item.name} logoSrc={item.logo} brand={item.brandName} hideBrandLogo={item.hideBrandLogo} compact />
+                <ProductImage src={getProductImage(item, 'card')} alt={item.name} logoSrc={item.logo} brand={item.brandName} hideBrandLogo={item.hideBrandLogo} compact priority={index < 6} />
                 <span className="brand-line">{item.brandName}</span>
                 <h3>{item.name}</h3>
                 <p>{getProductCardDescription(item)}</p>
@@ -299,14 +317,14 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
         {pageCount > 1 ? (
           <nav className="catalog-pagination" aria-label="Страницы каталога">
             {currentPage > 1 ? (
-              <Link rel="prev" href={buildCategoryHref(categorySlug, selected, viewMode, sort, { page: currentPage - 1 })}>Назад</Link>
+              <Link rel="prev" href={`${buildCategoryHref(categorySlug, selected, viewMode, sort, { page: currentPage - 1 })}#catalog-products`}>Назад</Link>
             ) : null}
             {paginationPages.map((page, index) => (
               <span className="catalog-pagination-item" key={page}>
                 {index > 0 && page - paginationPages[index - 1] > 1 ? <span className="catalog-pagination-gap" aria-hidden="true">…</span> : null}
                 <Link
                   className={page === currentPage ? 'is-active' : ''}
-                  href={buildCategoryHref(categorySlug, selected, viewMode, sort, { page })}
+                  href={`${buildCategoryHref(categorySlug, selected, viewMode, sort, { page })}#catalog-products`}
                   aria-current={page === currentPage ? 'page' : undefined}
                 >
                   {page}
@@ -314,7 +332,7 @@ function ProductGrid({ categorySlug, products, baseProducts, selected, viewMode,
               </span>
             ))}
             {currentPage < pageCount ? (
-              <Link rel="next" href={buildCategoryHref(categorySlug, selected, viewMode, sort, { page: currentPage + 1 })}>Вперёд</Link>
+              <Link rel="next" href={`${buildCategoryHref(categorySlug, selected, viewMode, sort, { page: currentPage + 1 })}#catalog-products`}>Вперёд</Link>
             ) : null}
           </nav>
         ) : null}
@@ -375,6 +393,9 @@ function RadiatorsCategoryView({ category, product, products, related, viewMode,
             <ul className="check-grid">
               {(product.selectionHelp ?? []).map((item) => <li key={item}>{item}</li>)}
             </ul>
+            <div className="actions info-card-actions">
+              <CallStoreButton location="radiator_before_purchase" label="Позвонить менеджеру" />
+            </div>
           </aside>
         </div>
       </section>
@@ -419,7 +440,7 @@ function RadiatorsCategoryView({ category, product, products, related, viewMode,
           </div>
         </div>
       </section>
-      <ProductGrid categorySlug={category.slug} products={sortCatalogProducts(products, sort)} baseProducts={products} selected={{}} viewMode={viewMode} sort={sort} requestedPage={page} />
+      <ProductGrid category={category} products={sortCatalogProducts(products, sort)} baseProducts={products} selected={{}} viewMode={viewMode} sort={sort} requestedPage={page} />
       <CategoryExpertText category={category} />
     </>
   );
@@ -443,6 +464,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     if (legacyDestination) permanentRedirect(legacyDestination);
     notFound();
   }
+  const categoryMascot = getCategoryMascot(categoryData.slug);
   const related = getRelatedProducts(product.categorySlug);
   const featuredGroupLabels = featuredProducts.map((item) => getProductGroupLabel(item) ?? item.purpose);
 
@@ -471,7 +493,14 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
               <Link className="btn btn-secondary" href="/contacts">Связаться с магазином</Link>
             </div>
           </div>
-          <CategoryProductCarousel products={featuredProducts} groupLabels={featuredGroupLabels} />
+          <div className="category-hero-media">
+            <CategoryProductCarousel
+              products={featuredProducts}
+              groupLabels={featuredGroupLabels}
+              mascot={categoryMascot ? getCategoryMascotPose(categoryMascot, 'peek') : undefined}
+              categorySlug={categoryData.slug}
+            />
+          </div>
         </div>
       </section>
 
@@ -479,25 +508,33 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
         <div className="container grid grid-2">
           <article className="card popular-product-card">
             <h2>Основные направления раздела</h2>
-            <h3>Три разных типа товаров</h3>
+            <h3>Разные типы товаров</h3>
             <p>Карусель показывает разные направления категории, чтобы быстрее перейти к основному оборудованию, а не к случайной вспомогательной позиции.</p>
             <ul className="badges">
               {featuredGroupLabels.map((label) => <li className="badge" key={label}>{label}</li>)}
             </ul>
           </article>
-          <aside className="card">
+          <aside className="card category-advice-card">
             <h2>Что уточнить перед покупкой</h2>
             <p>{categoryData.buyingGuide}</p>
             <p className="meta">Менеджер проверит параметры и совместимость конкретных артикулов до заказа.</p>
+            <div className="actions info-card-actions">
+              <CallStoreButton location={`category_before_purchase_${categoryData.slug}`} label="Позвонить менеджеру" />
+            </div>
+            {categoryMascot ? <MascotFigure mascot={getCategoryMascotPose(categoryMascot, 'thoughtful')} placement="thoughtful" className="mascot-figure-category" /> : null}
           </aside>
         </div>
       </section>
-      <ProductGrid categorySlug={categoryData.slug} products={filteredProducts} baseProducts={categoryProducts} selected={selectedFilters} viewMode={viewMode} sort={sort} requestedPage={page} />
+      <ProductGrid category={categoryData} products={filteredProducts} baseProducts={categoryProducts} selected={selectedFilters} viewMode={viewMode} sort={sort} requestedPage={page} />
       <CategoryExpertText category={categoryData} />
 
       <section className="section">
         <div className="container">
-          <div className="section-head"><h2>Связанные категории</h2><p>Комплектующие, которые часто нужны для одной инженерной системы.</p></div>
+          <div className="section-head category-related-head">
+            <h2>Связанные категории</h2>
+            <p>Комплектующие, которые часто нужны для одной инженерной системы.</p>
+            {categoryMascot ? <MascotFigure mascot={getCategoryMascotPose(categoryMascot, 'seated')} placement="seated" className="mascot-figure-category" /> : null}
+          </div>
           <div className="grid grid-3">
             {related.map((item) => (
               <Link key={item.categorySlug} className="card" href={`/catalog/${item.categorySlug}`}>

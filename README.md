@@ -48,12 +48,9 @@ npm audit --audit-level=high
 Фотографии товаров (`public/images/products`, ~1.2 ГБ) в репозиторий не входят и
 монтируются на сервере томом.
 
-npm-скрипт `images:apply-sinikon-source` удалён: файл
-`scripts/apply-sinikon-source-images.mjs`, на который он ссылался, в репозитории
-отсутствует. Единственный сохранившийся инструмент для SINIKON —
-`scripts/apply_sinikon_photos.py` (одноразовый, `python3`). Он берёт каталог
-из текущего клона и каталог резервных копий из домашнего каталога пользователя;
-путь к входному патчу `/tmp/sin-patch.json` задаётся отдельно.
+Команда `images:apply-sinikon-source` удалена: её целевого файла в репозитории
+нет. Исторический `scripts/apply_sinikon_photos.py` требует отдельной проверки
+путей перед запуском и не участвует в текущем импорте каталога.
 
 ## Документация
 
@@ -73,15 +70,13 @@ npm-скрипт `images:apply-sinikon-source` удалён: файл
 
 1. Образ собирается на билд-хосте, не на маленьком production-сервере:
    `docker compose -f deploy/docker-compose.prod.yml build` (build context — корень
-   репозитория). Если compose-файл копируют вне репозитория, путь `build.context`
-   нужно задать относительно его нового расположения.
+   репозитория).
 2. Образ переносится на production и запускается blue-green: новый контейнер на
    свободном порту, проверка `/api/health`, `/catalog`, `/sitemap.xml`, затем
    переключение nginx upstream и остановка старого контейнера.
 3. Обязательные переменные: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SITE_ENV`,
    `NEXT_PUBLIC_YANDEX_METRIKA_ID`, `CSP_MODE`, `TRUSTED_CLIENT_IP_HEADER`
    (см. `.env.example`). nginx должен сам выставлять `X-Real-IP` и не пропускать
-   клиентские `CF-Connecting-IP` / `X-Forwarded-For`. Для blue-green compose-файлов
-   также задайте `PUMBUM_PRODUCT_IMAGES_DIR` — абсолютный путь к каталогу фото.
+   клиентские `CF-Connecting-IP` / `X-Forwarded-For`.
 
 Подробности, откат и доказательства релизов — в `docs/`.

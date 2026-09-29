@@ -3,12 +3,18 @@ import { getProductGroupLabel } from '@/lib/catalog/filters';
 import { getProductTitleParameter } from '@/lib/catalog/specs';
 
 const categoryLabels: Record<string, string> = {
+  vodosnabzhenie: 'Оборудование для водоснабжения',
+  kanalizaciya: 'Оборудование для канализации',
+  filtraciya: 'Оборудование для фильтрации',
+  nasosy: 'Насосное оборудование',
+  'smesiteli-i-sifony': 'Смесители и сифоны',
+  'krepezh-dlya-montazha': 'Крепёж для монтажа',
   'nasosy-i-vodosnabzhenie': 'Оборудование для насосов и водоснабжения',
   'kanalizaciya-i-vodootvedenie': 'Оборудование для канализации и водоотведения',
   'truby-i-fitingi': 'Трубы и фитинги',
   'otoplenie-i-kotelnaya': 'Оборудование для отопления и котельной',
   'armatura-i-komplektuyuschie': 'Арматура и комплектующие',
-  'prochee-oborudovanie': 'Инженерное оборудование',
+  'prochee-oborudovanie': 'Инструмент и расходные материалы',
 };
 
 function compact(value: string): string {
@@ -29,10 +35,15 @@ function trimAtWord(value: string, maxLength: number): string {
 
 export function getProductDisplayName(product: Product): string {
   const name = compact(product.name);
+  if (product.brand === 'generic' && product.brandName === 'Производитель не указан') return name;
   const brand = compact(product.brandName);
   return name.toLocaleLowerCase('ru-RU').includes(brand.toLocaleLowerCase('ru-RU'))
     ? name
     : `${brand} ${name}`;
+}
+
+function getProductIdentifier(product: Product): string {
+  return compact(product.sku || product.vendorCode || product.slug);
 }
 
 export function getProductLocalSummary(product: Product): string {
@@ -63,7 +74,11 @@ export function getProductDisplayTitle(product: Product): string {
 }
 
 export function getProductSeoTitle(product: Product): string {
-  return trimAtWord(`${getProductDisplayTitle(product)} — купить в Саратове | Сантехникъ`, 90);
+  const parameter = getProductTitleParameter(product);
+  const identity = parameter
+    ? `${getProductIdentifier(product)}, ${parameter}`
+    : getProductIdentifier(product);
+  return trimAtWord(`${identity} — ${getProductDisplayName(product)} | Сантехникъ`, 75);
 }
 
 export function getProductSeoDescription(product: Product): string {
@@ -71,7 +86,7 @@ export function getProductSeoDescription(product: Product): string {
     ? 'Поставка под заказ, срок подтвердит менеджер.'
     : 'Актуальную цену и возможность отгрузки подтвердит менеджер.';
   return trimAtWord(
-    `${getProductDisplayName(product)}. ${getProductLocalSummary(product)} Характеристики, фото и артикул в каталоге. ${orderNote}`,
-    180,
+    `${getProductIdentifier(product)}. ${getProductDisplayTitle(product)}. ${getProductLocalSummary(product)} Характеристики и фото. ${orderNote}`,
+    170,
   );
 }

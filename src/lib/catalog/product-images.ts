@@ -111,8 +111,9 @@ export function getProductImage(product: Product, variant: 'card' | 'detail' = '
   const entry = getProductImageManifestKeys(product)
     .map((key) => manifest.products?.[key])
     .find((candidate) => candidate?.status && usableStatuses.has(candidate.status));
-  if (!entry?.status || !usableStatuses.has(entry.status)) return toAsciiSafeImagePath(product.image);
-  const selectedImage = entry.image?.[variant] || entry.image?.detail || entry.image?.card || product.image;
+  const selectedImage = entry?.status && usableStatuses.has(entry.status)
+    ? entry.image?.[variant] || entry.image?.detail || entry.image?.card || product.image
+    : product.image;
   const presentedImage = presentationImageOverrides[selectedImage] ?? selectedImage;
   const transparentImage = transparencyOverrides[presentedImage]?.[variant] ?? presentedImage;
   return toAsciiSafeImagePath(transparentImage);

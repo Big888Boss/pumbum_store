@@ -25,6 +25,11 @@ artifacts/
 
 # Local/server-side image archives and generated operational reports
 .asset-store/
+public/images/products/
+!public/images/products/
+public/images/products/*
+!public/images/products/vrt/
+!public/images/products/aquabright/
 
 # Generated validation/runtime evidence artifacts
 # Keep curated docs/evidence files only when intentionally added by a task handoff.
@@ -36,6 +41,7 @@ docs/evidence/task-130-ocr-images*.json
 # Package/cache noise
 .npm/
 .cache/
+*.tsbuildinfo
 __pycache__/
 *.pyc
 .DS_Store

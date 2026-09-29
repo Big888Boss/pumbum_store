@@ -40,8 +40,7 @@ V2 now supports a generated image manifest:
 - `content/generated/product-image-manifest.json` maps `categorySlug/slug` to normalized product images.
 - `scripts/audit-product-images.mjs` writes `image-audit-before.json` and `image-audit-before.csv`.
 - `scripts/normalize-product-images.mjs` reads the generated catalog, normalizes current supplier/legacy images to WebP variants and writes `missing-product-images.csv`.
-- `scripts/apply-sinikon-source-images.mjs` pulls exact product images from official `sinikon.ru` product pages by article.
-  **Missing from this repository:** the file was never committed, and the `images:apply-sinikon-source` npm script that pointed to it was removed. Only the one-off `scripts/apply_sinikon_photos.py` survives.
+- The former SINIKON source-image script is absent from this repository. Its npm command was removed; the historical Python helper requires separate review before use.
 - `scripts/apply-aquatec-source-images.mjs` pulls exact АКВАТЕК model images from official `aq-plastic.ru` catalog cards by SKU/model name.
 - `scripts/repair-product-image-manifest-suppliers.mjs` repairs manifest supplier labels from generated product source refs, without changing images.
 
@@ -106,7 +105,7 @@ Python environment are factory-only and excluded from Docker context.
 - 1 JPG file, about 15 KB.
 - 5 SVG files, about 11 KB.
 
-2026-07-07 production `<deploy-root>/public` audit:
+2026-07-07 production `<legacy-deploy-root>/public` audit:
 
 - JPG: 74 files, about 28.04 MB.
 - JPEG: 24 files, about 0.58 MB.

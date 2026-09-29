@@ -37,6 +37,12 @@ jobs:
       - name: Type check
         run: npx tsc --noEmit
 
+      - name: Catalog and site contracts
+        run: |
+          npm run check:isolation
+          npm run analytics:check
+          npm run catalog:validate-water-filters
+
       - name: Lint
         run: npx eslint src scripts --ext .ts,.tsx,.js,.mjs
 
@@ -47,7 +53,7 @@ jobs:
         run: npm audit --audit-level=high
 
       - name: Unit tests
-        run: npx vitest run
+        run: npm test
 
       - name: Infra-leak check (no real SSH logins, Tailscale hosts, VM names or home paths)
         run: |

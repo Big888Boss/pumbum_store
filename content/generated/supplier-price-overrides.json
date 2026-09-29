@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-03T14:06:30.373Z",
+  "generatedAt": "2026-08-20T18:28:44.483Z",
   "policy": "Only confirmed supplier price overrides. Runtime falls back to numeric legacy price notes for suppliers without current source.",
   "sources": [
     {
@@ -25278,6 +25278,16 @@
       "matchedArticle": "КВ.110",
       "previousLegacyPrice": 465.17,
       "supplierDiscountVatAmount": 532.53
+    },
+    "Гидроконтракт::GK-364362308": {
+      "amount": 22100,
+      "currency": "RUB",
+      "supplier": "Гидроконтракт",
+      "source": "MyShop supplier mail",
+      "sourceUrl": "supplier-mail://price-update/2026-08-20",
+      "sourceDate": "2026-08-20",
+      "matchedArticle": "EAJm75A5",
+      "previousLegacyPrice": 20050
     }
   }
 }

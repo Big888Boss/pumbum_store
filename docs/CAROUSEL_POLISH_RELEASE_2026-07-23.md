@@ -19,7 +19,7 @@ were changed.
 - `npm run check:isolation`: passed.
 - `npm run analytics:check`: passed.
 - `npm audit --audit-level=moderate`: `0 vulnerabilities`.
-- `npm run build`: passed on `<build-user>@<staging-host>`; no build ran on production.
+- `npm run build`: passed on `<deploy-user>@<tailnet-host>`; no build ran on production.
 - Public `catalog:check-taxonomy`: 9,276 products, 10 categories and 9,293 sitemap URLs.
 - Public `catalog:check-legacy-purpose-redirects`: 7,546 moved paths covered, 0 missing, 0 ambiguous.
 - Public `security:check-csp`: enforcing policy, rotating nonce and report endpoint 204.

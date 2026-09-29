@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MetrikaSearchForm } from '@/components/analytics/MetrikaEvents';
 import { ProductImage } from '@/components/product/ProductImage';
+import { PageMascot } from '@/components/layout/PageMascot';
 import { getAllCategories, getCategoryShowcaseBySlug, getProductsByCategory } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -24,18 +25,26 @@ export default function CatalogPage() {
   return (
     <>
       <section className="hero">
-        <div className="container">
-          <div className="eyebrow">Каталог</div>
-          <h1>Каталог товаров по назначению</h1>
-          <p className="lead">Выберите нужную инженерную систему, а внутри раздела сначала увидите основное оборудование и только затем комплектующие.</p>
-          <div className="actions">
-            <Link className="btn btn-primary" href="/catalog/po-zadache">Подобрать по задаче</Link>
-            <Link className="btn btn-secondary" href="/catalog/proizvoditeli">Открыть каталог по производителям</Link>
+        <div className="container hero-grid hero-grid-mascot">
+          <div>
+            <div className="eyebrow">Каталог</div>
+            <h1>Каталог товаров по назначению</h1>
+            <p className="lead">Выберите нужную инженерную систему, а внутри раздела сначала увидите основное оборудование и только затем комплектующие.</p>
+            <div className="actions">
+              <Link className="btn btn-primary" href="/catalog/po-zadache">Подобрать по задаче</Link>
+              <Link className="btn btn-secondary" href="/catalog/proizvoditeli">Открыть каталог по производителям</Link>
+            </div>
+            <MetrikaSearchForm className="search-panel search-panel-compact" action="/search" location="catalog_page">
+              <input name="q" type="search" placeholder="Поиск по артикулу, бренду или параметру" />
+              <button className="btn btn-primary" type="submit">Найти</button>
+            </MetrikaSearchForm>
           </div>
-          <MetrikaSearchForm className="search-panel search-panel-compact" action="/search" location="catalog_page">
-            <input name="q" type="search" placeholder="Поиск по артикулу, бренду или параметру" />
-            <button className="btn btn-primary" type="submit">Найти</button>
-          </MetrikaSearchForm>
+          <PageMascot
+            src="/images/mascots/bak-hlopotun-present.webp"
+            alt="Бак Хлопотун показывает каталог"
+            label="Бак Хлопотун показывает разделы каталога"
+            variant="catalog"
+          />
         </div>
       </section>
       <section className="section section-tight">

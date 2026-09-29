@@ -1,0 +1,25 @@
+[Unit]
+Description=Pumbum Hermes isolated MCP API
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/agent-projects/pumbum-hermes-dev/ops/hermes-dev/factory
+EnvironmentFile=%h/.config/pumbum-hermes-dev/runtime.env
+ExecStart=%h/.local/share/pumbum-hermes-dev/venv/bin/uvicorn pumbum_dev_mcp:app --host ${PUMBUM_DEV_TAILNET_HOST} --port 8798 --no-server-header
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.local/state/pumbum-hermes-dev
+InaccessiblePaths=%h/.ssh %h/.aws %h/.gnupg %h/.kube %h/.docker %h/ai-gateway
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryMax=512M
+CPUQuota=100%
+
+[Install]
+WantedBy=default.target

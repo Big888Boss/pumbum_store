@@ -1,7 +1,13 @@
 const baseUrl = process.env.SEO_CRAWL_BASE_URL ?? 'http://127.0.0.1:3010';
 
 async function fetchText(path) {
-  const response = await fetch(new URL(path, baseUrl));
+  const response = await fetch(new URL(path, baseUrl), {
+    headers: {
+      accept: 'text/html,application/xhtml+xml',
+      'accept-language': 'ru-RU,ru;q=0.9',
+      'user-agent': 'Mozilla/5.0 pumbum-monitoring/1.0',
+    },
+  });
   return {
     path,
     status: response.status,

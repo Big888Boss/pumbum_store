@@ -7,7 +7,6 @@ const directories = [
   'public/images/category-showcase',
   'public/images/carousel-products',
 ];
-const explicitFiles = ['public/brand-logos/santekhnik-logo.png'];
 
 async function existingPngs(directory) {
   try {
@@ -23,14 +22,6 @@ async function existingPngs(directory) {
 const inputs = [
   ...(await Promise.all(directories.map(existingPngs))).flat(),
 ];
-for (const file of explicitFiles) {
-  try {
-    await stat(path.join(root, file));
-    inputs.push(file);
-  } catch (error) {
-    if (error?.code !== 'ENOENT') throw error;
-  }
-}
 
 const results = [];
 for (const input of [...new Set(inputs)].sort()) {

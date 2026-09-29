@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { CatalogCollectionGrid, hasCatalogCollectionState } from '@/components/catalog/CatalogCollectionGrid';
+import { CatalogCollectionGrid } from '@/components/catalog/CatalogCollectionGrid';
+import { CallStoreButton } from '@/components/layout/CallStoreButton';
 import type { Product } from '@/entities/product/model';
 import { getBuyerTaskBySlug } from '@/lib/catalog/buyer-tasks';
 import { getCatalogSubcategory, getProductsByCatalogSubcategory } from '@/lib/catalog/loaders';
@@ -12,9 +13,11 @@ type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-function groupHref(basePath: string, group: string): string {
-  const params = new URLSearchParams({ group });
-  return `${basePath}?${params.toString()}`;
+function parsePage(query: Record<string, string | string[] | undefined>): number {
+  const raw = query.page;
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  const page = Number.parseInt(value ?? '1', 10);
+  return Number.isSafeInteger(page) && page > 0 ? page : 1;
 }
 
 function getTaskProducts(taskSlug: string): Product[] {
@@ -48,7 +51,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     title: task.title,
     description: task.description,
     path: `/catalog/po-zadache/${task.slug}`,
-    noindex: hasCatalogCollectionState(query),
+    noindex: parsePage(query) > 1 || Object.values(query).some((value) => (Array.isArray(value) ? value[0] : value ?? '').trim().length > 0),
     followWhenNoindex: true,
   });
 }
@@ -74,8 +77,8 @@ export default async function BuyerTaskPage({ params, searchParams }: PageProps)
             {task.subcategories.map(({ categorySlug, subcategorySlug }) => {
               const group = getCatalogSubcategory(categorySlug, subcategorySlug);
               return group ? (
-                <li className="badge" key={`${categorySlug}/${subcategorySlug}`}>
-                  <Link href={groupHref(basePath, group.name)}>{group.name}</Link>
+                <li key={`${categorySlug}/${subcategorySlug}`}>
+                  <Link className="badge badge-link" href={`${basePath}?group=${encodeURIComponent(group.name)}#catalog-products`}>{group.name}</Link>
                 </li>
               ) : null;
             })}
@@ -93,6 +96,9 @@ export default async function BuyerTaskPage({ params, searchParams }: PageProps)
             <h2>Что нужно знать для подбора</h2>
             <ul>{task.guide.map((item) => <li key={item}>{item}</li>)}</ul>
             <p className="meta">Это навигационная подборка, а не обещание готовой совместимости. Конкретный комплект проверит менеджер.</p>
+            <div className="actions info-card-actions">
+              <CallStoreButton location={`task_guide_${task.slug}`} />
+            </div>
           </article>
         </div>
       </section>

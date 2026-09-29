@@ -1,0 +1,13 @@
+[Unit]
+Description=Check for verified Pumbum development commits to sync to GitHub
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=1min
+AccuracySec=10s
+RandomizedDelaySec=5s
+Persistent=false
+Unit=pumbum-hermes-git-sync.service
+
+[Install]
+WantedBy=timers.target

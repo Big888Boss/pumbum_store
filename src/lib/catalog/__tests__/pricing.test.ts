@@ -1,6 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { Product } from '@/entities/product/model';
-import { applyProductPricing, formatMoney, formatProductPrice, parseNumericPrice } from '@/lib/catalog/pricing';
+vi.mock('server-only', () => ({}));
+import { formatMoney, formatProductPrice } from '@/lib/catalog/pricing';
+import { applyProductPricing, parseNumericPrice } from '@/lib/catalog/pricing-runtime';
 import supplierPriceOverrides from '../../../../content/generated/supplier-price-overrides.json';
 
 type OverrideFile = { prices?: Record<string, { amount: number }> };
