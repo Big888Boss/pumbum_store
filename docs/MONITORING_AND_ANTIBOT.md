@@ -2,12 +2,11 @@
 
 ## What is implemented in V2 now
 
-- `/api/health` returns service status, catalog totals and timestamp to everyone. Runtime
-  details (`runtime.node`, `runtime.env`, `runtime.siteEnv`, `uptimeSeconds`) are returned
-  only when the request carries the synthetic monitor user agent `pumbum-monitoring/1.0`
-  (the same marker the middleware trusts), so anonymous callers cannot fingerprint the
-  Node version or environment. Grafana/blackbox checks that parse `runtime` must send
-  this user agent.
+- `/api/health` returns service status, catalog totals and timestamp to everyone.
+  Only the non-secret site mode (`runtime.siteEnv`) is added for the synthetic
+  monitor user agent `pumbum-monitoring/1.0`. The marker is spoofable and is not
+  authentication; Node version, uptime and host details are never returned.
+  Grafana/blackbox checks that parse `runtime` must send this user agent.
 - `middleware.ts` adds app-level rate limiting for `/`, `/catalog`, product pages, `/search` and `/api`.
 - Script-like clients are blocked on catalog/search/API paths by user-agent and browser-header heuristics.
 - Bulk-catalog probe paths such as `/api/public/catalog`, `/api/catalog`, `/api/products` and `/content/generated/**` are blocked and penalized.
