@@ -62,7 +62,11 @@ def health_is_ready(payload: dict[str, Any]) -> bool:
 
 def read_health() -> dict[str, Any] | None:
     try:
-        with urllib.request.urlopen(f"{PREVIEW_URL}/api/health", timeout=5) as response:
+        request = urllib.request.Request(
+            f"{PREVIEW_URL}/api/health",
+            headers={"User-Agent": "pumbum-monitoring/1.0"},
+        )
+        with urllib.request.urlopen(request, timeout=5) as response:
             if response.status != 200:
                 return None
             payload = json.loads(response.read().decode("utf-8"))
