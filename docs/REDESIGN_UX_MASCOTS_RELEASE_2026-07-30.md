@@ -49,7 +49,7 @@ text and do not enter the keyboard order.
 
 ## Build and safety
 
-- Candidate source: `/home/administrator/agent-projects/pumbum-store-redesign-candidate-ux-mascots-20260730`
+- Candidate source: `<build-home>/agent-projects/pumbum-store-redesign-candidate-ux-mascots-20260730`
 - Build host: USA factory only
 - Build controls: `MemoryMax=4G`, `CPUQuota=160%`, Node heap 3 GiB
 - Runtime remains bound to loopback; Tailnet and public gates remain the only
@@ -100,7 +100,7 @@ state or change catalog content.
 
 - Active staging commit: `a239cc3`
 - Active build ID: `ioTJXSOnOFtqczXlpHGzk`
-- Tailnet endpoint: `http://100.95.56.90:3027/`
+- Tailnet endpoint: `http://<tailnet-host>:3027/`
 - Application listener: `127.0.0.1:3025`; public read-only gate:
   `127.0.0.1:3028`
 - Post-switch health: `ok`, 9,276 published products, ten categories
@@ -111,7 +111,7 @@ state or change catalog content.
 - Read-only public gate: `X-Robots-Tag: noindex, nofollow, noarchive`, CSP
   enforced, `POST /api/leads` rejected with `405`
 - Exact rollback build:
-  `/home/administrator/backups/pumbum-redesign/ux-mascots-20260730/.next-ntJzITqB6mFDEfk1uCyWy`
+  `<build-home>/backups/pumbum-redesign/ux-mascots-20260730/.next-ntJzITqB6mFDEfk1uCyWy`
 
 The staging service had one controlled restart during the build switch.
 Production `477477.ru` was not restarted or modified.
@@ -126,7 +126,7 @@ No catalog data, route, filter, sorting, pagination, price or product logic was
 changed.
 
 - Candidate source:
-  `/home/administrator/agent-projects/pumbum-store-redesign-candidate-card-mascots-20260730`
+  `<build-home>/agent-projects/pumbum-store-redesign-candidate-card-mascots-20260730`
 - Candidate build ID: `aan2vpoPFXuxQezetsdd_`
 - Desktop size ranges: 226–310 px for general card companions and 224–286 px
   for product/detail companions
@@ -155,7 +155,7 @@ Production `477477.ru` remains outside this staging-only release.
 
 - Active staging commit: `92bde2b`
 - Active build ID: `aan2vpoPFXuxQezetsdd_`
-- Tailnet endpoint: `http://100.95.56.90:3027/`
+- Tailnet endpoint: `http://<tailnet-host>:3027/`
 - Loopback app: `127.0.0.1:3025`; public read-only gate: `127.0.0.1:3028`
 - Post-switch browser QA passed at desktop `1280 x 847` and mobile
   `390 x 844`; `runtimeErrors` remained empty
@@ -166,7 +166,7 @@ Production `477477.ru` remains outside this staging-only release.
 - SalesGame API, web, Postgres, Redis and Mailpit containers remained running;
   the stateful containers remained healthy
 - Exact rollback build:
-  `/home/administrator/backups/pumbum-redesign/card-mascots-v2-20260730/.next-ioTJXSOnOFtqczXlpHGzk`
+  `<build-home>/backups/pumbum-redesign/card-mascots-v2-20260730/.next-ioTJXSOnOFtqczXlpHGzk`
 
 Production `477477.ru` was not connected to, restarted or modified during this
 staging release.
@@ -181,7 +181,7 @@ and the seated footer Krestovich, as well as the catalog-anchor, CTA,
 performance and mobile reveal fixes from the same development period.
 
 - Candidate source:
-  `/home/administrator/agent-projects/pumbum-store-redesign-candidate-card-mascots-20260730`
+  `<build-home>/agent-projects/pumbum-store-redesign-candidate-card-mascots-20260730`
 - Candidate build ID: `oGVITNX3iPc27gSte3MyV`
 - Removed: `MascotTrail`, `CategoryMascotRunner`, card companion placement and
   the twelve assets used only by those two rejected layers
@@ -203,7 +203,7 @@ remains outside this change.
 
 - Active staging commit: `1ec79e0`
 - Active build ID: `oGVITNX3iPc27gSte3MyV`
-- Tailnet endpoint: `http://100.95.56.90:3027/`
+- Tailnet endpoint: `http://<tailnet-host>:3027/`
 - Loopback app: `127.0.0.1:3025`; public read-only gate: `127.0.0.1:3028`
 - Post-switch desktop/mobile browser QA passed with `runtimeErrors: []`
 - Health and Tailnet gate return `200`; the public gate remains noindex,
@@ -213,6 +213,6 @@ remains outside this change.
 - SalesGame web, API, Postgres, Redis and Mailpit remained running; stateful
   containers remained healthy
 - Exact rollback build:
-  `/home/administrator/backups/pumbum-redesign/mascot-layer-rollback-20260730/.next-aan2vpoPFXuxQezetsdd_`
+  `<build-home>/backups/pumbum-redesign/mascot-layer-rollback-20260730/.next-aan2vpoPFXuxQezetsdd_`
 
 Production `477477.ru` was not connected to, restarted or modified.

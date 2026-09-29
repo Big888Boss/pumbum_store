@@ -12,15 +12,16 @@ Sources of truth for restoration:
   (legacy-catalog.2026-07-07.json) and, for the 2026-07-06 wave, from the
   audit log's "was" values.
 """
+from pathlib import Path
 import json
 import shutil
 from datetime import datetime
 
-ROOT = "/opt/plumbing_store_v2/new-store-v2/content/generated"
+ROOT = str(Path(__file__).resolve().parents[1] / "content/generated")
 CATALOG = f"{ROOT}/legacy-catalog.json"
 MANIFEST = f"{ROOT}/product-image-manifest.json"
-BK7_CAT = "/home/dev477477/deploy-backup-20260707-photos/legacy-catalog.2026-07-07.json"
-AUDIT6 = "/home/dev477477/catalog-normalize-audit-20260706.json"
+BK7_CAT = str(Path.home() / "deploy-backup-20260707-photos/legacy-catalog.2026-07-07.json")
+AUDIT6 = str(Path.home() / "catalog-normalize-audit-20260706.json")
 PLACEHOLDER_MARK = "/images/generated-placeholders/"
 STAMP = datetime.now().strftime("%Y%m%d-%H%M")
 
@@ -62,8 +63,8 @@ print(f"восстановлено product.image: {restored_img}")
 print(f"восстановлено манифест-записей: {restored_man}")
 print(f"сохранено привязанных xlsx-фото: {kept_attached}")
 
-shutil.copy2(CATALOG, f"/home/dev477477/deploy-backup-20260707-photos/legacy-catalog.pre-rollback-{STAMP}.json")
-shutil.copy2(MANIFEST, f"/home/dev477477/deploy-backup-20260707-photos/product-image-manifest.pre-rollback-{STAMP}.json")
+shutil.copy2(CATALOG, f"{Path.home()}/deploy-backup-20260707-photos/legacy-catalog.pre-rollback-{STAMP}.json")
+shutil.copy2(MANIFEST, f"{Path.home()}/deploy-backup-20260707-photos/product-image-manifest.pre-rollback-{STAMP}.json")
 json.dump(catalog, open(CATALOG, "w"), ensure_ascii=False)
 json.dump(manifest, open(MANIFEST, "w"), ensure_ascii=False)
 print("записано")

@@ -106,7 +106,7 @@ Final result: passed.
   `work/qa-candidate/manufacturers-tablet-dark.png`,
   `work/qa-candidate/about-tablet-dark.png`.
 - Full automated evidence on the factory:
-  `/home/administrator/qa/pumbum-mobile-responsive-candidate-20260801-rerun`.
+  `<build-home>/qa/pumbum-mobile-responsive-candidate-20260801-rerun`.
 
 ## Findings
 
@@ -149,9 +149,9 @@ final result: passed
   below the card, after the CTA, and the resulting card-to-products gap is
   approximately `142px` after fonts settle.
 - Candidate captures:
-  `/home/administrator/qa/pumbum-mobile-geometry-candidate-20260801c-rerun`.
+  `<build-home>/qa/pumbum-mobile-geometry-candidate-20260801c-rerun`.
 - Active captures:
-  `/home/administrator/qa/pumbum-mobile-geometry-active-final-20260801`.
+  `<build-home>/qa/pumbum-mobile-geometry-active-final-20260801`.
 - Direct visual comparison was performed in one review input using the source
   phone captures and the final phone top-peek/advice captures.
 
@@ -173,8 +173,8 @@ final result: passed
 - Unit: `pumbum-redesign-preview-mobile-geometry-final-20260801.service`
 - Listener: `127.0.0.1:3025`
 - Exact rollback builds:
-  - `/home/administrator/backups/pumbum-redesign/mobile-geometry-20260801/.next-6wdXbM7NuzXGJKCS6BOyj`;
-  - `/home/administrator/backups/pumbum-redesign/mobile-geometry-20260801/.next-E4IO4uqeibUwYb9MjOG6P`.
+  - `<build-home>/backups/pumbum-redesign/mobile-geometry-20260801/.next-6wdXbM7NuzXGJKCS6BOyj`;
+  - `<build-home>/backups/pumbum-redesign/mobile-geometry-20260801/.next-E4IO4uqeibUwYb9MjOG6P`.
 
 Final result: passed. Candidate and post-activation browser runs completed
 without runtime errors or horizontal overflow. Production `477477.ru` was not

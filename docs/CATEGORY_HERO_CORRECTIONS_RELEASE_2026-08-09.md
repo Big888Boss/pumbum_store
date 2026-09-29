@@ -11,7 +11,7 @@ routes, search, filters, pagination, category videos and production
 - Build ID: `3DPRAiMccBM2DzAzrs_iA`.
 - Service: `pumbum-redesign-preview-category-hero-corrections-20260809.service`.
 - App binding: loopback `127.0.0.1:3025`.
-- Tailnet gate: `100.95.56.90:3027`.
+- Tailnet gate: `<tailnet-host>:3027`.
 - Public gate: loopback `3028` behind the existing outbound-only read-only
   tunnel. It remains `noindex` and rejects `POST /api/leads` with `405`.
 - Resource limits: `MemoryHigh=700M`, `MemoryMax=1G`, `CPUQuota=150%`.
@@ -66,7 +66,7 @@ in the catalog override map.
 
 The exact previously active build `lS3jNHYnNcDbUzn_QdkMC` is retained at:
 
-`/home/administrator/backups/pumbum-redesign/category-hero-corrections-20260809/.next-lS3jNHYnNcDbUzn_QdkMC`
+`<build-home>/backups/pumbum-redesign/category-hero-corrections-20260809/.next-lS3jNHYnNcDbUzn_QdkMC`
 
 Rollback must stop the new staging unit, restore that directory as the active
 `.next`, and restart the previous staging unit. Production is outside this

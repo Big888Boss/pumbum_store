@@ -4,9 +4,9 @@ After=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/administrator/agent-projects/pumbum-hermes-dev/ops/hermes-dev/factory
-EnvironmentFile=/home/administrator/.config/pumbum-hermes-dev/runtime.env
-ExecStart=/home/administrator/.local/share/pumbum-hermes-dev/venv/bin/uvicorn pumbum_dev_mcp:app --host 100.95.56.90 --port 8798 --no-server-header
+WorkingDirectory=%h/agent-projects/pumbum-hermes-dev/ops/hermes-dev/factory
+EnvironmentFile=%h/.config/pumbum-hermes-dev/runtime.env
+ExecStart=%h/.local/share/pumbum-hermes-dev/venv/bin/uvicorn pumbum_dev_mcp:app --host ${PUMBUM_DEV_TAILNET_HOST} --port 8798 --no-server-header
 Restart=on-failure
 RestartSec=3
 UMask=0077
@@ -14,8 +14,8 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=read-only
-ReadWritePaths=/home/administrator/.local/state/pumbum-hermes-dev
-InaccessiblePaths=/home/administrator/.ssh /home/administrator/.aws /home/administrator/.gnupg /home/administrator/.kube /home/administrator/.docker /home/administrator/ai-gateway
+ReadWritePaths=%h/.local/state/pumbum-hermes-dev
+InaccessiblePaths=%h/.ssh %h/.aws %h/.gnupg %h/.kube %h/.docker %h/ai-gateway
 RestrictSUIDSGID=true
 LockPersonality=true
 MemoryMax=512M

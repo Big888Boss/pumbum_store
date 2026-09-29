@@ -8,11 +8,11 @@
   `MemoryMax=2G` and `CPUQuota=150%`.
 - Production `477477.ru`, nginx, containers, catalog data, product images and services were not changed.
 - Source baseline: clean production commit `a6bc64e4105a7de96a2b3f9fc29c9d1ba56c1981`.
-- Isolated build-host path: `/home/administrator/agent-projects/pumbum-store-redesign-20260725`.
+- Isolated build-host path: `<build-home>/agent-projects/pumbum-store-redesign-20260725`.
 - Visual source: `https://high-end-plumbing-landing-page.vercel.app/`.
 - Current staging presentation build: `b7f370647b8307da8d7fd6fddb0fa37c16bb7316`.
   The previous `.next` is retained at
-  `/home/administrator/backups/pumbum-redesign/.next-949bfb8-pre-b7f3706-20260726`.
+  `<build-home>/backups/pumbum-redesign/.next-949bfb8-pre-b7f3706-20260726`.
 
 ## Implemented
 
@@ -208,13 +208,13 @@ The build ran while the SalesGame E2E stack stayed online.
 The owner approved temporary external access for one reviewer who is not in
 the tailnet. Production routing remains unchanged.
 
-- Tailnet reviewers use `http://100.95.56.90:3027/`.
+- Tailnet reviewers use `http://<tailnet-host>:3027/`.
 - External traffic enters through a Cloudflare Quick Tunnel and reaches only
   the loopback token gate on `127.0.0.1:3026`.
 - The invitation credential is carried in the URL fragment, which is not sent
   in the HTTP request, then exchanged for a 24-hour `Secure`, `HttpOnly`,
   `SameSite=Lax` cookie. The credential is stored only in the mode-0600 runtime
-  file `/home/administrator/.config/pumbum-redesign-preview/share.env`; it is
+  file `<build-home>/.config/pumbum-redesign-preview/share.env`; it is
   intentionally absent from Git and this documentation.
 - Anonymous requests receive only the closed-preview page. Shared responses
   include `X-Robots-Tag: noindex, nofollow, noarchive`, `Cache-Control:
@@ -229,7 +229,7 @@ the tailnet. Production routing remains unchanged.
   - transient `pumbum-redesign-localhost-run.service` (temporary fallback only
     while Cloudflare returns Quick Tunnel allocation `1015/429`).
 - The official user-scoped `cloudflared` `2026.7.2` binary is installed at
-  `/home/administrator/.local/bin/cloudflared`. Verified SHA-256:
+  `<build-home>/.local/bin/cloudflared`. Verified SHA-256:
   `ec905ea7b7e327ff8abdde8cb64697a2152de74dbcdbf6aec9db8364eb3886cd`.
 - Quick Tunnels are for temporary preview/testing, have no SLA and issue a new
   random hostname after the tunnel service restarts. Capture the current
@@ -285,7 +285,7 @@ with about `3.0 GiB` peak unit memory and zero unit swap. After activation the
 host had about `11 GiB` available RAM and memory PSI returned to zero. All five
 SalesGame E2E containers remained running with `restarts=0` and
 `OOMKilled=false`. The preview, share gate and tunnel metrics remain bound to
-`127.0.0.1`; only the tailnet proxy listens on `100.95.56.90:3027`.
+`127.0.0.1`; only the tailnet proxy listens on `<tailnet-host>:3027`.
 
 Acceptance evidence: health reports 9,276 products and 10 categories;
 isolation, analytics, taxonomy, complete 3,379-product pagination and enforced
@@ -297,7 +297,7 @@ nonce CSP and frame denial. Contacts remain actionable through `tel:` and
 the document reaches `complete` and the application remains interactive.
 
 Pre-switch rollback build:
-`/home/administrator/backups/pumbum-redesign/.next-c660077-pre-2a42d76-20260726`.
+`<build-home>/backups/pumbum-redesign/.next-c660077-pre-2a42d76-20260726`.
 Production was not modified.
 
 ## Scroll reveal and transparent catalog pass — 2026-07-26
@@ -334,7 +334,7 @@ rebuilt, restarted or deployed.
   manual-review CSV contains 159 retained sources. Unsafe subject loss and
   edge coverage are rejected instead of being published.
 - Versioned derivatives are stored at
-  `/home/administrator/agent-projects/pumbum-store-redesign-assets/catalog-alpha-v1`
+  `<build-home>/agent-projects/pumbum-store-redesign-assets/catalog-alpha-v1`
   (about 81 MiB). The application path
   `public/images/products/_transparent-v1` is a symlink to that store.
 - Runtime selection is controlled only by
@@ -349,7 +349,7 @@ npm run build
 ```
 
 The prior source tree remains at
-`/home/administrator/agent-projects/pumbum-store-redesign-20260725`. A staging
+`<build-home>/agent-projects/pumbum-store-redesign-20260725`. A staging
 runtime rollback is therefore also possible by stopping the scroll-alpha unit
 and starting that tree again on loopback port 3025. Do not remove the asset
 store until the owner separately approves cleanup.
@@ -376,7 +376,7 @@ store until the owner separately approves cleanup.
 - The activated staging runtime is
   `pumbum-redesign-preview-scroll-alpha.service` on `127.0.0.1:3025`; the
   invitation gate remains on `127.0.0.1:3026` and tailnet proxy on
-  `100.95.56.90:3027`. The temporary external fallback passed anonymous 401,
+  `<tailnet-host>:3027`. The temporary external fallback passed anonymous 401,
   invitation exchange 204, authenticated health 200 and category 200 checks.
 
 Reports are retained in the operator workspace rather than the public site:
@@ -393,7 +393,7 @@ display sources in total.
 
 - Exact-article recovery found source candidates for 342 rows. Supplier and
   article evidence is retained in
-  `/home/administrator/agent-projects/pumbum-store-redesign-assets/reports-image-recovery-v2/source-recovery-manifest.json`.
+  `<build-home>/agent-projects/pumbum-store-redesign-assets/reports-image-recovery-v2/source-recovery-manifest.json`.
 - Apple Vision generated local foreground masks without sending catalog images
   to an external image API. Sharp then removed the white matte, trimmed the
   subject, and emitted transparent `1100 x 825` detail plus `480 x 360` card
@@ -406,7 +406,7 @@ display sources in total.
   unsafe subject ratio, an unsupported placeholder, or no trustworthy improved
   source. A rejected conversion never replaces the current image.
 - Original files were not overwritten. Versioned derivatives live in
-  `/home/administrator/agent-projects/pumbum-store-redesign-assets/catalog-alpha-v2`;
+  `<build-home>/agent-projects/pumbum-store-redesign-assets/catalog-alpha-v2`;
   source downloads, Vision output, reports and timestamped override backups are
   retained beside that store.
 - Five cross-supplier samples were copied to
@@ -437,7 +437,7 @@ Staging runtime:
 
 - app: `pumbum-redesign-preview-image-recovery.service` on `127.0.0.1:3025`;
 - invitation gate: `pumbum-redesign-share-gate-image-recovery.service` on
-  `127.0.0.1:3026` and Tailnet `100.95.56.90:3027`;
+  `127.0.0.1:3026` and Tailnet `<tailnet-host>:3027`;
 - anonymous external request returns `401`; Tailnet health returns `200`;
 - public reviewer proxy: `pumbum-redesign-public-readonly-gate.service` on
   loopback `3028`, reached only through the outbound

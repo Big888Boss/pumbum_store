@@ -24,15 +24,15 @@ from pumbum_dev_common import (
 
 
 CODEX_BIN = os.environ.get(
-    "PUMBUM_DEV_CODEX_BIN", "/home/administrator/.local/bin/codex"
+    "PUMBUM_DEV_CODEX_BIN", "/usr/local/bin/codex"
 )
 CODEX_HOME = os.environ.get(
-    "PUMBUM_DEV_CODEX_HOME", "/home/administrator/ai-gateway/tmp/codex_pools/codex4/.codex"
+    "PUMBUM_DEV_CODEX_HOME", "/codex-home"
 )
 MODEL = os.environ.get("PUMBUM_DEV_CODEX_MODEL", "gpt-5.6-sol")
 TASK_TIMEOUT_SECONDS = int(os.environ.get("PUMBUM_DEV_TASK_TIMEOUT_SECONDS", "5400"))
 POLL_SECONDS = int(os.environ.get("PUMBUM_DEV_POLL_SECONDS", "3"))
-NPM_BIN = os.environ.get("PUMBUM_DEV_NPM_BIN", "/home/administrator/.nvm/versions/node/v22.22.2/bin/npm")
+NPM_BIN = os.environ.get("PUMBUM_DEV_NPM_BIN", "/usr/local/bin/npm")
 STOP = False
 
 
@@ -60,7 +60,7 @@ def sanitized_environment() -> dict[str, str]:
     env = {key: value for key, value in os.environ.items() if key in allowed}
     env.update(
         {
-            "HOME": os.environ.get("PUMBUM_DEV_AGENT_HOME", "/home/administrator"),
+            "HOME": os.environ.get("PUMBUM_DEV_AGENT_HOME", str(Path.home())),
             "CODEX_HOME": CODEX_HOME,
             "PATH": f"{Path(CODEX_BIN).parent}:{Path(NPM_BIN).parent}:/usr/local/bin:/usr/bin:/bin",
         }

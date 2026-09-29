@@ -2,21 +2,21 @@
 set -euo pipefail
 
 profile_name="pumbum-dev"
-profile_root="/home/vira-admin/.hermes/profiles/${profile_name}"
-config_root="/home/vira-admin/.config/pumbum-hermes-dev"
-unit_root="/home/vira-admin/.config/systemd/user"
+profile_root="${HOME}/.hermes/profiles/${profile_name}"
+config_root="${HOME}/.config/pumbum-hermes-dev"
+unit_root="${HOME}/.config/systemd/user"
 service_name="vira-pumbum-hermes.service"
 prepare_only=false
 if [[ "${1:-}" == "--prepare-only" ]]; then
   prepare_only=true
   shift
 fi
-source_root="${1:-/home/vira-admin/pumbum-hermes-dev/vira}"
+source_root="${1:-${HOME}/pumbum-hermes-dev/vira}"
 runtime_env="${config_root}/runtime.env"
-hermes_bin="/home/vira-admin/.local/bin/hermes"
+hermes_bin="${HOME}/.local/bin/hermes"
 
-if [[ "$(id -un)" != "vira-admin" ]]; then
-  echo "Run as vira-admin" >&2
+if [[ "$(id -u)" == "0" ]]; then
+  echo "Run as an unprivileged Vira user" >&2
   exit 1
 fi
 
@@ -48,7 +48,7 @@ if [[ "$(stat -c '%a' "${runtime_env}")" != "600" ]]; then
   exit 1
 fi
 
-for key in TELEGRAM_BOT_TOKEN TELEGRAM_ALLOWED_USERS TELEGRAM_ALLOWED_CHATS PUMBUM_DEV_MCP_TOKEN; do
+for key in TELEGRAM_BOT_TOKEN TELEGRAM_ALLOWED_USERS TELEGRAM_ALLOWED_CHATS PUMBUM_DEV_MCP_TOKEN PUMBUM_DEV_MCP_URL; do
   if ! grep -Eq "^${key}=.+$" "${runtime_env}"; then
     echo "Missing ${key}" >&2
     exit 1
@@ -66,6 +66,14 @@ set -a
 # shellcheck disable=SC1090
 source "${runtime_env}"
 set +a
+python3 - "${profile_root}/config.yaml" <<'PY'
+from pathlib import Path
+import os
+import sys
+path = Path(sys.argv[1])
+content = path.read_text()
+path.write_text(content.replace('__PUMBUM_DEV_MCP_URL__', os.environ['PUMBUM_DEV_MCP_URL']))
+PY
 "${hermes_bin}" -p "${profile_name}" mcp test pumbum_dev
 systemctl --user enable --now "${service_name}"
 systemctl --user is-active "${service_name}"

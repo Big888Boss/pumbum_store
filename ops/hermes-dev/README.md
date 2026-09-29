@@ -33,9 +33,9 @@ GitHub deploy key остаётся на host и передаётся тольк�
 
 ## Установка
 
-`factory/install-factory.sh` запускается из чистой рабочей копии на Fanding. До запуска должны существовать runtime env с `PUMBUM_DEV_MCP_TOKEN` и mode-0600 deploy key `/home/administrator/.ssh/pumbum-hermes-github`. Установщик проверяет или добавляет точный remote `github`, устанавливает доверенную копию sync-скрипта, собирает pinned worker image и запускает MCP API, worker, preview-reload path unit и Git sync timer.
+`factory/install-factory.sh` запускается из чистой рабочей копии на Fanding. До запуска должны существовать runtime env с `PUMBUM_DEV_MCP_TOKEN` и mode-0600 deploy key `<build-home>/.ssh/pumbum-hermes-github`. Установщик проверяет или добавляет точный remote `github`, устанавливает доверенную копию sync-скрипта, собирает pinned worker image и запускает MCP API, worker, preview-reload path unit и Git sync timer.
 
-Профиль Vira сначала безопасно готовится без запуска: `vira/install-profile.sh --prepare-only`. Команда создаёт изолированный профиль, устанавливает совместимый с Vira Hermes `0.18.0` config/SOUL и hardened unit `vira-pumbum-hermes.service`, но не включает его. Для запуска создаётся mode-0600 файл `/home/vira-admin/.config/pumbum-hermes-dev/runtime.env` по `vira/runtime.env.example`, затем выполняется обычный `vira/install-profile.sh`.
+Профиль Vira сначала безопасно готовится без запуска: `vira/install-profile.sh --prepare-only`. Команда создаёт изолированный профиль, устанавливает совместимый с Vira Hermes `0.18.0` config/SOUL и hardened unit `vira-pumbum-hermes.service`, но не включает его. Для запуска создаётся mode-0600 файл `<vira-home>/.config/pumbum-hermes-dev/runtime.env` по `vira/runtime.env.example`, затем выполняется обычный `vira/install-profile.sh`.
 
 Нужны новый BotFather-токен, числовые Telegram ID разрешённых пользователей и тот же MCP bearer token. `TELEGRAM_ALLOWED_CHATS` должен дословно совпадать с `TELEGRAM_ALLOWED_USERS`: личный chat ID равен user ID, а отрицательные ID групп не пройдут этот gate. Сервис использует immutable Hermes release Vira и управляемое общее Codex OAuth-хранилище; отдельные OAuth-копии в профиль не создаются.
 
@@ -45,5 +45,5 @@ GitHub deploy key остаётся на host и передаётся тольк�
 
 ## Read-only acceptance
 
-- `curl --fail --silent http://100.95.56.90:8798/health` проверяет MCP API без раскрытия токена.
+- `curl --fail --silent http://<tailnet-host>:8798/health` проверяет MCP API без раскрытия токена.
 - Авторизованный `tools/list` должен вернуть ровно семь инструментов из `factory/pumbum_dev_mcp.py`; инструмента production-деплоя среди них нет.

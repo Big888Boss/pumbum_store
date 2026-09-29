@@ -6,7 +6,7 @@ Requires=pumbum-redesign-share-gate.service
 
 [Service]
 Type=simple
-ExecStart=/home/administrator/.local/bin/cloudflared tunnel --no-autoupdate --metrics 127.0.0.1:49327 --loglevel info --transport-loglevel warn --url http://127.0.0.1:3026
+ExecStart=%h/.local/bin/cloudflared tunnel --no-autoupdate --metrics 127.0.0.1:49327 --loglevel info --transport-loglevel warn --url http://127.0.0.1:3026
 Restart=on-failure
 RestartSec=5s
 NoNewPrivileges=true

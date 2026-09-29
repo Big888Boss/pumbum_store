@@ -10,6 +10,7 @@ relates to the product (own / family-ok / mismatch / placeholder / unknown).
 
 Run: python3 photo_audit_and_fix.py [--dry-run]
 """
+from pathlib import Path
 import json
 import os
 import re
@@ -18,13 +19,13 @@ import sys
 from collections import defaultdict, Counter
 from datetime import date
 
-ROOT = "/opt/plumbing_store_v2/new-store-v2/content/generated"
+ROOT = str(Path(__file__).resolve().parents[1] / "content/generated")
 CATALOG = f"{ROOT}/legacy-catalog.json"
 MANIFEST = f"{ROOT}/product-image-manifest.json"
-XLSX_BASE = "/opt/plumbing_store_v2/public/images/products/sinikon/xlsx"
+XLSX_BASE = str(Path(__file__).resolve().parents[1] / "public/images/products/sinikon/xlsx")
 XLSX_URL = "/images/products/sinikon/xlsx"
-BACKUP_DIR = "/home/dev477477/deploy-backup-20260707-photos"
-REPORT_OUT = "/home/dev477477/photo-audit-20260707.json"
+BACKUP_DIR = str(Path.home() / "deploy-backup-20260707-photos")
+REPORT_OUT = str(Path.home() / "photo-audit-20260707.json")
 PLACEHOLDER_MARK = "/images/generated-placeholders/"
 
 DRY = "--dry-run" in sys.argv

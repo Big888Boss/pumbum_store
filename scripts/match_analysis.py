@@ -2,12 +2,13 @@
 """Read-only: try to match unmapped xlsx images to products by strong article norm.
 Classifies unmapped images into: article-matches-a-product (missed by normalization),
 vs hash/descriptive (needs visual)."""
+from pathlib import Path
 import json, os, re
 from collections import defaultdict
 
-ROOT = "/opt/plumbing_store_v2/new-store-v2/content/generated"
+ROOT = str(Path(__file__).resolve().parents[1] / "content/generated")
 catalog = json.load(open(f"{ROOT}/legacy-catalog.json"))
-tgt = json.load(open("/home/dev477477/photo-targets-20260707.json"))
+tgt = json.load(open(str(Path.home() / "photo-targets-20260707.json")))
 products = catalog["products"]
 target_skus = {t["sku"] for t in tgt["targets"]}
 

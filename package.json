@@ -22,7 +22,6 @@
     "analytics:check-browser": "node scripts/check-metrika-browser.mjs",
     "catalog:check-pagination": "node scripts/check-category-pagination.mjs",
     "catalog:check-taxonomy": "node scripts/check-category-taxonomy.mjs",
-    "catalog:check-navigation": "node scripts/check-category-taxonomy.mjs",
     "catalog:check-carousels-browser": "node scripts/check-category-carousels-browser.mjs",
     "catalog:check-category-videos": "node scripts/check-category-videos.mjs",
     "catalog:check-category-videos-browser": "node scripts/check-category-videos-browser.mjs",
@@ -33,7 +32,6 @@
     "images:normalize": "node scripts/normalize-product-images.mjs",
     "images:audit-transparency": "node scripts/process-product-transparency.mjs",
     "images:process-transparency": "node scripts/process-product-transparency.mjs --process",
-    "images:apply-sinikon-source": "node scripts/apply-sinikon-source-images.mjs",
     "images:apply-aquatec-source": "node scripts/apply-aquatec-source-images.mjs",
     "images:repair-manifest-suppliers": "node scripts/repair-product-image-manifest-suppliers.mjs",
     "images:convert-webp": "node scripts/convert-product-images-to-webp.mjs",
@@ -45,33 +43,33 @@
     "seo:check-legacy-redirects": "node scripts/check-legacy-route-redirects.mjs",
     "seo:crawl": "node scripts/seo-crawl.mjs",
     "smoke:overlay": "node scripts/browser-smoke-task130.mjs",
-    "check:ocr-images": "node scripts/ocr-task130-images.mjs"
+    "check:ocr-images": "node scripts/ocr-task130-images.mjs",
+    "test": "vitest run"
   },
   "dependencies": {
-    "@next/env": "15.5.21",
+    "@next/env": "15.5.26",
     "lucide-react": "1.25.0",
-    "next": "15.5.21",
+    "next": "15.5.26",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "sharp": "0.35.3",
-    "zod": "^3.23.8"
+    "react-dom": "^18.3.1"
   },
   "overrides": {
-    "brace-expansion": "5.0.8",
-    "js-yaml": "^4.3.0",
+    "brace-expansion": "^5.0.9",
+    "js-yaml": "^4.3.2",
     "nanoid": "3.3.18",
-    "postcss": "8.5.24",
-    "sharp": "0.35.3"
+    "postcss": "8.5.24"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "15.5.21",
+    "eslint-config-next": "15.5.26",
     "playwright": "^1.60.0",
     "tesseract.js": "^7.0.0",
-    "typescript": "^5.5.0"
+    "typescript": "^5.5.0",
+    "sharp": "^0.35.4",
+    "vitest": "^4.1.11"
   },
   "type": "module"
 }

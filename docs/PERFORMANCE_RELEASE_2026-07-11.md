@@ -43,9 +43,9 @@ The heaviest category rendered up to `240` product cards into one dynamic respon
 
 - Active upstream: `127.0.0.1:3013`.
 - Previous CSP container is stopped on `127.0.0.1:3012` and remains the nginx backup target when restarted.
-- Backup: `/opt/plumbing_store_v2/deploy-backups/perf-20260711-precutover`.
+- Backup: `<legacy-deploy-root>/deploy-backups/perf-20260711-precutover`.
 - Rollback image: `plumbing_store_v2-v2:rollback-pre-perf-20260711`.
-- Previous compose: `/opt/plumbing_store_v2/deploy/docker-compose.bluegreen-csp-20260711.yml`.
+- Previous compose: `<legacy-deploy-root>/deploy/docker-compose.bluegreen-csp-20260711.yml`.
 
 Rollback procedure:
 
