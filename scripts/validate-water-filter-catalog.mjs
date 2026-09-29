@@ -63,6 +63,12 @@ assert.equal(imported.filter((product) => product.brand === 'alsis').length, 6, 
 assert.equal(health.products, catalog.products.length, 'health product count');
 assert.equal(health.publishedProducts, catalog.products.filter((product) => product.dataQuality.publishInSitemap).length, 'health published product count');
 
+for (const sku of ['558256', '558257', '558258']) {
+  const product = bySku.get(sku);
+  assert.equal(product?.specs['Подраздел'], 'Фильтры и комплектующие', `VRT filter classified as cartridge: ${sku}`);
+  assert.equal(product?.purpose, 'Оборудование для бытовой фильтрации воды.', `VRT filter purpose: ${sku}`);
+}
+
 console.log(JSON.stringify({
   imported: imported.length,
   vrt: vrt.items.length,

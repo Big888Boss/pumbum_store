@@ -67,6 +67,7 @@ function vrtProduct(item, index) {
   const photo = vrtPhotos[item.code];
   const details = vrtDetails[item.code];
   assert(photo?.kind === 'exact' && details, `missing verified VRT photo/details for ${item.code}`);
+  const isCartridge = /^картридж(?:\s|$)/iu.test(item.name.trim());
   const specs = {
     ...details.features,
     Артикул: item.code,
@@ -74,7 +75,7 @@ function vrtProduct(item, index) {
     Производитель: 'VRT',
     Поставщик: 'Ф58',
     Раздел: 'Фильтрация',
-    Подраздел: item.name.toLowerCase().includes('картридж') ? 'Картриджи для фильтров' : 'Фильтры и комплектующие',
+    Подраздел: isCartridge ? 'Картриджи для фильтров' : 'Фильтры и комплектующие',
   };
   const description = details.description || item.name;
   return {
@@ -85,7 +86,7 @@ function vrtProduct(item, index) {
     name: item.name, sku: item.code, vendorCode: item.code,
     shortDescription: shortText(description),
     description,
-    purpose: item.name.toLowerCase().includes('картридж') ? 'Сменный элемент для бытовой фильтрации воды.' : 'Оборудование для бытовой фильтрации воды.',
+    purpose: isCartridge ? 'Сменный элемент для бытовой фильтрации воды.' : 'Оборудование для бытовой фильтрации воды.',
     image: photo.file, logo: '/brand-logos/vrt.svg', hideBrandLogo: false,
     highlights: [`Код ${item.code}`, specs.Подраздел],
     sellingPoints: ['Точный код для подбора и заказа', 'Характеристики сверены с каталогом Ф58'],
