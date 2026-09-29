@@ -200,13 +200,13 @@ const categoryFeaturedProductOverrides: Record<string, string[]> = {
 };
 
 const categoryFeaturedImageOverrides: Record<string, string> = {
-  'kanalizaciya/tim-bad478002gy': '/images/category-showcase/tim-bad478002gy-detail.png',
-  'smesiteli-i-sifony/tim-bas0802s': '/images/category-showcase/tim-bas0802s-detail.png',
-  'smesiteli-i-sifony/tim-bas0260b-a': '/images/category-showcase/tim-bas0260ba-detail.png',
-  'smesiteli-i-sifony/tim-c-l50-02bk': '/images/category-showcase/tim-cl5002bk-detail.png',
-  'krepezh-dlya-montazha/tim-zsr-2501-5002': '/images/category-showcase/zeisler-zsr25015002-detail.png',
-  'krepezh-dlya-montazha/tim-p20-2': '/images/category-showcase/tim-p20-2-detail.png',
-  'prochee-oborudovanie/tim-mb1519-030': '/images/category-showcase/tim-ptfe-tape-detail.png',
+  'kanalizaciya/tim-bad478002gy': '/images/category-showcase/tim-bad478002gy-detail.webp',
+  'smesiteli-i-sifony/tim-bas0802s': '/images/category-showcase/tim-bas0802s-detail.webp',
+  'smesiteli-i-sifony/tim-bas0260b-a': '/images/category-showcase/tim-bas0260ba-detail.webp',
+  'smesiteli-i-sifony/tim-c-l50-02bk': '/images/category-showcase/tim-cl5002bk-detail.webp',
+  'krepezh-dlya-montazha/tim-zsr-2501-5002': '/images/category-showcase/zeisler-zsr25015002-detail.webp',
+  'krepezh-dlya-montazha/tim-p20-2': '/images/category-showcase/tim-p20-2-detail.webp',
+  'prochee-oborudovanie/tim-mb1519-030': '/images/category-showcase/tim-ptfe-tape-detail.webp',
 };
 
 const categoryFeaturedSubcategoryOrder: Record<string, string[]> = {

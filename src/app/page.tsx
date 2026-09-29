@@ -28,7 +28,7 @@ export default function HomePage() {
             </div>
           </div>
           <aside className="home-contact-panel" aria-label="Контакты магазина">
-            <StaticImage className="home-contact-logo" src="/brand-logos/santekhnik-logo.png" alt="Сантехникъ" width={360} height={70} priority />
+            <StaticImage className="home-contact-logo" src="/brand-logos/santekhnik-logo.webp" alt="Сантехникъ" width={360} height={70} priority />
             <MetrikaGoalAnchor
               href="tel:+78452477477"
               goal={METRIKA_GOALS.phoneClick}
