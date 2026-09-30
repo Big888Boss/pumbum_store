@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { CatalogCollectionGrid } from '@/components/catalog/CatalogCollectionGrid';
 import { getCatalogSubcategory, getCategoryBySlug, getProductsByCatalogSubcategory } from '@/lib/catalog/loaders';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -33,6 +33,9 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 
 export default async function CatalogSubcategoryPage({ params, searchParams }: PageProps) {
   const { category, subcategory } = await params;
+  if (category === 'filtraciya' && (subcategory === 'promyvnye-filtry' || subcategory === 'gryazeotdeliteli')) {
+    permanentRedirect('/catalog/filtraciya/podrazdel/filtry-otopleniya-vodosnabzheniya');
+  }
   const query = searchParams ? await searchParams : {};
   const categoryData = getCategoryBySlug(category);
   const definition = getCatalogSubcategory(category, subcategory);

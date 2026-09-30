@@ -104,43 +104,63 @@ const definitions: BuyerSubcategory[] = [
   },
   {
     categorySlug: 'filtraciya',
-    slug: 'promyvnye-filtry',
-    name: 'Промывные фильтры',
-    title: 'Промывные фильтры для воды',
-    description: 'Промывные фильтры с удобным обслуживанием для систем водоснабжения и отопления.',
-    intro: 'Фильтры, которые очищаются промывкой без полной разборки корпуса.',
-    selectionGuide: 'Сравните размер подключения, тонкость фильтрации, расход и наличие манометра.',
-    patterns: [/промывн.*фильтр|фильтр.*промыв/],
+    slug: 'filtry-otopleniya-vodosnabzheniya',
+    name: 'Фильтры для отопления и водоснабжения',
+    title: 'Фильтры для отопления и водоснабжения',
+    description: 'Промывные фильтры, грязеотделители и фильтры для трубопроводов отопления и водоснабжения.',
+    intro: 'Оборудование для защиты отопительных и водопроводных контуров от загрязнений.',
+    selectionGuide: 'Сравните назначение, диаметр подключения, рабочее давление, температуру и способ обслуживания.',
+    patterns: [/промывн.*фильтр|фильтр.*промыв|грязеотдел|шламоотдел|сепаратор/],
   },
   {
     categorySlug: 'filtraciya',
     slug: 'mehanicheskie-filtry',
-    name: 'Механические фильтры',
+    name: 'Фильтры механической очистки',
     title: 'Фильтры механической очистки воды',
-    description: 'Косые, прямые и сетчатые фильтры для защиты трубопроводной арматуры и оборудования.',
-    intro: 'Компактные фильтры для задержания механических примесей.',
-    selectionGuide: 'Проверьте размер резьбы, направление потока, материал корпуса и доступ для обслуживания.',
+    description: 'Косые, прямые и сетчатые фильтры для удаления песка, ржавчины и взвешенных частиц.',
+    intro: 'Фильтры для задержания механических примесей в воде.',
+    selectionGuide: 'Проверьте тонкость фильтрации, размер резьбы, направление потока и доступ для обслуживания.',
     patterns: [/фильтр механическ|фильтр косой|фильтр прямой|сетчат.*фильтр|грязевик/],
   },
   {
     categorySlug: 'filtraciya',
-    slug: 'gryazeotdeliteli',
-    name: 'Грязе- и шламоотделители',
-    title: 'Грязеотделители и сепараторы для инженерных систем',
-    description: 'Грязеотделители, шламоотделители и сепараторы для защиты оборудования.',
-    intro: 'Оборудование для удаления загрязнений и воздуха из циркуляционных контуров.',
-    selectionGuide: 'Учитывайте диаметр, расход, рабочее давление, температуру и место монтажа.',
-    patterns: [/грязеотдел|шламоотдел|сепаратор.*гряз|дешламатор/],
+    slug: 'magistralnye-filtry',
+    name: 'Магистральные фильтры',
+    title: 'Магистральные фильтры для холодной и горячей воды',
+    description: 'Магистральные фильтры, корпуса и многоступенчатые системы очистки воды.',
+    intro: 'Фильтры и корпуса для установки на магистраль водоснабжения.',
+    selectionGuide: 'Проверьте температуру воды, расход, типоразмер корпуса и совместимость картриджа.',
+    patterns: [/магистрал|фильтр.дозатор/],
+  },
+  {
+    categorySlug: 'filtraciya',
+    slug: 'pitievye-sistemy',
+    name: 'Фильтры и системы очистки питьевой воды',
+    title: 'Фильтры и системы очистки питьевой воды',
+    description: 'Системы под мойку, многоступенчатые фильтры и обратный осмос для питьевой воды.',
+    intro: 'Системы подготовки питьевой воды для кухни.',
+    selectionGuide: 'Учитывайте состав исходной воды, число ступеней, производительность и доступное место под мойкой.',
+    patterns: [/питьев.*систем|под кухонн.*мойк|обратн.*осмос/],
+  },
+  {
+    categorySlug: 'filtraciya',
+    slug: 'kartridzhi',
+    name: 'Картриджи для фильтров',
+    title: 'Картриджи для фильтров воды',
+    description: 'Механические, угольные, полипропиленовые и комбинированные сменные картриджи.',
+    intro: 'Сменные элементы и комплекты картриджей для фильтров воды.',
+    selectionGuide: 'Сверьте типоразмер, назначение, тонкость очистки и совместимость с корпусом.',
+    patterns: [/картридж|фильтрующ.*элемент/],
   },
   {
     categorySlug: 'filtraciya',
     slug: 'komplektuyushchie-filtrov',
-    name: 'Комплектующие для фильтров',
-    title: 'Комплектующие и сменные элементы для фильтров',
-    description: 'Сетки, колбы, картриджи и другие комплектующие для обслуживания фильтров.',
-    intro: 'Сменные и монтажные элементы для фильтрационного оборудования.',
-    selectionGuide: 'Сверьте модель фильтра, размер, материал и совместимость по артикулу.',
-    patterns: [/картридж|сетка.*фильтр|колба.*фильтр|комплектующ.*фильтр|фильтр-дозатор/],
+    name: 'Комплектующие для систем фильтрации',
+    title: 'Комплектующие для систем фильтрации воды',
+    description: 'Колбы, ключи, сетки, фитинги, уплотнения и материалы для обслуживания систем фильтрации.',
+    intro: 'Монтажные детали, запасные части и материалы для фильтрационных систем.',
+    selectionGuide: 'Сверьте модель, размер, материал и совместимость детали по артикулу.',
+    patterns: [/колба|ключ|сетка|комплектующ|фитинг|уплотн/],
   },
   {
     categorySlug: 'nasosy',
@@ -475,6 +495,47 @@ function normalize(value: string | undefined): string {
 const productTextCache = new WeakMap<Product, string>();
 const productSubcategoryCache = new WeakMap<Product, BuyerSubcategory | null>();
 
+function filtrationSubcategorySlug(product: Product): string | undefined {
+  const name = normalize(product.name);
+  const section = normalize(product.specs['Подраздел']);
+  const description = normalize(product.shortDescription);
+
+  // The supplier section is useful for anonymous fittings, but a complete filter may
+  // still mention an included cartridge. Classify the item sold, not its contents.
+  if (/^фильтр магистральный|^корпус магистрального фильтра|система магистральных фильтров/.test(name)
+    || /магистральн.*фильтр|магистральн.*система/.test(name) && !/ключ|кольцо|кронштейн|уплотн|картридж/.test(name)) {
+    return 'magistralnye-filtry';
+  }
+  if (/фильтр.дозатор|дозатор умягчитель/.test(name) && !/картридж/.test(name)) return 'magistralnye-filtry';
+  if (/питьевые системы под кухонную мойку/.test(section)
+    || /система.*(под мойку|обратн.*осмос)/.test(name)) return 'pitievye-sistemy';
+  if (/картридж|^фильтрующ.*элемент|^мембрана для систем обратного осмоса|^линейный угольный постфильтр/.test(name)
+      && !/корпус засыпного картриджа/.test(name)
+    || /картриджи/.test(section) && !/запчаст|пустые контейнеры/.test(section)
+      && !/уплотнит|кольцо|ключ|подключен|корпус/.test(name)) {
+    return 'kartridzhi';
+  }
+  if (/фитинги для питьевых систем|фильтрующие загрузки|пустые контейнеры/.test(section)
+    || /ключ|кольцо|кронштейн|уплотн/.test(name)
+    || /^(ключ|кольцо|уплотн|кронштейн|сетка для|инвертор потока|вставка клапана|кран шаровой сливной|корпус засыпного|р-слим|р-бб|br-|кр-бб|кл-бб|абф дф-ключ|кпб-|кбп-|пф-)/.test(name)
+    || /^(абф-бак|р-гор|р-нер|рбб-|wrf-)/.test(name)
+    || /комплектующ/.test(section) && !/^фильтр /.test(name)
+    || /запчаст/.test(section) && !/^фильтр /.test(name)) {
+    return 'komplektuyushchie-filtrov';
+  }
+  if (/фильтры магистральные|умягчители аквабрайт|дозаторы полифосфата|фильтр -дозатор|слим лайн.*горячей воды/.test(section)) {
+    return 'magistralnye-filtry';
+  }
+  if (/фильтр механической очистки|фильтр косой|фильтр прямой|фильтр сетчатый|сетчатые механические фильтры|^фильтр для заливного шланга/.test(name)
+    && !/промыв|дешламатор|шламоотдел/.test(name)) return 'mehanicheskie-filtry';
+  if (/промыв|шламоотдел|грязеотдел|дешламатор|сепаратор|фильтр с манометром|фильтр с поворотным|фильтр свободного вращения/.test(name)
+    || /фильтр|сепаратор|регулирующая арматура|valtec рекомендует/.test(section)) {
+    return 'filtry-otopleniya-vodosnabzheniya';
+  }
+  if (/магистрал|фильтр для воды|умягчени|очистк.*воды/.test(name + ' ' + description)) return 'magistralnye-filtry';
+  return undefined;
+}
+
 function getProductText(product: Product): string {
   const cached = productTextCache.get(product);
   if (cached) return cached;
@@ -512,8 +573,11 @@ export function getBuyerSubcategoryForProduct(product: Product): BuyerSubcategor
   const cached = productSubcategoryCache.get(product);
   if (cached !== undefined) return cached ?? undefined;
   const text = getProductText(product);
-  const definition = getBuyerSubcategoriesByCategory(product.categorySlug)
-    .find((definition) => definition.patterns.some((pattern) => pattern.test(text)));
+  const filtrationSlug = product.categorySlug === 'filtraciya' ? filtrationSubcategorySlug(product) : undefined;
+  const definition = product.categorySlug === 'filtraciya'
+    ? getBuyerSubcategoryBySlug(product.categorySlug, filtrationSlug ?? '')
+    : getBuyerSubcategoriesByCategory(product.categorySlug)
+      .find((item) => item.patterns.some((pattern) => pattern.test(text)));
   productSubcategoryCache.set(product, definition ?? null);
   return definition;
 }

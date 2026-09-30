@@ -195,7 +195,7 @@ const carouselImageOverrides: Record<string, string> = {
 const categoryFeaturedSubcategoryOrder: Record<string, string[]> = {
   vodosnabzhenie: ['emkosti-dlya-vody', 'gidroakkumulyatory', 'zashchita-ot-protechek'],
   kanalizaciya: ['naruzhnaya-kanalizaciya', 'vnutrennyaya-kanalizaciya', 'trapy-i-dushevye-lotki'],
-  filtraciya: ['promyvnye-filtry', 'mehanicheskie-filtry', 'gryazeotdeliteli'],
+  filtraciya: ['filtry-otopleniya-vodosnabzheniya', 'magistralnye-filtry', 'pitievye-sistemy'],
   nasosy: ['skvazhinnye-nasosy', 'nasosnye-stancii', 'cirkulyacionnye-nasosy'],
   'smesiteli-i-sifony': ['sifony', 'slivy-i-obvyazki', 'dushevye-komplektuyushchie'],
   'otoplenie-i-kotelnaya': ['kotly', 'kollektory', 'radiatornaya-armatura'],
