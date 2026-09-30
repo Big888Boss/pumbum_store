@@ -4,7 +4,7 @@ const expectedPhone = '+7 (8452) 477-477';
 const categories = [
   ['vodosnabzhenie', 'Водоснабжение', 'ATV 500', /atv|емкост|бак|гидроаккумулятор/i],
   ['kanalizaciya', 'Канализация', 'Труба однораструбная L=1000', /канализац|локальной очистки|душевой лоток|трап/i],
-  ['filtraciya', 'Фильтрация', 'Фильтр механической очистки промывной каскадный', /фильтр|сепаратор/i],
+  ['filtraciya', 'Фильтрация и очистка воды', 'Фильтр механической очистки промывной каскадный', /фильтр|сепаратор/i],
   ['nasosy', 'Насосы', 'AUTO ADB-35', /насос/i],
   ['smesiteli-i-sifony', 'Смесители и сифоны', 'Сифон металлический', /сифон|обвязка|слив/i],
   ['otoplenie-i-kotelnaya', 'Отопление и котельная', 'ZOTA «Zuma»', /zota|котел/i],
@@ -76,6 +76,21 @@ for (const group of ['Котлы', 'Коллекторы и коллекторн
 }
 assert(heating.body.replaceAll('<!-- -->', '').includes('Рекомендуемые товары · 1 из 3'), 'heating carousel counter is missing');
 
+const filtration = await get('/catalog/filtraciya');
+for (const slug of [
+  'filtry-otopleniya-vodosnabzheniya',
+  'mehanicheskie-filtry',
+  'magistralnye-filtry',
+  'pitievye-sistemy',
+  'kartridzhi',
+  'komplektuyushchie-filtrov',
+]) {
+  const path = `/catalog/filtraciya/podrazdel/${slug}`;
+  assert(filtration.body.includes(path), `filtration category does not link to ${slug}`);
+  const page = await get(path);
+  assert(page.response.ok && page.body.includes('<h1'), `${path} is not a populated section`);
+}
+
 for (const [path, asset] of [
   ['/catalog/kanalizaciya', '/images/category-showcase/sinikon-sewer-pipe-detail.webp'],
   ['/catalog/krepezh-dlya-montazha', '/images/category-showcase/sinikon-clamp-km038-detail.webp'],
@@ -88,6 +103,8 @@ for (const [path, asset] of [
 for (const [source, destination] of [
   ['/catalog/nasosy-i-vodosnabzhenie', '/catalog/nasosy'],
   ['/catalog/kanalizaciya-i-vodootvedenie', '/catalog/kanalizaciya'],
+  ['/catalog/filtraciya/podrazdel/promyvnye-filtry', '/catalog/filtraciya/podrazdel/filtry-otopleniya-vodosnabzheniya'],
+  ['/catalog/filtraciya/podrazdel/gryazeotdeliteli', '/catalog/filtraciya/podrazdel/filtry-otopleniya-vodosnabzheniya'],
   ['/catalog/otoplenie-i-kotelnaya/latunnye-aksialnye-fitingi-fa160001', '/catalog/truby-i-fitingi/latunnye-aksialnye-fitingi-fa160001'],
 ]) {
   const moved = await get(source, { redirect: 'manual' });

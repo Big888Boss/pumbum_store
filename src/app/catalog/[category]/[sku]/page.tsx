@@ -7,6 +7,7 @@ import { ProductImage } from '@/components/product/ProductImage';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getCategoryBySlug, getProductBySlug, getProductByUniqueSlug, getRelatedProductsForProduct } from '@/lib/catalog/loaders';
 import { getProductAvailabilityPresentation } from '@/lib/catalog/availability';
+import { getBuyerSubcategoryForProduct } from '@/lib/catalog/buyer-subcategories';
 import { canPublishProductInSitemap } from '@/lib/catalog/quality';
 import { formatProductPrice } from '@/lib/catalog/pricing';
 import { formatSpecLabel, getProductDistinctionFacts, getProductKeyFacts } from '@/lib/catalog/specs';
@@ -46,6 +47,7 @@ export default async function ProductPage({ params }: PageProps) {
   }
   const categoryData = getCategoryBySlug(product.categorySlug);
   if (!categoryData) notFound();
+  const filtrationSubcategory = product.categorySlug === 'filtraciya' ? getBuyerSubcategoryForProduct(product) : undefined;
   const related = getRelatedProductsForProduct(product);
   const requestHref = `/contacts?category=${encodeURIComponent(product.categorySlug)}&sku=${encodeURIComponent(product.slug)}`;
   const priceLabel = formatProductPrice(product);
@@ -82,6 +84,10 @@ export default async function ProductPage({ params }: PageProps) {
                 <dt>Категория</dt>
                 <dd>{categoryData.name}</dd>
               </div>
+              {filtrationSubcategory ? <div>
+                <dt>Подраздел</dt>
+                <dd><Link href={`/catalog/filtraciya/podrazdel/${filtrationSubcategory.slug}`}>{filtrationSubcategory.name}</Link></dd>
+              </div> : null}
               <div>
                 <dt>Артикул</dt>
                 <dd>{product.sku || product.vendorCode || 'уточняется'}</dd>
@@ -143,7 +149,9 @@ export default async function ProductPage({ params }: PageProps) {
           </article>
           <aside className="card">
             <h2>Параметры</h2>
-            <table className="specs"><tbody>{Object.entries(product.specs)
+            <table className="specs"><tbody>{product.categorySlug === 'filtraciya' && !product.specs['Единица измерения'] ? (
+              <tr><th>Единица измерения</th><td>{product.specs['Единица цены'] === '1 м' ? 'м' : 'Уточняется у поставщика'}</td></tr>
+            ) : null}{Object.entries(product.specs)
               .filter(([key]) => key !== 'Статус поставки')
               .map(([key, value]) => <tr key={key}><th>{formatSpecLabel(key)}</th><td>{value}</td></tr>)}</tbody></table>
           </aside>
